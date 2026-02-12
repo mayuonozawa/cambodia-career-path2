@@ -10,7 +10,7 @@ interface Props {
 
 export default async function ScholarshipDetailPage({ params }: Props) {
   // 年齢・居住地をCookieから取得
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const age = cookieStore.get("userAge")?.value;
   const region = cookieStore.get("userRegion")?.value;
   if (!age || !region) {

@@ -1,6 +1,9 @@
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
+import { createClient } from "@/lib/supabase/server";
+import { notFound } from "next/navigation";
 import { VocationalSchoolDetail } from "@/components/vocational-schools/VocationalSchoolDetail";
 import { LoginPrompt } from "@/components/ui/LoginPrompt";
 
@@ -9,7 +12,7 @@ interface Props {
 }
 
 export default async function VocationalSchoolDetailPage({ params }: Props) {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const age = cookieStore.get("userAge")?.value;
   const region = cookieStore.get("userRegion")?.value;
   if (!age || !region) {

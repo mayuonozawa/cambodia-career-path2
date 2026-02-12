@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default async function UniversityDetailPage({ params }: Props) {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const age = cookieStore.get("userAge")?.value;
   const region = cookieStore.get("userRegion")?.value;
   if (!age || !region) {
