@@ -1,15 +1,21 @@
 "use client";
 
-import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useState, useEffect } from "react";
+import { useLocale } from "next-intl";
 
 export function LoginPrompt({ onSuccess }: { onSuccess?: () => void }) {
+  const locale = useLocale(); // "en" or "km"
   const [age, setAge] = useState("");
   const [region, setRegion] = useState("");
   const [error, setError] = useState("");
   const [lang, setLang] = useState<"en" | "km">("en");
 
-  // 英語・クメール語のみ
+  // 外側の言語に合わせて初期化
+  useEffect(() => {
+    if (locale === "km") setLang("km");
+    else setLang("en");
+  }, [locale]);
+
   const texts = {
     en: {
       title: "Please enter your age and residence to view details.",
@@ -17,7 +23,7 @@ export function LoginPrompt({ onSuccess }: { onSuccess?: () => void }) {
       region: "Residence (e.g. Phnom Penh)",
       confirm: "Confirm",
       error: "Please enter your age and residence.",
-      switch: "ភាសាខ្មែរ", // Khmer
+      switch: "ភាសាខ្មែរ",
     },
     km: {
       title: "សូមបញ្ចូលអាយុ និងទីលំនៅដើម្បីមើលព័ត៌មានលម្អិត។",
