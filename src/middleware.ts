@@ -6,16 +6,15 @@ import { updateSession } from "./lib/supabase/middleware";
 const intlMiddleware = createMiddleware(routing);
 
 export async function middleware(request: NextRequest) {
-  // 1. まず先に Supabase のセッション（ログイン状態など）を更新する
-  // この時、レスポンス（返事）の準備をします
-  const response = await updateSession(request);
+  // 1. まず Supabase のセッション更新だけを行う
+  await updateSession(request);
 
-  // 2. そのレスポンスを使って、多言語対応（i18n）の処理を行う
-  // ここで response を渡してあげるのがポイントです
+  // 2. 多言語対応のミドルウェアを実行して、その結果をそのまま返す
+  // これが最もエラーが起きにくい書き方です
   return intlMiddleware(request);
 }
 
 export const config = {
-  // 監視するページの設定
-  matcher: ["/", "/(km|en)/:path*", "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"],
+  // 門番がチェックする範囲を「ページだけ」に絞り、画像などは完全に無視させる設定
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)']
 };
