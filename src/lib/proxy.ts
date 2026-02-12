@@ -1,7 +1,7 @@
 import createMiddleware from "next-intl/middleware";
 import { type NextRequest } from "next/server";
 import { routing } from "../i18n/routing"; // 正しい場所に合わせる
-import { updateSession } from "../lib/supabase/middleware"; // 正しい場所に合わせる
+import { updateSession } from "./supabase/middleware"; // 正しい場所に合わせる
 
 const intlMiddleware = createMiddleware(routing);
 
