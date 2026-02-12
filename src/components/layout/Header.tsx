@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Link, usePathname, useRouter } from "@/i18n/routing";
 import { useLocale } from "next-intl";
-import { Menu, X, Globe, User, LogOut } from "lucide-react";
+import { Menu, X, Globe, Bell, LogOut, Plus } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { createClient } from "@/lib/supabase/client";
@@ -28,135 +28,134 @@ export function Header() {
   };
 
   const navLinks = [
+    { href: "/" as const, label: "Home" },
     { href: "/scholarships" as const, label: t("scholarships") },
-    { href: "/universities" as const, label: t("universities") },
+    { href: "/universities" as const, label: "Schools" },
     { href: "/vocational-schools" as const, label: t("vocationalSchools") },
-    { href: "/about-scholarships" as const, label: t("aboutScholarships") },
   ];
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link href="/" className="text-xl font-bold text-blue-600">
-            {t("siteName")}
-          </Link>
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
+        {/* Logo */}
+        <Link href="/" className="flex items-center">
+          <img 
+            src="/images/brightdoor-logo.png" 
+            alt="Bright Door Logo" 
+            className="w-40 h-auto"
+          />
+        </Link>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-6">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-gray-700 hover:text-blue-600 text-sm font-medium transition-colors"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Right side: Language + Auth */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={switchLocale}
-              className="flex items-center gap-1 text-sm text-gray-600 hover:text-blue-600 transition-colors"
-              aria-label="Switch language"
+        {/* Desktop Nav */}
+        <nav className="hidden items-center gap-1 md:flex">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-8 rounded-md gap-1.5 px-3 hover:bg-accent hover:text-accent-foreground"
             >
-              <Globe className="w-4 h-4" />
-              <span>{locale === "km" ? "EN" : "ខ្មែរ"}</span>
-            </button>
+              {link.label}
+            </Link>
+          ))}
+        </nav>
 
-            {!loading && (
-              <>
-                {user ? (
-                  <div className="hidden md:flex items-center gap-2">
-                    <Link
-                      href="/profile"
-                      className="flex items-center gap-1 text-sm text-gray-600 hover:text-blue-600 transition-colors"
-                    >
-                      <User className="w-4 h-4" />
-                      <span>{t("profile")}</span>
-                    </Link>
-                    <button
-                      onClick={handleLogout}
-                      className="flex items-center gap-1 text-sm text-gray-500 hover:text-red-600 transition-colors"
-                    >
-                      <LogOut className="w-4 h-4" />
-                    </button>
-                  </div>
-                ) : (
-                  <Link
-                    href="/auth"
-                    className="hidden md:inline-block bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
-                  >
-                    {t("login")}
-                  </Link>
-                )}
-              </>
-            )}
+        {/* Right side: Language + Notifications + Auth */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={switchLocale}
+            className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-8 rounded-md px-3 gap-1"
+            aria-label="Switch language"
+          >
+            <Globe className="h-4 w-4" />
+            <span className="text-sm">{locale === "km" ? "English" : "ខ្មែរ"}</span>
+          </button>
 
-            {/* Mobile menu button */}
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="md:hidden p-2 text-gray-600"
-              aria-label="Toggle menu"
-            >
-              {menuOpen ? (
-                <X className="w-5 h-5" />
-              ) : (
-                <Menu className="w-5 h-5" />
-              )}
-            </button>
-          </div>
-        </div>
+          <button
+            className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] hover:bg-accent hover:text-accent-foreground size-9 relative"
+          >
+            <Bell className="h-5 w-5" />
+          </button>
 
-        {/* Mobile Nav */}
-        {menuOpen && (
-          <nav className="md:hidden py-4 border-t border-gray-100">
-            <div className="flex flex-col gap-3">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-gray-700 hover:text-blue-600 font-medium py-2"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {link.label}
-                </Link>
-              ))}
+          {!loading && (
+            <>
               {user ? (
                 <>
                   <Link
                     href="/profile"
-                    className="text-gray-700 hover:text-blue-600 font-medium py-2"
-                    onClick={() => setMenuOpen(false)}
+                    className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-8 rounded-md gap-1.5 px-3 hover:bg-accent hover:text-accent-foreground"
                   >
-                    {t("profile")}
+                    Profile
                   </Link>
                   <button
-                    onClick={() => {
-                      handleLogout();
-                      setMenuOpen(false);
-                    }}
-                    className="text-left text-red-600 font-medium py-2"
+                    onClick={handleLogout}
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] hover:bg-accent hover:text-accent-foreground size-9"
                   >
-                    {t("logout")}
+                    <LogOut className="h-4 w-4" />
                   </button>
                 </>
               ) : (
                 <Link
                   href="/auth"
-                  className="bg-blue-600 hover:bg-blue-700 text-white text-center font-medium px-4 py-2 rounded-lg transition-colors"
-                  onClick={() => setMenuOpen(false)}
+                  className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-8 rounded-md gap-1.5 px-3 bg-[#3DBDB8] text-white hover:bg-[#2da8a3]"
                 >
                   {t("login")}
                 </Link>
               )}
-            </div>
-          </nav>
-        )}
+            </>
+          )}
+
+          {/* Mobile menu button */}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="md:hidden inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] hover:bg-accent hover:text-accent-foreground size-9"
+            aria-label="Toggle menu"
+          >
+            {menuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile Nav */}
+      {menuOpen && (
+        <nav className="border-t border-border bg-card px-4 py-4 md:hidden">
+          <div className="flex flex-col gap-3">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-foreground hover:text-[#3DBDB8] font-medium py-2"
+                onClick={() => setMenuOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))}
+            {user && (
+              <>
+                <Link
+                  href="/profile"
+                  className="text-foreground hover:text-[#3DBDB8] font-medium py-2"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {t("profile")}
+                </Link>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setMenuOpen(false);
+                  }}
+                  className="text-left text-foreground hover:text-red-600 font-medium py-2"
+                >
+                  {t("logout")}
+                </button>
+              </>
+            )}
+          </div>
+        </nav>
+      )}
     </header>
   );
 }

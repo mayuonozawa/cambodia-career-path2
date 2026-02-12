@@ -1,108 +1,199 @@
-import type { Metadata } from "next";
+"use client";
+
 import { useTranslations } from "next-intl";
-import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
-import { GraduationCap, Search } from "lucide-react";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("aboutScholarships");
-  return {
-    title: t("title"),
-    description: "Learn about scholarships, types, how to find them, and application tips",
-  };
-}
-
-export default function AboutScholarshipsPage() {
-  const t = useTranslations("aboutScholarships");
+export default function ScholarshipGuidePage() {
+  const t = useTranslations("scholarshipGuide");
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      {/* Hero */}
-      <div className="text-center mb-10">
-        <GraduationCap className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
-        <h1 className="text-3xl md:text-4xl font-bold mb-4">{t("title")}</h1>
-        <p className="text-lg text-gray-700 leading-relaxed max-w-2xl mx-auto">
-          {t("whatIs")}
-        </p>
-      </div>
-
-      {/* Types */}
-      <section className="mb-10">
-        <h2 className="text-2xl font-semibold mb-5">{t("types")}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-5 bg-green-50 rounded-xl border border-green-200">
-            <h3 className="font-bold text-green-800 text-lg mb-2">
-              {t("fullTitle")}
-            </h3>
-            <p className="text-sm text-green-700 leading-relaxed">
-              {t("fullDesc")}
-            </p>
-          </div>
-          <div className="p-5 bg-blue-50 rounded-xl border border-blue-200">
-            <h3 className="font-bold text-blue-800 text-lg mb-2">
-              {t("partialTitle")}
-            </h3>
-            <p className="text-sm text-blue-700 leading-relaxed">
-              {t("partialDesc")}
-            </p>
-          </div>
-          <div className="p-5 bg-yellow-50 rounded-xl border border-yellow-200">
-            <h3 className="font-bold text-yellow-800 text-lg mb-2">
-              {t("grantTitle")}
-            </h3>
-            <p className="text-sm text-yellow-700 leading-relaxed">
-              {t("grantDesc")}
-            </p>
-          </div>
+    <div className="bg-gradient-to-b from-[#E0F5F4] to-white min-h-screen py-12">
+      <div className="max-w-4xl mx-auto px-4">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="mb-4 text-5xl">📘</div>
+          <h1 className="text-4xl md:text-5xl font-bold text-[#3DBDB8] mb-4">
+            {t("title")}
+          </h1>
         </div>
-      </section>
 
-      {/* How to Find */}
-      <section className="mb-10">
-        <h2 className="text-2xl font-semibold mb-5">{t("howToFind")}</h2>
-        <div className="space-y-3">
-          {(["step1", "step2", "step3", "step4"] as const).map((key, i) => (
-            <div
-              key={key}
-              className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg"
-            >
-              <span className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
-                {i + 1}
-              </span>
-              <p className="text-gray-700 pt-1">{t(key)}</p>
+        {/* Definition */}
+        <section className="mb-12 bg-white rounded-xl p-8 shadow-sm border border-[#E0F5F4]">
+          <h2 className="text-3xl font-bold text-[#3DBDB8] mb-4 flex items-center gap-3">
+            <span>📚</span> {t("definition.title")}
+          </h2>
+          <p className="text-gray-700 mb-6 leading-relaxed text-lg">
+            {t("definition.content")}
+          </p>
+        </section>
+
+        {/* When to Use */}
+        <section className="mb-12 bg-white rounded-xl p-8 shadow-sm border border-[#FEF0E6]">
+          <h2 className="text-3xl font-bold text-[#E8995E] mb-4 flex items-center gap-3">
+            <span>💰</span> {t("whenToUse.title")}
+          </h2>
+          <ul className="space-y-3 mb-4">
+            {(["reason1", "reason2", "reason3"] as const).map((key) => (
+              <li key={key} className="flex items-start gap-3 text-gray-700">
+                <span className="text-[#3DBDB8] font-bold mt-1">•</span>
+                <span className="text-lg">{t(`whenToUse.${key}`)}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="text-[#3DBDB8] font-bold text-lg">{t("whenToUse.cta")}</p>
+        </section>
+
+        {/* Benefits */}
+        <section className="mb-12 bg-white rounded-xl p-8 shadow-sm border border-[#E0F5F4]">
+          <h2 className="text-3xl font-bold text-[#3DBDB8] mb-6 flex items-center gap-3">
+            <span>✨</span> {t("benefits.title")}
+          </h2>
+          <div className="space-y-4">
+            {(["benefit1", "benefit2", "benefit3"] as const).map((key) => (
+              <div key={key} className="flex items-start gap-4 p-4 bg-[#E0F5F4]/30 rounded-lg">
+                <span className="text-2xl">{key === "benefit1" ? "🎓" : key === "benefit2" ? "💭" : "🌈"}</span>
+                <div>
+                  <h3 className="font-bold text-gray-900 text-lg">{t(`benefits.${key}.title`)}</h3>
+                  <p className="text-gray-700">{t(`benefits.${key}.desc`)}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Types */}
+        <section className="mb-12 bg-white rounded-xl p-8 shadow-sm border border-[#E8995E]">
+          <h2 className="text-3xl font-bold text-[#E8995E] mb-6 flex items-center gap-3">
+            <span>🎯</span> {t("types.title")}
+          </h2>
+          <div className="space-y-4">
+            {(["type1", "type2", "type3"] as const).map((key) => (
+              <div key={key} className="p-5 bg-[#FEF0E6]/50 rounded-lg border-l-4 border-[#E8995E]">
+                <h3 className="font-bold text-[#E8995E] text-lg mb-2">
+                  {t(`types.${key}.title`)}
+                </h3>
+                <p className="text-gray-700 leading-relaxed">
+                  {t(`types.${key}.desc`)}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Requirements */}
+        <section className="mb-12 bg-white rounded-xl p-8 shadow-sm border border-[#E0F5F4]">
+          <h2 className="text-3xl font-bold text-[#3DBDB8] mb-6 flex items-center gap-3">
+            <span>📋</span> {t("requirements.title")}
+          </h2>
+          <div className="space-y-3">
+            {(["req1", "req2", "req3", "req4", "req5"] as const).map((key) => (
+              <div key={key} className="flex items-start gap-3 p-3 bg-[#E0F5F4]/20 rounded-lg">
+                <span className="text-[#3DBDB8] font-bold">✓</span>
+                <span className="text-gray-700">{t(`requirements.${key}`)}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Process */}
+        <section className="mb-12 bg-white rounded-xl p-8 shadow-sm border border-[#E8995E]">
+          <h2 className="text-3xl font-bold text-[#E8995E] mb-6 flex items-center gap-3">
+            <span>🚀</span> {t("process.title")}
+          </h2>
+          <div className="space-y-3">
+            {(["step1", "step2", "step3", "step4", "step5"] as const).map((key, idx) => (
+              <div key={key} className="flex items-start gap-4 p-4 bg-[#FEF0E6]/30 rounded-lg">
+                <div className="flex-shrink-0 w-8 h-8 bg-[#E8995E] text-white rounded-full flex items-center justify-center font-bold">
+                  {idx + 1}
+                </div>
+                <p className="text-gray-700 pt-1 text-lg">{t(`process.${key}`)}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section className="mb-12 bg-white rounded-xl p-8 shadow-sm border border-[#E0F5F4]">
+          <h2 className="text-3xl font-bold text-[#3DBDB8] mb-6 flex items-center gap-3">
+            <span>❗</span> {t("faq.title")}
+          </h2>
+          <div className="space-y-4">
+            {(["q1", "q2", "q3", "q4", "q5"] as const).map((key) => (
+              <div key={key} className="p-4 bg-[#E0F5F4]/10 rounded-lg border-l-4 border-[#3DBDB8]">
+                <h3 className="font-bold text-gray-900 mb-2 text-lg">
+                  {t(`faq.${key}.q`)}
+                </h3>
+                <p className="text-gray-700 text-lg">{t(`faq.${key}.a`)}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Tips */}
+        <section className="mb-12 bg-white rounded-xl p-8 shadow-sm border border-[#3DBDB8]">
+          <h2 className="text-3xl font-bold text-[#3DBDB8] mb-6 flex items-center gap-3">
+            <span>💡</span> {t("tips.title")}
+          </h2>
+          <ul className="space-y-3">
+            {(["tip1", "tip2", "tip3", "tip4", "tip5"] as const).map((key) => (
+              <li
+                key={key}
+                className="flex items-start gap-3 text-gray-700 p-3 bg-[#E0F5F4]/20 rounded-lg"
+              >
+                <span className="text-[#3DBDB8] text-lg">✓</span>
+                <span className="text-lg">{t(`tips.${key}`)}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* Scams Warning */}
+        <section className="mb-12 bg-red-50 rounded-xl p-8 shadow-sm border border-red-200">
+          <h2 className="text-3xl font-bold text-red-700 mb-6 flex items-center gap-3">
+            <span>⚠️</span> {t("scams.title")}
+          </h2>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <h3 className="font-bold text-red-700 mb-3 text-lg">❌ {t("scams.redFlags")}</h3>
+              <ul className="space-y-2">
+                {(["flag1", "flag2", "flag3"] as const).map((key) => (
+                  <li key={key} className="flex items-start gap-2 text-red-700">
+                    <span>•</span> <span className="text-lg">{t(`scams.${key}`)}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
-          ))}
+            <div>
+              <h3 className="font-bold text-green-700 mb-3 text-lg">✅ {t("scams.trustworthy")}</h3>
+              <ul className="space-y-2">
+                {(["trust1", "trust2"] as const).map((key) => (
+                  <li key={key} className="flex items-start gap-2 text-green-700">
+                    <span>•</span> <span className="text-lg">{t(`scams.${key}`)}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* Final Message */}
+        <section className="bg-gradient-to-r from-[#3DBDB8] to-[#2da8a3] text-white rounded-xl p-10 shadow-lg text-center mb-12">
+          <h2 className="text-3xl font-bold mb-4">🌟 {t("final.title")}</h2>
+          <p className="text-lg text-white/90 leading-relaxed">
+            {t("final.message")}
+          </p>
+        </section>
+
+        {/* CTA */}
+        <div className="text-center">
+          <Link
+            href="/scholarships"
+            className="inline-flex items-center gap-2 bg-[#3DBDB8] text-white font-bold px-8 py-4 rounded-lg hover:bg-[#2da8a3] transition-colors text-lg"
+          >
+            {t("cta")}
+          </Link>
         </div>
-      </section>
-
-      {/* Tips */}
-      <section className="mb-10">
-        <h2 className="text-2xl font-semibold mb-5">{t("tips")}</h2>
-        <ul className="space-y-3">
-          {(["tip1", "tip2", "tip3", "tip4", "tip5"] as const).map((key) => (
-            <li
-              key={key}
-              className="flex items-start gap-3 text-gray-700"
-            >
-              <span className="text-green-500 mt-0.5">✓</span>
-              <span>{t(key)}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {/* CTA */}
-      <section className="bg-gradient-to-br from-blue-600 to-blue-800 text-white rounded-2xl p-8 text-center">
-        <h2 className="text-2xl font-bold mb-3">{t("ctaTitle")}</h2>
-        <p className="text-blue-100 mb-6">{t("ctaDesc")}</p>
-        <Link
-          href="/scholarships"
-          className="inline-flex items-center gap-2 bg-white text-blue-700 font-semibold px-6 py-3 rounded-lg hover:bg-blue-50 transition-colors"
-        >
-          <Search className="w-4 h-4" />
-          {t("ctaButton")}
-        </Link>
-      </section>
+      </div>
     </div>
   );
 }

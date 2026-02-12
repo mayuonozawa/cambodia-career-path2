@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { BackButtonWrapper } from "@/components/ui/BackButtonWrapper";
 import "../globals.css";
 
 export const metadata: Metadata = {
@@ -50,12 +51,14 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} dir="ltr">
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+        <meta name="theme-color" content="#3b82f6" />
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className="min-h-screen flex flex-col bg-white text-gray-900 antialiased">
+      <body className="flex min-h-screen flex-col bg-background font-sans antialiased">
         <NextIntlClientProvider messages={messages}>
           <Header />
+          <BackButtonWrapper />
           <main className="flex-1">{children}</main>
           <Footer />
         </NextIntlClientProvider>

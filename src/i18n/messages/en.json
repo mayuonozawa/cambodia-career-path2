@@ -23,13 +23,26 @@
     "heroSubtitle": "Find scholarships, universities, and vocational schools",
     "searchPlaceholder": "Search scholarships or universities...",
     "featuredScholarships": "Featured Scholarships",
+    "featuredSchools": "Featured Schools",
     "browseAll": "Browse All",
     "findByScholarship": "Find by Scholarship",
     "findByScholarshipDesc": "Find universities based on scholarships available to you",
     "scholarshipsDesc": "Search scholarships from governments, NGOs, and universities",
     "universitiesDesc": "Browse public and private universities across Cambodia",
     "vocationalDesc": "Discover vocational training programs for practical skills",
-    "viewAll": "View All"
+    "viewAll": "View All",
+    "howItWorks": "How it works",
+    "step1": "Find Scholarships!",
+    "step1Desc": "Just select your grade, interests, and financial situation — and discover scholarships that match you today.",
+    "step2": "See the pathways!",
+    "step2Desc": "We show you schools and career paths you can pursue with each scholarship.",
+    "step3": "Apply",
+    "step3Desc": "Get application info and contact details.",
+    "scholarshipsCount": "Scholarships",
+    "schoolsCount": "Schools",
+    "fieldsCount": "Fields of Study",
+    "fieldsOfStudy": "Fields of Study",
+    "fullCoverage": "Full coverage"
   },
   "scholarships": {
     "title": "Scholarships",
@@ -108,6 +121,112 @@
     "ctaTitle": "Ready to start?",
     "ctaDesc": "Browse available scholarships and find the right one for you.",
     "ctaButton": "Search Scholarships"
+  },
+  "scholarshipGuide": {
+    "title": "📘 Scholarship Guide",
+    "definition": {
+      "title": "Scholarship = Financial Support for Your Education",
+      "content": "A scholarship is money provided to support people who want to study at a university or vocational training school."
+    },
+    "whenToUse": {
+      "title": "When to use it:",
+      "reason1": "You want to go to university but don't have enough money.",
+      "reason2": "You want to study but cannot afford the tuition fees.",
+      "reason3": "You want to continue your studies while helping your family.",
+      "cta": "👉 Scholarships are there to help you!"
+    },
+    "benefits": {
+      "title": "Benefits of Scholarships",
+      "benefit1": {
+        "title": "Less worry about costs",
+        "desc": "Covers tuition, textbooks, and living expenses."
+      },
+      "benefit2": {
+        "title": "Don't give up on your dreams",
+        "desc": "Study what you love and aim for your dream career regardless of your financial situation."
+      },
+      "benefit3": {
+        "title": "Various types available",
+        "desc": "Full coverage, partial support, non-repayable grants, or low-interest loans."
+      }
+    },
+    "types": {
+      "title": "Types of Scholarships",
+      "type1": {
+        "title": "Type 1: Grant (Non-repayable)",
+        "desc": "Money you get for free. No need to pay back after graduation. Usually for students with top grades or those in financial need. (High competition!)"
+      },
+      "type2": {
+        "title": "Type 2: Loan (Repayable)",
+        "desc": "Money you borrow. You pay it back in small amounts after you start working. Lower interest than banks (or zero interest)."
+      },
+      "type3": {
+        "title": "Type 3: Work-Study",
+        "desc": "A set deal with part-time work. You work at the university (e.g., library) or an NGO, and in return, your tuition is waived or reduced."
+      }
+    },
+    "requirements": {
+      "title": "Requirements to Apply",
+      "req1": "Grades: Maintaining a certain average (e.g., over 60%).",
+      "req2": "Financial Status: Proof of financial need (e.g., family income certificate).",
+      "req3": "Age: Often limited to ages 18–25.",
+      "req4": "Location: Some are specific to students from rural provinces.",
+      "req5": "Field of Study: Some are limited to IT, Medicine, Agriculture, etc."
+    },
+    "process": {
+      "title": "The Application Process",
+      "step1": "Search: Look on Facebook, university websites, or ask friends.",
+      "step2": "Check Conditions: Confirm if you meet the grade, age, and financial criteria.",
+      "step3": "Apply: Prepare documents (Transcripts, Income proof, Personal statement, Recommendation letter).",
+      "step4": "Selection: Document review, Interview, or sometimes a Test.",
+      "step5": "Success!: Receive the scholarship and start your university life."
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "q1": {
+        "q": "Q1: Can anyone get one?",
+        "a": "A: Anyone can apply, but you must meet the specific criteria for each scholarship."
+      },
+      "q2": {
+        "q": "Q2: Can I get multiple?",
+        "a": "A: Yes! If the conditions allow, you can combine them."
+      },
+      "q3": {
+        "q": "Q3: Is there a fee to apply?",
+        "a": "A: Most are free. If they ask for money, it's likely a scam!"
+      },
+      "q4": {
+        "q": "Q4: What if I fail?",
+        "a": "A: Don't give up! New opportunities appear every year."
+      },
+      "q5": {
+        "q": "Q5: When should I apply?",
+        "a": "A: Grade 12 is the best time to start, but some are available after you enter university."
+      }
+    },
+    "tips": {
+      "title": "Tips for Success",
+      "tip1": "Start Early: Prepare well before the deadline.",
+      "tip2": "Ask Teachers: They have valuable information.",
+      "tip3": "Ask Friends: Seniors and friends might know hidden opportunities.",
+      "tip4": "Check Social Media: Search on Facebook and Telegram.",
+      "tip5": "Contact Universities: Ask the university offices directly."
+    },
+    "scams": {
+      "title": "Stay Safe from Scams!",
+      "redFlags": "Red Flags",
+      "flag1": "Promises of 'guaranteed' success",
+      "flag2": "Asking for money to apply",
+      "flag3": "Asking for bank details immediately",
+      "trustworthy": "Trustworthy",
+      "trust1": "Offered by universities, government, or well-known NGOs",
+      "trust2": "Clear websites and transparent processes"
+    },
+    "final": {
+      "title": "Finally",
+      "message": "Scholarships are your right. Don't let money stop your dreams. Many people want to support students like you. Take courage and apply!"
+    },
+    "cta": "Browse Scholarships"
   },
   "profile": {
     "title": "Profile",
