@@ -1,25 +1,21 @@
 import createMiddleware from "next-intl/middleware";
-import { NextResponse, type NextRequest } from "next/server";
+import { type NextRequest } from "next/server";
 import { routing } from "./i18n/routing";
 import { updateSession } from "./lib/supabase/middleware";
 
 const intlMiddleware = createMiddleware(routing);
 
 export async function middleware(request: NextRequest) {
-  // Update Supabase session
-  const supabaseResponse = await updateSession(request);
+  // 1. まず先に Supabase のセッション（ログイン状態など）を更新する
+  // この時、レスポンス（返事）の準備をします
+  const response = await updateSession(request);
 
-  // Apply i18n routing
-  const intlResponse = intlMiddleware(request);
-
-  // Merge Supabase cookies into the i18n response
-  supabaseResponse.cookies.getAll().forEach((cookie) => {
-    intlResponse.cookies.set(cookie.name, cookie.value);
-  });
-
-  return intlResponse;
+  // 2. そのレスポンスを使って、多言語対応（i18n）の処理を行う
+  // ここで response を渡してあげるのがポイントです
+  return intlMiddleware(request);
 }
 
 export const config = {
-  matcher: ["/", "/(km|en)/:path*"],
+  // 監視するページの設定
+  matcher: ["/", "/(km|en)/:path*", "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"],
 };
