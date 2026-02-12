@@ -1,62 +1,67 @@
+"use client";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import { ScholarshipDetail } from "@/components/scholarships/ScholarshipDetail";
 import { LoginPrompt } from "@/components/ui/LoginPrompt";
 
-interface Props {
-  params: Promise<{ id: string; locale: string }>;
-}
+export default function ScholarshipDetailPage() {
+  const params = useParams();
+  const [hasAccess, setHasAccess] = useState(false);
+  const [scholarship, setScholarship] = useState(null);
+  const [relatedUniversities, setRelatedUniversities] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-export default async function ScholarshipDetailPage({ params }: Props) {
-  const { id } = await params;
-  const supabase = await createClient();
+  useEffect(() => {
+    const age = localStorage.getItem("userAge");
+    const region = localStorage.getItem("userRegion");
+    setHasAccess(!!age && !!region);
+  }, []);
 
-  // Check auth - detail pages require login (段階的ログイン)
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  useEffect(() => {
+    if (hasAccess && params?.id) {
+      (async () => {
+        const supabase = await createClient();
+        const { data: scholarship } = await supabase
+          .from("scholarships")
+          .select("*")
+          .eq("id", params.id)
+          .single();
+        if (!scholarship) {
+          notFound();
+        }
+        setScholarship(scholarship);
+        const { data: relations } = await supabase
+          .from("scholarship_university_relations")
+          .select("university_id")
+          .eq("scholarship_id", params.id);
+        let relatedUniversities: any[] = [];
+        if (relations && relations.length > 0) {
+          const uniIds = relations.map((r: any) => r.university_id);
+          const { data: universities } = await supabase
+            .from("universities")
+            .select("*")
+            .in("id", uniIds);
+          relatedUniversities = universities ?? [];
+        }
+        setRelatedUniversities(relatedUniversities);
+        setLoading(false);
+      })();
+    }
+  }, [hasAccess, params]);
 
-  if (!user) {
+  if (!hasAccess) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <LoginPrompt />
+        <LoginPrompt onSuccess={() => setHasAccess(true)} />
       </div>
     );
   }
-
-  // Fetch scholarship
-  const { data: scholarship } = await supabase
-    .from("scholarships")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (!scholarship) {
-    notFound();
-  }
-
-  // Fetch related universities via junction table
-  const { data: relations } = await supabase
-    .from("scholarship_university_relations")
-    .select("university_id")
-    .eq("scholarship_id", id);
-
-  let relatedUniversities: any[] = [];
-  if (relations && relations.length > 0) {
-    const uniIds = relations.map((r) => r.university_id);
-    const { data: universities } = await supabase
-      .from("universities")
-      .select("*")
-      .in("id", uniIds);
-    relatedUniversities = universities ?? [];
-  }
-
+  if (loading) return <div className="max-w-4xl mx-auto px-4 py-8">Loading...</div>;
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <ScholarshipDetail
-        scholarship={scholarship}
-        relatedUniversities={relatedUniversities}
-      />
+      <ScholarshipDetail scholarship={scholarship} relatedUniversities={relatedUniversities} />
     </div>
   );
 }
