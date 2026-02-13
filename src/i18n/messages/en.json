@@ -53,10 +53,17 @@
     "grant": "Grant",
     "provider": "Provider",
     "deadline": "Deadline",
+    "noDeadline": "No deadline set",
     "coverage": "Coverage",
     "eligibility": "Eligibility",
+    "description": "Description",
     "howToApply": "How to Apply",
     "applyNow": "Apply Now",
+    "share": "Share",
+    "active": "Active",
+    "closed": "Closed",
+    "deadlineWarning": "Deadline approaching!",
+    "daysRemaining": "{days} days remaining",
     "relatedUniversities": "Related Universities",
     "applicationInfo": "Application Information",
     "requiredDocuments": "Required Documents",
@@ -83,19 +90,31 @@
   "universities": {
     "title": "Universities",
     "searchPlaceholder": "Search universities...",
+    "type": "Type",
     "public": "Public",
     "private": "Private",
     "location": "Location",
     "programs": "Programs",
+    "programsCount": "{count} programs",
     "tuition": "Tuition",
     "website": "Website",
-    "availableScholarships": "Available Scholarships"
+    "visitWebsite": "Visit Website",
+    "share": "Share",
+    "about": "About",
+    "availableScholarships": "Available Scholarships",
+    "scholarshipsAvailable": "{count} scholarships available",
+    "scholarshipsDescription": "These scholarships can be used at this university. Click to see details."
   },
   "vocationalSchools": {
     "title": "Vocational Schools",
     "searchPlaceholder": "Search vocational schools...",
     "programs": "Programs",
-    "contact": "Contact"
+    "programsCount": "{count} programs",
+    "contact": "Contact",
+    "contactInfo": "Contact Information",
+    "about": "About",
+    "visitWebsite": "Visit Website",
+    "share": "Share"
   },
   "aboutScholarships": {
     "title": "What is a Scholarship?",
@@ -315,5 +334,88 @@
     "facebook": "Facebook",
     "google": "Google",
     "loginDescription": "Log in to view detailed information and save your searches"
+  },
+  "vocationalGuide": {
+    "heroTitle": "Empower Your Future! Complete Guide to the \"Vocational Training Program\"",
+    "heroSubtitle": "Are you worried about your future or want to support your family but cannot afford tuition fees? Here is a golden opportunity from the Cambodian government! This isn't just a school — it's a chance to gain professional skills while receiving financial support.",
+    "section1": {
+      "title": "1. Learn for Free and Get Paid",
+      "free": {
+        "title": "Zero Tuition Fees",
+        "desc": "The training is 100% free of charge."
+      },
+      "stipend": {
+        "title": "Monthly Stipend",
+        "desc": "Students with an IDPoor card or from vulnerable households will receive 280,000 Riels (approx. $70) per month."
+      },
+      "short": {
+        "title": "Short-term Training",
+        "desc": "In just 4 months, you can acquire high-demand skills and start your career."
+      }
+    },
+    "section2": {
+      "title": "2. Which \"Super Skill\" Do You Want to Master?",
+      "construction": {
+        "title": "Construction",
+        "desc": "Build houses and install electrical systems as a skilled technician."
+      },
+      "automotive": {
+        "title": "Automotive",
+        "desc": "Become a pro mechanic repairing motorcycles and cars."
+      },
+      "it": {
+        "title": "Information Technology (IT)",
+        "desc": "Master graphic design, computer maintenance, and office admin."
+      },
+      "electronics": {
+        "title": "Electronics",
+        "desc": "Learn to fix smartphones and various electronic appliances."
+      },
+      "tourism": {
+        "title": "Tourism",
+        "desc": "Become a professional in hotels, restaurants, and culinary arts."
+      },
+      "agriculture": {
+        "title": "Agriculture",
+        "desc": "Lead the way in modern farming and livestock breeding."
+      }
+    },
+    "section3": {
+      "title": "3. Top Institutes in Phnom Penh",
+      "npic": {
+        "name": "NPIC (National Polytechnic Institute of Cambodia)",
+        "desc": "Offers the widest range of 33 skills."
+      },
+      "ntti": {
+        "name": "NTTI (National Technical Training Institute)",
+        "desc": "Specializes in civil engineering and electricity."
+      },
+      "ppi": {
+        "name": "PPI (Preah Kossomak Polytechnic Institute)",
+        "desc": "Strong in automotive, electricity, and construction."
+      },
+      "nib": {
+        "name": "NIB (National Institute of Business)",
+        "desc": "Perfect for office work, accounting, and tourism."
+      },
+      "jvc": {
+        "name": "JVC (Japan-Cambodia Technical Training Center)",
+        "desc": "High-quality training based on Japanese standards."
+      },
+      "ptcNote": "Note: Provincial Training Centers (PTC) are also available in all 25 provinces."
+    },
+    "section4": {
+      "title": "4. Important Notes",
+      "idpoor": "An IDPoor card is required to receive the monthly stipend.",
+      "deadline": "Each course has specific enrollment periods and limited seats, so apply early!"
+    },
+    "section5": {
+      "title": "Start Looking for a School Near You!",
+      "desc": "Check available schools and skills right from your smartphone:",
+      "website1": "Official TVET Website",
+      "website2": "Registration Portal",
+      "app": "Search for \"TVET 1.5M\" on the App Store or Google Play."
+    },
+    "cta": "Browse Vocational Schools"
   }
 }

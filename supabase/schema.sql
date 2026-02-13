@@ -90,12 +90,22 @@ CREATE TABLE IF NOT EXISTS profiles (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Visitors table (anonymous login with age & region)
+CREATE TABLE IF NOT EXISTS visitors (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  age INTEGER NOT NULL,
+  region TEXT NOT NULL,
+  gender TEXT NOT NULL DEFAULT '',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 -- Enable Row Level Security
 ALTER TABLE scholarships ENABLE ROW LEVEL SECURITY;
 ALTER TABLE universities ENABLE ROW LEVEL SECURITY;
 ALTER TABLE vocational_schools ENABLE ROW LEVEL SECURITY;
 ALTER TABLE scholarship_university_relations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE visitors ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies
 
@@ -131,6 +141,15 @@ CREATE POLICY "Users can insert own profile"
 CREATE POLICY "Users can update own profile"
   ON profiles FOR UPDATE
   USING (auth.uid() = user_id);
+
+-- Visitors: anyone can insert and read
+CREATE POLICY "Anyone can insert visitors"
+  ON visitors FOR INSERT
+  WITH CHECK (true);
+
+CREATE POLICY "Anyone can view visitors"
+  ON visitors FOR SELECT
+  USING (true);
 
 -- Indexes for search performance
 CREATE INDEX IF NOT EXISTS idx_scholarships_type ON scholarships(type);

@@ -80,4 +80,12 @@ export interface ScholarshipUniversityRelation {
   created_at: string;
 }
 
+export interface Visitor {
+  id: string;
+  age: number;
+  region: string;
+  gender: string;
+  created_at: string;
+}
+
 export type Locale = "km" | "en";

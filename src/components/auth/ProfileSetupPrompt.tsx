@@ -28,11 +28,10 @@ const PROVINCE_KM: Record<string, string> = {
   "Takeo": "តាកែវ", "Tboung Khmum": "ត្បូងឃ្មុំ",
 };
 
-export function LoginPrompt() {
+export function ProfileSetupPrompt({ userId }: { userId: string }) {
   const locale = useLocale();
   const [age, setAge] = useState("");
-  const [region, setRegion] = useState("");
-  const [gender, setGender] = useState("");
+  const [province, setProvince] = useState("");
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [lang, setLang] = useState<"en" | "km">("en");
@@ -44,42 +43,32 @@ export function LoginPrompt() {
 
   const texts = {
     en: {
-      title: "Tell us a little about yourself",
+      title: "Almost there! Please tell us about yourself.",
       subtitle: "This helps us show you the most relevant information.",
       age: "Age",
-      region: "Province / Residence",
-      selectRegion: "Select your province",
-      gender: "Gender",
-      selectGender: "Select gender",
-      male: "Male",
-      female: "Female",
-      other: "Other",
-      confirm: "View Details",
-      error: "Please fill in all fields.",
-      saving: "Loading...",
+      province: "Province / Residence",
+      selectProvince: "Select your province",
+      confirm: "Continue",
+      error: "Please enter your age and select your province.",
+      saving: "Saving...",
       switch: "ភាសាខ្មែរ",
     },
     km: {
-      title: "សូមប្រាប់យើងអំពីអ្នក",
+      title: "ជិតរួចហើយ! សូមប្រាប់យើងអំពីអ្នក។",
       subtitle: "នេះជួយយើងបង្ហាញព័ត៌មានដែលសមស្របបំផុតសម្រាប់អ្នក។",
       age: "អាយុ",
-      region: "ខេត្ត / ទីលំនៅ",
-      selectRegion: "ជ្រើសរើសខេត្តរបស់អ្នក",
-      gender: "ភេទ",
-      selectGender: "ជ្រើសរើសភេទ",
-      male: "ប្រុស",
-      female: "ស្រី",
-      other: "ផ្សេងទៀត",
-      confirm: "មើលព័ត៌មានលម្អិត",
-      error: "សូមបំពេញព័ត៌មានទាំងអស់។",
-      saving: "កំពុងផ្ទុក...",
+      province: "ខេត្ត / ទីលំនៅ",
+      selectProvince: "ជ្រើសរើសខេត្តរបស់អ្នក",
+      confirm: "បន្ត",
+      error: "សូមបញ្ចូលអាយុ និងជ្រើសរើសខេត្តរបស់អ្នក។",
+      saving: "កំពុងរក្សាទុក...",
       switch: "English",
     },
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!age || !region || !gender) {
+    if (!age || !province) {
       setError(texts[lang].error);
       return;
     }
@@ -88,45 +77,57 @@ export function LoginPrompt() {
     setError("");
 
     try {
-      // Supabase visitors テーブルに保存
       const supabase = createClient();
+
+      // profilesテーブルにupsert（年齢と居住地）
+      const { error: dbError } = await supabase.from("profiles").upsert(
+        {
+          user_id: userId,
+          nickname: "",
+          current_province: province,
+          privacy_agreed: true,
+        },
+        { onConflict: "user_id" }
+      );
+
+      if (dbError) {
+        console.error("Failed to save profile:", dbError);
+      }
+
+      // visitorsテーブルにも保存（匿名統計用）
       await supabase
         .from("visitors")
-        .insert({ age: parseInt(age, 10), region, gender });
+        .insert({ age: parseInt(age, 10), region: province });
 
-      // Cookie に保存（サーバー側ゲート用）
-      const maxAge = 60 * 60 * 24 * 365;
-      document.cookie = `userAge=${encodeURIComponent(age)}; path=/; max-age=${maxAge}`;
-      document.cookie = `userRegion=${encodeURIComponent(region)}; path=/; max-age=${maxAge}`;
-      document.cookie = `userGender=${encodeURIComponent(gender)}; path=/; max-age=${maxAge}`;
+      // Cookieにも保存（サーバー側でのゲート用）
+      document.cookie = `userAge=${encodeURIComponent(age)}; path=/; max-age=${60 * 60 * 24 * 365}`;
+      document.cookie = `userRegion=${encodeURIComponent(province)}; path=/; max-age=${60 * 60 * 24 * 365}`;
 
       window.location.reload();
     } catch (err) {
-      console.error("Error saving visitor:", err);
-      // 失敗してもCookieで続行
-      const maxAge = 60 * 60 * 24 * 365;
-      document.cookie = `userAge=${encodeURIComponent(age)}; path=/; max-age=${maxAge}`;
-      document.cookie = `userRegion=${encodeURIComponent(region)}; path=/; max-age=${maxAge}`;
-      document.cookie = `userGender=${encodeURIComponent(gender)}; path=/; max-age=${maxAge}`;
-      window.location.reload();
+      console.error("Error saving profile:", err);
+      setSaving(false);
     }
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] bg-gradient-to-br from-blue-50 via-white to-blue-100 rounded-xl shadow-lg p-8">
       <button
-        onClick={() => { setLang(lang === "en" ? "km" : "en"); setError(""); }}
-        className="self-end mb-4 px-3 py-1 bg-blue-200 hover:bg-blue-300 text-blue-900 rounded transition text-sm"
+        onClick={() => setLang(lang === "en" ? "km" : "en")}
+        className="self-end mb-4 px-3 py-1 bg-blue-200 hover:bg-blue-300 text-blue-900 rounded transition"
       >
         {texts[lang].switch}
       </button>
 
-      <div className="mb-2 text-4xl">📋</div>
-      <h2 className="text-2xl font-bold mb-2 text-blue-800">{texts[lang].title}</h2>
-      <p className="text-gray-600 mb-6 text-center max-w-sm text-sm">{texts[lang].subtitle}</p>
+      <div className="mb-2 text-5xl">📝</div>
+      <h2 className="text-2xl font-bold mb-2 text-blue-800">
+        {texts[lang].title}
+      </h2>
+      <p className="text-gray-600 mb-6 text-center max-w-sm">
+        {texts[lang].subtitle}
+      </p>
 
       <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-sm">
-        {/* 年齢 */}
         <input
           type="number"
           min={10}
@@ -139,34 +140,19 @@ export function LoginPrompt() {
           disabled={saving}
         />
 
-        {/* 居住地（ドロップダウン） */}
         <select
-          value={region}
-          onChange={(e) => setRegion(e.target.value)}
+          value={province}
+          onChange={(e) => setProvince(e.target.value)}
           className="w-full border border-blue-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
           required
           disabled={saving}
         >
-          <option value="">{texts[lang].selectRegion}</option>
+          <option value="">{texts[lang].selectProvince}</option>
           {PROVINCES.map((p) => (
             <option key={p} value={p}>
               {lang === "km" ? PROVINCE_KM[p] || p : p}
             </option>
           ))}
-        </select>
-
-        {/* 性別 */}
-        <select
-          value={gender}
-          onChange={(e) => setGender(e.target.value)}
-          className="w-full border border-blue-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
-          required
-          disabled={saving}
-        >
-          <option value="">{texts[lang].selectGender}</option>
-          <option value="male">{texts[lang].male}</option>
-          <option value="female">{texts[lang].female}</option>
-          <option value="other">{texts[lang].other}</option>
         </select>
 
         {error && <div className="text-red-500 text-sm">{error}</div>}

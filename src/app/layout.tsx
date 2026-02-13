@@ -1,4 +1,5 @@
-import Script from 'next/script'
+import Script from "next/script";
+import "./globals.css";
 
 export default function RootLayout({
   children,
@@ -6,11 +7,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ja">
-      <body>
+    <html lang="km" dir="ltr">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+        <meta name="theme-color" content="#3b82f6" />
+        <link rel="icon" href="/favicon.ico" />
+      </head>
+      <body className="flex min-h-screen flex-col bg-background font-sans antialiased">
         {children}
 
-        {/* --- Google Analytics 設置 --- */}
+        {/* Google Analytics */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-R95RXEFDYX"
           strategy="afterInteractive"

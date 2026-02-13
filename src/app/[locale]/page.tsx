@@ -1,7 +1,7 @@
 import { getTranslations, getLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { createClient } from "@/lib/supabase/server";
-import { GraduationCap, Compass, Heart, Banknote, MapPin, Award, ArrowRight, Calendar, ChevronRight } from "lucide-react";
+import { GraduationCap, Compass, Heart, Banknote, MapPin, Award, ArrowRight, Calendar, ChevronRight, Wrench } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { getLocalizedField, getScholarshipTypeBadgeColor, formatDate } from "@/lib/utils";
 import type { Locale } from "@/types/database";
@@ -29,11 +29,11 @@ export default async function HomePage() {
     <div>
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="relative h-56 sm:h-80 md:h-96 lg:h-screen/2 w-full">
-          <img 
-            src="/images/hero-banner.png" 
-            alt="Cambodia Career Path - Find Your Future" 
-            className="h-full w-full object-cover"
+        <div className="relative w-full">
+          <img
+            src="/images/hero-banner.png"
+            alt="Cambodia Career Path - Find Your Future"
+            className="w-full h-auto block"
           />
         </div>
         <div className="bg-background px-4 py-8">
@@ -52,6 +52,15 @@ export default async function HomePage() {
                 <div className="flex items-center gap-3">
                   <Compass className="h-6 w-6" />
                   <span>{t("common.universities")}</span>
+                </div>
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </Link>
+            <Link href="/about-vocational" className="block">
+              <button className="inline-flex items-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-10 rounded-md px-6 w-full justify-between gap-2 bg-[#2BA89E] py-6 text-lg font-semibold text-white hover:bg-[#239088]">
+                <div className="flex items-center gap-3">
+                  <Wrench className="h-6 w-6" />
+                  <span>{t("common.vocationalSchools")}</span>
                 </div>
                 <ChevronRight className="h-5 w-5" />
               </button>

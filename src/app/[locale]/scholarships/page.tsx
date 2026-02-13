@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
-import { ScholarshipList } from "@/components/scholarships/ScholarshipList";
+import { ScholarshipList } from "@/mponents/scholarships/ScholarshipList";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("scholarships");
