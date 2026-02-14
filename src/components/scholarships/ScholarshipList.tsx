@@ -25,13 +25,35 @@ export function ScholarshipList({ scholarships }: ScholarshipListProps) {
   ];
 
   const filtered = useMemo(() => {
-    return scholarships.filter((s) => {
+    const results = scholarships.filter((s) => {
       const name = getLocalizedField(s, "name", locale).toLowerCase();
       const provider = getLocalizedField(s, "provider", locale).toLowerCase();
       const q = search.toLowerCase();
       const matchesSearch = !q || name.includes(q) || provider.includes(q);
       const matchesType = !typeFilter || s.type === typeFilter;
       return matchesSearch && matchesType;
+    });
+
+    // Sort: active with nearest deadline first, no deadline next, closed last
+    return results.sort((a, b) => {
+      const now = Date.now();
+      const deadlineA = a.deadline ? new Date(a.deadline).getTime() : null;
+      const deadlineB = b.deadline ? new Date(b.deadline).getTime() : null;
+      const closedA = deadlineA !== null && deadlineA < now;
+      const closedB = deadlineB !== null && deadlineB < now;
+
+      // Closed items go to the bottom
+      if (closedA && !closedB) return 1;
+      if (!closedA && closedB) return -1;
+
+      // Among active: earliest deadline first
+      if (deadlineA !== null && deadlineB !== null) return deadlineA - deadlineB;
+
+      // Items with deadline before items without
+      if (deadlineA !== null && deadlineB === null) return -1;
+      if (deadlineA === null && deadlineB !== null) return 1;
+
+      return 0;
     });
   }, [scholarships, search, typeFilter, locale]);
 
