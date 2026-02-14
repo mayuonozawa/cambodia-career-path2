@@ -1,7 +1,7 @@
 import { getTranslations, getLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { createClient } from "@/lib/supabase/server";
-import { GraduationCap, Compass, Heart, Banknote, MapPin, Award, ArrowRight, Calendar, ChevronRight, Wrench } from "lucide-react";
+import { GraduationCap, Compass, Heart, Banknote, MapPin, Award, ArrowRight, Calendar, ChevronRight, Wrench, Sparkles, BookOpen, Users } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { getLocalizedField, getScholarshipTypeBadgeColor, formatDate } from "@/lib/utils";
 import type { Locale } from "@/types/database";
@@ -29,42 +29,137 @@ export default async function HomePage() {
     <div>
       {/* Hero Section */}
       <section className="relative overflow-hidden">
+        {/* Hero Image with Gradient Overlay */}
         <div className="relative w-full">
           <img
             src="/images/hero-banner.png"
             alt="Cambodia Career Path - Find Your Future"
             className="w-full h-auto block"
           />
+          {/* Gradient overlay - bottom fade into content */}
+          <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-brand-primary/10 to-brand-secondary/10" />
         </div>
-        <div className="bg-background px-4 py-8">
-          <div className="mx-auto flex max-w-md flex-col gap-4">
-            <Link href="/scholarships" className="block">
-              <button className="inline-flex items-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-10 rounded-md px-6 w-full justify-between gap-2 bg-brand-primary py-6 text-lg font-semibold text-white hover:bg-brand-primary-hover">
-                <div className="flex items-center gap-3">
-                  <GraduationCap className="h-6 w-6" />
-                  <span>{t("common.scholarships")}</span>
+
+        {/* Headline + CTAs overlapping the image bottom */}
+        <div className="relative -mt-16 sm:-mt-24 px-4 pb-6">
+          <div className="mx-auto max-w-lg">
+
+            {/* Emotional Headline */}
+            <div className="mb-6 text-center hero-animate-1">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-brand-secondary/10 px-3 py-1 text-xs font-semibold text-brand-secondary mb-3">
+                <Sparkles className="h-3.5 w-3.5" />
+                {t("home.heroLabel")}
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-foreground leading-tight tracking-tight">
+                {t("home.heroEmotional")}
+              </h1>
+            </div>
+
+            {/* Subtitle */}
+            <p className="text-center text-sm sm:text-base text-muted-foreground mb-6 hero-animate-2 max-w-sm mx-auto">
+              {t("home.heroSubtitle")}
+            </p>
+
+            {/* Primary CTA: Scholarships - largest, most prominent */}
+            <div className="hero-animate-cta-1 mb-3">
+              <Link href="/scholarships" className="block group">
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-brand-primary to-brand-tertiary p-[1px] shadow-lg shadow-brand-primary/20 transition-all hover:shadow-xl hover:shadow-brand-primary/30 hover:scale-[1.02] active:scale-[0.99]">
+                  <div className="relative flex items-center justify-between gap-3 rounded-2xl bg-gradient-to-r from-brand-primary to-brand-tertiary px-5 py-4 sm:px-6 sm:py-5">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+                        <GraduationCap className="h-5 w-5 text-white" />
+                      </div>
+                      <div>
+                        <span className="block text-lg font-bold text-white">
+                          {t("common.scholarships")}
+                        </span>
+                        <span className="block text-xs text-white/75">
+                          {t("home.scholarshipsCta")}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/20 transition-transform group-hover:translate-x-0.5">
+                      <ArrowRight className="h-4 w-4 text-white" />
+                    </div>
+                  </div>
                 </div>
-                <ChevronRight className="h-5 w-5" />
-              </button>
-            </Link>
-            <Link href="/universities" className="block">
-              <button className="inline-flex items-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-10 rounded-md px-6 w-full justify-between gap-2 bg-brand-secondary py-6 text-lg font-semibold text-white hover:bg-brand-secondary-hover">
-                <div className="flex items-center gap-3">
-                  <Compass className="h-6 w-6" />
-                  <span>{t("common.universities")}</span>
-                </div>
-                <ChevronRight className="h-5 w-5" />
-              </button>
-            </Link>
-            <Link href="/about-vocational" className="block">
-              <button className="inline-flex items-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-10 rounded-md px-6 w-full justify-between gap-2 bg-brand-tertiary py-6 text-lg font-semibold text-white hover:bg-brand-tertiary-hover">
-                <div className="flex items-center gap-3">
-                  <Wrench className="h-6 w-6" />
-                  <span>{t("common.vocationalSchools")}</span>
-                </div>
-                <ChevronRight className="h-5 w-5" />
-              </button>
-            </Link>
+              </Link>
+            </div>
+
+            {/* Secondary CTAs: Universities + Vocational - smaller, side by side on wider screens */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div className="hero-animate-cta-2">
+                <Link href="/universities" className="block group">
+                  <div className="flex items-center justify-between gap-2 rounded-xl border border-brand-secondary/20 bg-white px-4 py-3 shadow-sm transition-all hover:border-brand-secondary/40 hover:shadow-md hover:bg-brand-secondary-light/50 active:scale-[0.99]">
+                    <div className="flex items-center gap-2.5">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-secondary-light">
+                        <Compass className="h-4 w-4 text-brand-secondary" />
+                      </div>
+                      <div>
+                        <span className="block text-sm font-semibold text-foreground">
+                          {t("common.universities")}
+                        </span>
+                        <span className="block text-[11px] text-muted-foreground leading-tight">
+                          {t("home.universitiesCta")}
+                        </span>
+                      </div>
+                    </div>
+                    <ChevronRight className="h-4 w-4 shrink-0 text-brand-secondary/50 transition-transform group-hover:translate-x-0.5" />
+                  </div>
+                </Link>
+              </div>
+              <div className="hero-animate-cta-3">
+                <Link href="/about-vocational" className="block group">
+                  <div className="flex items-center justify-between gap-2 rounded-xl border border-brand-tertiary/20 bg-white px-4 py-3 shadow-sm transition-all hover:border-brand-tertiary/40 hover:shadow-md hover:bg-brand-primary-light/50 active:scale-[0.99]">
+                    <div className="flex items-center gap-2.5">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-primary-light">
+                        <Wrench className="h-4 w-4 text-brand-tertiary" />
+                      </div>
+                      <div>
+                        <span className="block text-sm font-semibold text-foreground">
+                          {t("common.vocationalSchools")}
+                        </span>
+                        <span className="block text-[11px] text-muted-foreground leading-tight">
+                          {t("home.vocationalCta")}
+                        </span>
+                      </div>
+                    </div>
+                    <ChevronRight className="h-4 w-4 shrink-0 text-brand-tertiary/50 transition-transform group-hover:translate-x-0.5" />
+                  </div>
+                </Link>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        {/* Trust Signal Stats Bar */}
+        <div className="hero-animate-stats border-t border-border bg-gradient-to-r from-brand-primary-light/40 via-white to-brand-secondary-light/40 px-4 py-5">
+          <div className="mx-auto flex max-w-lg items-center justify-around">
+            <div className="flex flex-col items-center gap-1">
+              <div className="flex items-center gap-1.5">
+                <BookOpen className="h-4 w-4 text-brand-primary" />
+                <span className="text-xl font-bold text-brand-primary">8+</span>
+              </div>
+              <span className="text-[11px] font-medium text-muted-foreground">{t("home.scholarshipsCount")}</span>
+            </div>
+            <div className="h-8 w-px bg-border" />
+            <div className="flex flex-col items-center gap-1">
+              <div className="flex items-center gap-1.5">
+                <Compass className="h-4 w-4 text-brand-secondary" />
+                <span className="text-xl font-bold text-brand-secondary">11+</span>
+              </div>
+              <span className="text-[11px] font-medium text-muted-foreground">{t("home.schoolsCount")}</span>
+            </div>
+            <div className="h-8 w-px bg-border" />
+            <div className="flex flex-col items-center gap-1">
+              <div className="flex items-center gap-1.5">
+                <Users className="h-4 w-4 text-brand-tertiary" />
+                <span className="text-xl font-bold text-brand-tertiary">8</span>
+              </div>
+              <span className="text-[11px] font-medium text-muted-foreground">{t("home.fieldsCount")}</span>
+            </div>
           </div>
         </div>
       </section>
@@ -124,23 +219,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="border-y border-border bg-background px-4 py-12">
-        <div className="mx-auto grid max-w-7xl gap-8 sm:grid-cols-3">
-          <div className="text-center">
-            <div className="mb-2 text-4xl font-bold text-brand-primary">8+</div>
-            <div className="text-muted-foreground">Scholarships</div>
-          </div>
-          <div className="text-center">
-            <div className="mb-2 text-4xl font-bold text-brand-primary">11+</div>
-            <div className="text-muted-foreground">Schools</div>
-          </div>
-          <div className="text-center">
-            <div className="mb-2 text-4xl font-bold text-brand-primary">8</div>
-            <div className="text-muted-foreground">Fields of Study</div>
-          </div>
-        </div>
-      </section>
+      {/* Stats section is now integrated into the hero */}
 
       {/* Fields of Study */}
       <section className="bg-card px-4 py-16">

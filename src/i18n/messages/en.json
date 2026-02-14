@@ -20,7 +20,12 @@
   },
   "home": {
     "heroTitle": "Discover Your Future",
-    "heroSubtitle": "Find scholarships, universities, and vocational schools",
+    "heroLabel": "Your future starts here",
+    "heroEmotional": "Don't let money stop your dreams. Scholarships are waiting for you.",
+    "heroSubtitle": "Find free scholarships, compare universities, and discover vocational training — all in one place.",
+    "scholarshipsCta": "Find scholarships that match you",
+    "universitiesCta": "Compare schools",
+    "vocationalCta": "Free skills training",
     "searchPlaceholder": "Search scholarships or universities...",
     "featuredScholarships": "Featured Scholarships",
     "featuredSchools": "Featured Schools",
