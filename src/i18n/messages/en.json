@@ -90,7 +90,9 @@
     "step_fill_form": "Fill out the application form online or on paper",
     "step_submit": "Submit your application before the deadline",
     "step_interview": "Attend interview (if required)",
-    "step_result": "Wait for the result announcement"
+    "step_result": "Wait for the result announcement",
+    "guideBannerTitle": "New here? Learn about the 3 types of scholarships first",
+    "guideBannerHint": "which one fits you?"
   },
   "universities": {
     "title": "Universities",

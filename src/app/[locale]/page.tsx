@@ -206,19 +206,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Scholarship Guide CTA */}
-      <section className="bg-gradient-to-r from-brand-primary-light to-brand-secondary-light px-4 py-12">
-        <div className="mx-auto max-w-4xl text-center">
-          <h2 className="mb-4 text-3xl font-bold text-brand-primary">Learn More About Scholarships</h2>
-          <p className="mb-6 text-lg text-muted-foreground">Explore our comprehensive guide to understand scholarship types, requirements, application process, and tips for success.</p>
-          <Link href="/about-scholarships" className="block">
-            <button className="inline-flex items-center gap-2 bg-brand-primary text-white font-bold px-8 py-3 rounded-lg hover:bg-brand-primary-hover transition-colors">
-              <span>📘</span> Read Scholarship Guide
-            </button>
-          </Link>
-        </div>
-      </section>
-
       {/* Stats section is now integrated into the hero */}
 
       {/* Fields of Study */}
