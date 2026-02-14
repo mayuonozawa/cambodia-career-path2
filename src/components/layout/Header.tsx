@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Link, usePathname, useRouter } from "@/i18n/routing";
 import { useLocale } from "next-intl";
-import { Menu, X, Globe, Bell, LogOut, Plus } from "lucide-react";
+import { Menu, X, Globe, LogOut } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { createClient } from "@/lib/supabase/client";
@@ -70,12 +70,6 @@ export function Header() {
             <span className="text-sm">{locale === "km" ? "English" : "ខ្មែរ"}</span>
           </button>
 
-          <button
-            className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] hover:bg-accent hover:text-accent-foreground size-9 relative"
-          >
-            <Bell className="h-5 w-5" />
-          </button>
-
           {!loading && (
             <>
               {user ? (
@@ -95,8 +89,8 @@ export function Header() {
                 </>
               ) : (
                 <Link
-                  href="/auth"
-                  className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-8 rounded-md gap-1.5 px-3 bg-[#3DBDB8] text-white hover:bg-[#2da8a3]"
+                  href={{ pathname: "/auth", query: { next: pathname } }}
+                  className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-8 rounded-md gap-1.5 px-3 bg-brand-primary text-white hover:bg-brand-primary-hover"
                 >
                   {t("login")}
                 </Link>
@@ -127,7 +121,7 @@ export function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-foreground hover:text-[#3DBDB8] font-medium py-2"
+                className="text-foreground hover:text-brand-primary font-medium py-2"
                 onClick={() => setMenuOpen(false)}
               >
                 {link.label}
@@ -137,7 +131,7 @@ export function Header() {
               <>
                 <Link
                   href="/profile"
-                  className="text-foreground hover:text-[#3DBDB8] font-medium py-2"
+                  className="text-foreground hover:text-brand-primary font-medium py-2"
                   onClick={() => setMenuOpen(false)}
                 >
                   {t("profile")}

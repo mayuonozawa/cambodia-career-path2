@@ -1,8 +1,6 @@
-import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import { UniversityDetail } from "@/components/universities/UniversityDetail";
-import { LoginPrompt } from "@/components/ui/LoginPrompt";
 import type { Metadata } from "next";
 
 interface Props {
@@ -40,20 +38,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function UniversityDetailPage({ params }: Props) {
   const { id } = await params;
 
-  const cookieStore = await cookies();
-  const age = cookieStore.get("userAge")?.value;
-  const region = cookieStore.get("userRegion")?.value;
-  const gender = cookieStore.get("userGender")?.value;
-
-  if (!age || !region || !gender) {
-    return (
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <LoginPrompt />
-      </div>
-    );
-  }
-
   const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const isAuthenticated = !!user;
+
   const { data: university } = await supabase
     .from("universities")
     .select("*")
@@ -64,20 +52,22 @@ export default async function UniversityDetailPage({ params }: Props) {
     notFound();
   }
 
-  const { data: relations } = await supabase
-    .from("scholarship_university_relations")
-    .select("scholarship_id")
-    .eq("university_id", id);
-
   let availableScholarships: any[] = [];
-  if (relations && relations.length > 0) {
-    const scholarshipIds = relations.map((r: any) => r.scholarship_id);
-    const { data: scholarships } = await supabase
-      .from("scholarships")
-      .select("*")
-      .in("id", scholarshipIds)
-      .eq("is_active", true);
-    availableScholarships = scholarships ?? [];
+  if (isAuthenticated) {
+    const { data: relations } = await supabase
+      .from("scholarship_university_relations")
+      .select("scholarship_id")
+      .eq("university_id", id);
+
+    if (relations && relations.length > 0) {
+      const scholarshipIds = relations.map((r: any) => r.scholarship_id);
+      const { data: scholarships } = await supabase
+        .from("scholarships")
+        .select("*")
+        .in("id", scholarshipIds)
+        .eq("is_active", true);
+      availableScholarships = scholarships ?? [];
+    }
   }
 
   return (
@@ -85,6 +75,7 @@ export default async function UniversityDetailPage({ params }: Props) {
       <UniversityDetail
         university={university}
         availableScholarships={availableScholarships}
+        isAuthenticated={isAuthenticated}
       />
     </div>
   );

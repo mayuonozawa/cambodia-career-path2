@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { VocationalSchoolCard } from "./VocationalSchoolCard";
 import type { VocationalSchool, Locale } from "@/types/database";
 import { getLocalizedField } from "@/lib/utils";
+import { useFilterParams } from "@/hooks/useFilterParams";
 
 interface VocationalSchoolListProps {
   schools: VocationalSchool[];
@@ -14,7 +15,7 @@ interface VocationalSchoolListProps {
 export function VocationalSchoolList({ schools }: VocationalSchoolListProps) {
   const locale = useLocale() as Locale;
   const t = useTranslations();
-  const [search, setSearch] = useState("");
+  const { search, setSearch } = useFilterParams();
 
   const filtered = useMemo(() => {
     return schools.filter((s) => {

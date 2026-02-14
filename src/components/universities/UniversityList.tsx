@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { FilterButtons } from "@/components/ui/FilterButtons";
 import { UniversityCard } from "./UniversityCard";
 import type { University, Locale } from "@/types/database";
 import { getLocalizedField } from "@/lib/utils";
+import { useFilterParams } from "@/hooks/useFilterParams";
 
 interface UniversityWithScholarships extends University {
   scholarship_count?: number;
@@ -19,8 +20,7 @@ interface UniversityListProps {
 export function UniversityList({ universities }: UniversityListProps) {
   const locale = useLocale() as Locale;
   const t = useTranslations();
-  const [search, setSearch] = useState("");
-  const [typeFilter, setTypeFilter] = useState("");
+  const { search, setSearch, typeFilter, setTypeFilter } = useFilterParams();
 
   const typeOptions = [
     { value: "public", label: t("universities.public") },

@@ -11,6 +11,16 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
+  /* Brand Colors */
+  --color-brand-primary: #3DBDB8;
+  --color-brand-primary-hover: #2da8a3;
+  --color-brand-primary-light: #E0F5F4;
+  --color-brand-secondary: #E8995E;
+  --color-brand-secondary-hover: #d88a50;
+  --color-brand-secondary-light: #FEF0E6;
+  --color-brand-tertiary: #2BA89E;
+  --color-brand-tertiary-hover: #239088;
 }
 
 body {

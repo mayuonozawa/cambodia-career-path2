@@ -11,6 +11,7 @@ import {
 } from "@/lib/utils";
 import type { Scholarship, University, Locale } from "@/types/database";
 import { ApplicationInfo } from "@/components/scholarships/ApplicationInfo";
+import { InlineAuthGate } from "@/components/auth/InlineAuthGate";
 import {
   Calendar,
   Building,
@@ -29,6 +30,7 @@ import {
 interface ScholarshipDetailProps {
   scholarship: Scholarship;
   relatedUniversities: University[];
+  isAuthenticated?: boolean;
 }
 
 function getTypeGradient(type: string) {
@@ -84,6 +86,7 @@ function getDaysRemaining(deadline: string | null): number {
 export function ScholarshipDetail({
   scholarship,
   relatedUniversities,
+  isAuthenticated = true,
 }: ScholarshipDetailProps) {
   const locale = useLocale() as Locale;
   const t = useTranslations();
@@ -241,79 +244,86 @@ export function ScholarshipDetail({
         </div>
       )}
 
-      {/* Application Info (F-009) */}
-      <ApplicationInfo
-        scholarship={scholarship}
-        deadlineFormatted={
-          scholarship.deadline
-            ? formatDate(scholarship.deadline, locale)
-            : undefined
-        }
-      />
+      {/* Auth Gate: application details require login */}
+      {!isAuthenticated ? (
+        <InlineAuthGate redirectPath={`/scholarships/${scholarship.id}`} />
+      ) : (
+        <>
+          {/* Application Info (F-009) */}
+          <ApplicationInfo
+            scholarship={scholarship}
+            deadlineFormatted={
+              scholarship.deadline
+                ? formatDate(scholarship.deadline, locale)
+                : undefined
+            }
+          />
 
-      {/* Action Buttons */}
-      <div className="flex flex-wrap gap-3">
-        {scholarship.application_url && !deadlinePassed && (
-          <a
-            href={scholarship.application_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl transition-colors shadow-lg shadow-blue-600/25"
-          >
-            {t("scholarships.applyNow")}
-            <ExternalLink className="w-4 h-4" />
-          </a>
-        )}
-        <button
-          onClick={handleShare}
-          className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium px-5 py-3 rounded-xl transition-colors"
-        >
-          <Share2 className="w-4 h-4" />
-          {t("scholarships.share")}
-        </button>
-      </div>
-
-      {/* Related Universities */}
-      {relatedUniversities.length > 0 && (
-        <div className="mt-8">
-          <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-            <Building className="w-5 h-5 text-blue-600" />
-            {t("scholarships.relatedUniversities")}
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {relatedUniversities.map((uni) => (
-              <Link
-                key={uni.id}
-                href={`/universities/${uni.id}`}
-                className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-xl hover:border-blue-300 hover:shadow-md transition-all group"
+          {/* Action Buttons */}
+          <div className="flex flex-wrap gap-3">
+            {scholarship.application_url && !deadlinePassed && (
+              <a
+                href={scholarship.application_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-brand-primary hover:bg-brand-primary-hover text-white font-semibold px-6 py-3 rounded-xl transition-colors shadow-lg shadow-brand-primary/25"
               >
-                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center shrink-0 group-hover:bg-blue-200 transition-colors">
-                  <Building className="w-5 h-5 text-blue-600" />
-                </div>
-                <div className="min-w-0">
-                  <p className="font-semibold text-gray-900 truncate">
-                    {getLocalizedField(uni, "name", locale)}
-                  </p>
-                  <div className="flex items-center gap-1 text-sm text-gray-500">
-                    <MapPin className="w-3 h-3" />
-                    <span className="truncate">
-                      {getLocalizedField(uni, "location", locale)}
-                    </span>
-                  </div>
-                </div>
-                <Badge
-                  className={
-                    uni.type === "public"
-                      ? "bg-blue-100 text-blue-800 ml-auto shrink-0"
-                      : "bg-purple-100 text-purple-800 ml-auto shrink-0"
-                  }
-                >
-                  {t(`universities.${uni.type}`)}
-                </Badge>
-              </Link>
-            ))}
+                {t("scholarships.applyNow")}
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            )}
+            <button
+              onClick={handleShare}
+              className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium px-5 py-3 rounded-xl transition-colors"
+            >
+              <Share2 className="w-4 h-4" />
+              {t("scholarships.share")}
+            </button>
           </div>
-        </div>
+
+          {/* Related Universities */}
+          {relatedUniversities.length > 0 && (
+            <div className="mt-8">
+              <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                <Building className="w-5 h-5 text-brand-primary" />
+                {t("scholarships.relatedUniversities")}
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {relatedUniversities.map((uni) => (
+                  <Link
+                    key={uni.id}
+                    href={`/universities/${uni.id}`}
+                    className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-xl hover:border-brand-primary-300 hover:shadow-md transition-all group"
+                  >
+                    <div className="w-10 h-10 bg-brand-primary-light rounded-lg flex items-center justify-center shrink-0 group-hover:bg-brand-primary-200 transition-colors">
+                      <Building className="w-5 h-5 text-brand-primary" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-semibold text-gray-900 truncate">
+                        {getLocalizedField(uni, "name", locale)}
+                      </p>
+                      <div className="flex items-center gap-1 text-sm text-gray-500">
+                        <MapPin className="w-3 h-3" />
+                        <span className="truncate">
+                          {getLocalizedField(uni, "location", locale)}
+                        </span>
+                      </div>
+                    </div>
+                    <Badge
+                      className={
+                        uni.type === "public"
+                          ? "bg-brand-primary-light text-brand-primary-800 ml-auto shrink-0"
+                          : "bg-purple-100 text-purple-800 ml-auto shrink-0"
+                      }
+                    >
+                      {t(`universities.${uni.type}`)}
+                    </Badge>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

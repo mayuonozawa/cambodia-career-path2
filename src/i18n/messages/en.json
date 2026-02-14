@@ -263,6 +263,12 @@
     "challenges": "Challenges (Optional)",
     "dream": "Future Dream (Optional)",
     "privacyAgreement": "I agree to the Privacy Policy",
+    "step1Title": "Basic Information",
+    "step2Title": "Learning & Skills",
+    "step3Title": "Goals & Situation",
+    "next": "Next",
+    "previous": "Back",
+    "stepOf": "Step {current} of {total}",
     "save": "Save",
     "saved": "Saved!",
     "graduated": "Graduated",
@@ -333,7 +339,9 @@
     "loginWith": "Login with",
     "facebook": "Facebook",
     "google": "Google",
-    "loginDescription": "Log in to view detailed information and save your searches"
+    "loginDescription": "Log in to view detailed information and save your searches",
+    "gateDescription": "Log in to see application details, contact information, and related opportunities.",
+    "moreContentBelow": "More details available after login"
   },
   "vocationalGuide": {
     "heroTitle": "Empower Your Future! Complete Guide to the \"Vocational Training Program\"",

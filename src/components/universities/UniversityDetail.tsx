@@ -10,6 +10,7 @@ import {
   getScholarshipTypeBadgeColor,
 } from "@/lib/utils";
 import type { University, Scholarship, Locale } from "@/types/database";
+import { InlineAuthGate } from "@/components/auth/InlineAuthGate";
 import {
   MapPin,
   ExternalLink,
@@ -28,11 +29,13 @@ import { formatDate } from "@/lib/utils";
 interface UniversityDetailProps {
   university: University;
   availableScholarships: Scholarship[];
+  isAuthenticated?: boolean;
 }
 
 export function UniversityDetail({
   university,
   availableScholarships,
+  isAuthenticated = true,
 }: UniversityDetailProps) {
   const locale = useLocale() as Locale;
   const t = useTranslations();
@@ -186,85 +189,92 @@ export function UniversityDetail({
         </div>
       )}
 
-      {/* Tuition */}
-      {tuition && (
-        <div className="p-5 bg-amber-50 rounded-xl border border-amber-200">
-          <h3 className="font-bold text-amber-800 mb-3 flex items-center gap-2">
-            <DollarSign className="w-5 h-5" />
-            {t("universities.tuition")}
-          </h3>
-          <p className="text-amber-700 text-sm whitespace-pre-line leading-relaxed">
-            {tuition}
-          </p>
-        </div>
-      )}
-
-      {/* Website & Share */}
-      <div className="flex flex-wrap gap-3">
-        {university.website && (
-          <a
-            href={university.website}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl transition-colors shadow-lg shadow-blue-600/25"
-          >
-            <Globe className="w-4 h-4" />
-            {t("universities.visitWebsite")}
-            <ExternalLink className="w-4 h-4" />
-          </a>
-        )}
-        <button
-          onClick={handleShare}
-          className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium px-5 py-3 rounded-xl transition-colors"
-        >
-          <Share2 className="w-4 h-4" />
-          {t("universities.share")}
-        </button>
-      </div>
-
-      {/* Available Scholarships (Reverse lookup - KEY FEATURE) */}
-      {availableScholarships.length > 0 && (
-        <div className="mt-8">
-          <div className="bg-gradient-to-r from-yellow-50 to-amber-50 rounded-2xl p-6 border border-yellow-200">
-            <h2 className="text-xl font-bold mb-2 flex items-center gap-2">
-              <GraduationCap className="w-5 h-5 text-yellow-600" />
-              {t("universities.availableScholarships")}
-            </h2>
-            <p className="text-sm text-gray-600 mb-4">
-              {t("universities.scholarshipsDescription")}
-            </p>
-            <div className="grid grid-cols-1 gap-3">
-              {availableScholarships.map((s) => (
-                <Link
-                  key={s.id}
-                  href={`/scholarships/${s.id}`}
-                  className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-xl hover:border-yellow-300 hover:shadow-md transition-all group"
-                >
-                  <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center shrink-0 group-hover:bg-yellow-200 transition-colors">
-                    <GraduationCap className="w-5 h-5 text-yellow-600" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="font-semibold text-gray-900">
-                      {getLocalizedField(s, "name", locale)}
-                    </p>
-                    <div className="flex items-center gap-3 mt-1">
-                      <Badge className={getScholarshipTypeBadgeColor(s.type)}>
-                        {t(`scholarships.${s.type}`)}
-                      </Badge>
-                      {s.deadline && (
-                        <span className="text-xs text-gray-500 flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
-                          {formatDate(s.deadline, locale)}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <ExternalLink className="w-4 h-4 text-gray-400 shrink-0" />
-                </Link>
-              ))}
+      {/* Auth Gate: tuition, website, scholarships require login */}
+      {!isAuthenticated ? (
+        <InlineAuthGate redirectPath={`/universities/${university.id}`} />
+      ) : (
+        <>
+          {/* Tuition */}
+          {tuition && (
+            <div className="p-5 bg-amber-50 rounded-xl border border-amber-200">
+              <h3 className="font-bold text-amber-800 mb-3 flex items-center gap-2">
+                <DollarSign className="w-5 h-5" />
+                {t("universities.tuition")}
+              </h3>
+              <p className="text-amber-700 text-sm whitespace-pre-line leading-relaxed">
+                {tuition}
+              </p>
             </div>
+          )}
+
+          {/* Website & Share */}
+          <div className="flex flex-wrap gap-3">
+            {university.website && (
+              <a
+                href={university.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-brand-primary hover:bg-brand-primary-hover text-white font-semibold px-6 py-3 rounded-xl transition-colors shadow-lg shadow-brand-primary/25"
+              >
+                <Globe className="w-4 h-4" />
+                {t("universities.visitWebsite")}
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            )}
+            <button
+              onClick={handleShare}
+              className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium px-5 py-3 rounded-xl transition-colors"
+            >
+              <Share2 className="w-4 h-4" />
+              {t("universities.share")}
+            </button>
           </div>
-        </div>
+
+          {/* Available Scholarships (Reverse lookup - KEY FEATURE) */}
+          {availableScholarships.length > 0 && (
+            <div className="mt-8">
+              <div className="bg-gradient-to-r from-yellow-50 to-amber-50 rounded-2xl p-6 border border-yellow-200">
+                <h2 className="text-xl font-bold mb-2 flex items-center gap-2">
+                  <GraduationCap className="w-5 h-5 text-yellow-600" />
+                  {t("universities.availableScholarships")}
+                </h2>
+                <p className="text-sm text-gray-600 mb-4">
+                  {t("universities.scholarshipsDescription")}
+                </p>
+                <div className="grid grid-cols-1 gap-3">
+                  {availableScholarships.map((s) => (
+                    <Link
+                      key={s.id}
+                      href={`/scholarships/${s.id}`}
+                      className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-xl hover:border-yellow-300 hover:shadow-md transition-all group"
+                    >
+                      <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center shrink-0 group-hover:bg-yellow-200 transition-colors">
+                        <GraduationCap className="w-5 h-5 text-yellow-600" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-semibold text-gray-900">
+                          {getLocalizedField(s, "name", locale)}
+                        </p>
+                        <div className="flex items-center gap-3 mt-1">
+                          <Badge className={getScholarshipTypeBadgeColor(s.type)}>
+                            {t(`scholarships.${s.type}`)}
+                          </Badge>
+                          {s.deadline && (
+                            <span className="text-xs text-gray-500 flex items-center gap-1">
+                              <Calendar className="w-3 h-3" />
+                              {formatDate(s.deadline, locale)}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <ExternalLink className="w-4 h-4 text-gray-400 shrink-0" />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

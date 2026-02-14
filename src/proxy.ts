@@ -7,23 +7,26 @@ const intlMiddleware = createMiddleware(routing);
 
 export async function proxy(request: NextRequest) {
   // 1. Supabaseのセッションを更新
-  await updateSession(request);
+  const supabaseResponse = await updateSession(request);
 
   // 2. ローカル環境（localhost）での開発中は、強制リダイレクトをスキップする
   const host = request.headers.get('host');
-  if (host?.includes('localhost')) {
-    return intlMiddleware(request);
-  }
-
-  // 3. 本番環境（www.brightdoorhub.com）への強制リダイレクト
-  const url = request.nextUrl.clone();
   if (host === 'brightdoorhub.com') {
+    // 3. 本番環境（www.brightdoorhub.com）への強制リダイレクト
+    const url = request.nextUrl.clone();
     url.host = 'www.brightdoorhub.com';
     url.protocol = 'https:';
     return NextResponse.redirect(url, 301);
   }
 
-  return intlMiddleware(request);
+  const intlResponse = intlMiddleware(request);
+
+  // Supabaseの認証クッキーをintlレスポンスに引き継ぐ
+  supabaseResponse.cookies.getAll().forEach((cookie) => {
+    intlResponse.cookies.set(cookie.name, cookie.value);
+  });
+
+  return intlResponse;
 }
 
 export const config = {

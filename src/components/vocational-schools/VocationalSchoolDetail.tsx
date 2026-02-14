@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { BackButton } from "@/components/ui/BackButton";
 import { getLocalizedField, getLocalizedArray } from "@/lib/utils";
 import type { VocationalSchool, Locale } from "@/types/database";
+import { InlineAuthGate } from "@/components/auth/InlineAuthGate";
 import {
   MapPin,
   ExternalLink,
@@ -18,10 +19,12 @@ import {
 
 interface VocationalSchoolDetailProps {
   school: VocationalSchool;
+  isAuthenticated?: boolean;
 }
 
 export function VocationalSchoolDetail({
   school,
+  isAuthenticated = true,
 }: VocationalSchoolDetailProps) {
   const locale = useLocale() as Locale;
   const t = useTranslations();
@@ -148,59 +151,66 @@ export function VocationalSchoolDetail({
         </div>
       )}
 
-      {/* Contact Information */}
-      {(school.contact || school.website) && (
-        <div className="p-5 bg-emerald-50 rounded-xl border border-emerald-200">
-          <h3 className="font-bold text-emerald-800 mb-4 flex items-center gap-2">
-            <Phone className="w-5 h-5" />
-            {t("vocationalSchools.contactInfo")}
-          </h3>
-          <div className="space-y-3">
-            {school.contact && (
-              <div className="flex items-center gap-3 text-emerald-700">
-                <Phone className="w-4 h-4 text-emerald-500" />
-                <span className="text-sm">{school.contact}</span>
+      {/* Auth Gate: contact info and actions require login */}
+      {!isAuthenticated ? (
+        <InlineAuthGate redirectPath={`/vocational-schools/${school.id}`} />
+      ) : (
+        <>
+          {/* Contact Information */}
+          {(school.contact || school.website) && (
+            <div className="p-5 bg-emerald-50 rounded-xl border border-emerald-200">
+              <h3 className="font-bold text-emerald-800 mb-4 flex items-center gap-2">
+                <Phone className="w-5 h-5" />
+                {t("vocationalSchools.contactInfo")}
+              </h3>
+              <div className="space-y-3">
+                {school.contact && (
+                  <div className="flex items-center gap-3 text-emerald-700">
+                    <Phone className="w-4 h-4 text-emerald-500" />
+                    <span className="text-sm">{school.contact}</span>
+                  </div>
+                )}
+                {school.website && (
+                  <div className="flex items-center gap-3 text-emerald-700">
+                    <Globe className="w-4 h-4 text-emerald-500" />
+                    <a
+                      href={school.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm hover:underline"
+                    >
+                      {school.website}
+                    </a>
+                  </div>
+                )}
               </div>
-            )}
-            {school.website && (
-              <div className="flex items-center gap-3 text-emerald-700">
-                <Globe className="w-4 h-4 text-emerald-500" />
-                <a
-                  href={school.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm hover:underline"
-                >
-                  {school.website}
-                </a>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+            </div>
+          )}
 
-      {/* Action Buttons */}
-      <div className="flex flex-wrap gap-3">
-        {school.website && (
-          <a
-            href={school.website}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold px-6 py-3 rounded-xl transition-colors shadow-lg shadow-teal-600/25"
-          >
-            <Globe className="w-4 h-4" />
-            {t("vocationalSchools.visitWebsite")}
-            <ExternalLink className="w-4 h-4" />
-          </a>
-        )}
-        <button
-          onClick={handleShare}
-          className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium px-5 py-3 rounded-xl transition-colors"
-        >
-          <Share2 className="w-4 h-4" />
-          {t("vocationalSchools.share")}
-        </button>
-      </div>
+          {/* Action Buttons */}
+          <div className="flex flex-wrap gap-3">
+            {school.website && (
+              <a
+                href={school.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold px-6 py-3 rounded-xl transition-colors shadow-lg shadow-teal-600/25"
+              >
+                <Globe className="w-4 h-4" />
+                {t("vocationalSchools.visitWebsite")}
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            )}
+            <button
+              onClick={handleShare}
+              className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium px-5 py-3 rounded-xl transition-colors"
+            >
+              <Share2 className="w-4 h-4" />
+              {t("vocationalSchools.share")}
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }

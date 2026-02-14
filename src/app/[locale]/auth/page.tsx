@@ -3,22 +3,27 @@ import { redirect } from "next/navigation";
 import { AuthPrompt } from "@/components/auth/AuthPrompt";
 import { getLocale } from "next-intl/server";
 
-export default async function AuthPage() {
+export default async function AuthPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ next?: string }>;
+}) {
   const locale = await getLocale();
   const supabase = await createClient();
+  const { next } = await searchParams;
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // ログイン済み → ホームへリダイレクト
+  // ログイン済み → リダイレクト
   if (user) {
-    redirect(`/${locale}`);
+    redirect(next ? `/${locale}${next}` : `/${locale}`);
   }
 
   return (
     <div className="max-w-md mx-auto px-4 py-12">
-      <AuthPrompt redirectPath="/" />
+      <AuthPrompt redirectPath={next || "/"} />
     </div>
   );
 }

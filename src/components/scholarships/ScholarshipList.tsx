@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { FilterButtons } from "@/components/ui/FilterButtons";
 import { ScholarshipCard } from "./ScholarshipCard";
 import type { Scholarship, Locale } from "@/types/database";
 import { getLocalizedField } from "@/lib/utils";
+import { useFilterParams } from "@/hooks/useFilterParams";
 
 interface ScholarshipListProps {
   scholarships: Scholarship[];
@@ -15,8 +16,7 @@ interface ScholarshipListProps {
 export function ScholarshipList({ scholarships }: ScholarshipListProps) {
   const locale = useLocale() as Locale;
   const t = useTranslations();
-  const [search, setSearch] = useState("");
-  const [typeFilter, setTypeFilter] = useState("");
+  const { search, setSearch, typeFilter, setTypeFilter } = useFilterParams();
 
   const typeOptions = [
     { value: "full", label: t("scholarships.full") },

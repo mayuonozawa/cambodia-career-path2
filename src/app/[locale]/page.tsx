@@ -39,7 +39,7 @@ export default async function HomePage() {
         <div className="bg-background px-4 py-8">
           <div className="mx-auto flex max-w-md flex-col gap-4">
             <Link href="/scholarships" className="block">
-              <button className="inline-flex items-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-10 rounded-md px-6 w-full justify-between gap-2 bg-[#3DBDB8] py-6 text-lg font-semibold text-white hover:bg-[#2da8a3]">
+              <button className="inline-flex items-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-10 rounded-md px-6 w-full justify-between gap-2 bg-brand-primary py-6 text-lg font-semibold text-white hover:bg-brand-primary-hover">
                 <div className="flex items-center gap-3">
                   <GraduationCap className="h-6 w-6" />
                   <span>{t("common.scholarships")}</span>
@@ -48,7 +48,7 @@ export default async function HomePage() {
               </button>
             </Link>
             <Link href="/universities" className="block">
-              <button className="inline-flex items-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-10 rounded-md px-6 w-full justify-between gap-2 bg-[#E8995E] py-6 text-lg font-semibold text-white hover:bg-[#d88a50]">
+              <button className="inline-flex items-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-10 rounded-md px-6 w-full justify-between gap-2 bg-brand-secondary py-6 text-lg font-semibold text-white hover:bg-brand-secondary-hover">
                 <div className="flex items-center gap-3">
                   <Compass className="h-6 w-6" />
                   <span>{t("common.universities")}</span>
@@ -57,7 +57,7 @@ export default async function HomePage() {
               </button>
             </Link>
             <Link href="/about-vocational" className="block">
-              <button className="inline-flex items-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-10 rounded-md px-6 w-full justify-between gap-2 bg-[#2BA89E] py-6 text-lg font-semibold text-white hover:bg-[#239088]">
+              <button className="inline-flex items-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-10 rounded-md px-6 w-full justify-between gap-2 bg-brand-tertiary py-6 text-lg font-semibold text-white hover:bg-brand-tertiary-hover">
                 <div className="flex items-center gap-3">
                   <Wrench className="h-6 w-6" />
                   <span>{t("common.vocationalSchools")}</span>
@@ -76,8 +76,8 @@ export default async function HomePage() {
           <div className="flex flex-col gap-4">
             <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm border border-border">
               <div className="flex items-start gap-4 p-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#E0F5F4]">
-                  <GraduationCap className="h-6 w-6 text-[#3DBDB8]" />
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-primary-light">
+                  <GraduationCap className="h-6 w-6 text-brand-primary" />
                 </div>
                 <div>
                   <h3 className="mb-1 font-bold text-foreground">1. Find Scholarships!</h3>
@@ -87,8 +87,8 @@ export default async function HomePage() {
             </div>
             <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm border border-border">
               <div className="flex items-start gap-4 p-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#E0F5F4]">
-                  <Compass className="h-6 w-6 text-[#3DBDB8]" />
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-primary-light">
+                  <Compass className="h-6 w-6 text-brand-primary" />
                 </div>
                 <div>
                   <h3 className="mb-1 font-bold text-foreground">2. See the pathways!</h3>
@@ -98,8 +98,8 @@ export default async function HomePage() {
             </div>
             <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm border border-border">
               <div className="flex items-start gap-4 p-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#FEF0E6]">
-                  <Heart className="h-6 w-6 text-[#E8995E]" />
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-secondary-light">
+                  <Heart className="h-6 w-6 text-brand-secondary" />
                 </div>
                 <div>
                   <h3 className="mb-1 font-bold text-foreground">3. Apply</h3>
@@ -112,12 +112,12 @@ export default async function HomePage() {
       </section>
 
       {/* Scholarship Guide CTA */}
-      <section className="bg-gradient-to-r from-[#E0F5F4] to-[#FEF0E6] px-4 py-12">
+      <section className="bg-gradient-to-r from-brand-primary-light to-brand-secondary-light px-4 py-12">
         <div className="mx-auto max-w-4xl text-center">
-          <h2 className="mb-4 text-3xl font-bold text-[#3DBDB8]">Learn More About Scholarships</h2>
+          <h2 className="mb-4 text-3xl font-bold text-brand-primary">Learn More About Scholarships</h2>
           <p className="mb-6 text-lg text-muted-foreground">Explore our comprehensive guide to understand scholarship types, requirements, application process, and tips for success.</p>
           <Link href="/about-scholarships" className="block">
-            <button className="inline-flex items-center gap-2 bg-[#3DBDB8] text-white font-bold px-8 py-3 rounded-lg hover:bg-[#2da8a3] transition-colors">
+            <button className="inline-flex items-center gap-2 bg-brand-primary text-white font-bold px-8 py-3 rounded-lg hover:bg-brand-primary-hover transition-colors">
               <span>📘</span> Read Scholarship Guide
             </button>
           </Link>
@@ -128,15 +128,15 @@ export default async function HomePage() {
       <section className="border-y border-border bg-background px-4 py-12">
         <div className="mx-auto grid max-w-7xl gap-8 sm:grid-cols-3">
           <div className="text-center">
-            <div className="mb-2 text-4xl font-bold text-[#3DBDB8]">8+</div>
+            <div className="mb-2 text-4xl font-bold text-brand-primary">8+</div>
             <div className="text-muted-foreground">Scholarships</div>
           </div>
           <div className="text-center">
-            <div className="mb-2 text-4xl font-bold text-[#3DBDB8]">11+</div>
+            <div className="mb-2 text-4xl font-bold text-brand-primary">11+</div>
             <div className="text-muted-foreground">Schools</div>
           </div>
           <div className="text-center">
-            <div className="mb-2 text-4xl font-bold text-[#3DBDB8]">8</div>
+            <div className="mb-2 text-4xl font-bold text-brand-primary">8</div>
             <div className="text-muted-foreground">Fields of Study</div>
           </div>
         </div>
@@ -148,7 +148,7 @@ export default async function HomePage() {
           <h2 className="mb-8 text-center text-2xl font-bold text-foreground">Fields of Study</h2>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             <Link href="/universities">
-              <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-[#3DBDB8] hover:shadow-md">
+              <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-brand-primary hover:shadow-md">
                 <div className="flex flex-col items-center gap-2 p-6 text-center">
                   <span className="text-3xl">💻</span>
                   <span className="font-medium text-foreground text-sm">Information Technology</span>
@@ -156,7 +156,7 @@ export default async function HomePage() {
               </div>
             </Link>
             <Link href="/universities">
-              <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-[#3DBDB8] hover:shadow-md">
+              <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-brand-primary hover:shadow-md">
                 <div className="flex flex-col items-center gap-2 p-6 text-center">
                   <span className="text-3xl">🏥</span>
                   <span className="font-medium text-foreground text-sm">Healthcare</span>
@@ -164,7 +164,7 @@ export default async function HomePage() {
               </div>
             </Link>
             <Link href="/universities">
-              <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-[#3DBDB8] hover:shadow-md">
+              <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-brand-primary hover:shadow-md">
                 <div className="flex flex-col items-center gap-2 p-6 text-center">
                   <span className="text-3xl">💼</span>
                   <span className="font-medium text-foreground text-sm">Business</span>
@@ -172,7 +172,7 @@ export default async function HomePage() {
               </div>
             </Link>
             <Link href="/universities">
-              <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-[#3DBDB8] hover:shadow-md">
+              <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-brand-primary hover:shadow-md">
                 <div className="flex flex-col items-center gap-2 p-6 text-center">
                   <span className="text-3xl">🌾</span>
                   <span className="font-medium text-foreground text-sm">Agriculture</span>
@@ -180,7 +180,7 @@ export default async function HomePage() {
               </div>
             </Link>
             <Link href="/universities">
-              <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-[#3DBDB8] hover:shadow-md">
+              <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-brand-primary hover:shadow-md">
                 <div className="flex flex-col items-center gap-2 p-6 text-center">
                   <span className="text-3xl">⚙️</span>
                   <span className="font-medium text-foreground text-sm">Engineering</span>
@@ -188,7 +188,7 @@ export default async function HomePage() {
               </div>
             </Link>
             <Link href="/universities">
-              <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-[#3DBDB8] hover:shadow-md">
+              <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-brand-primary hover:shadow-md">
                 <div className="flex flex-col items-center gap-2 p-6 text-center">
                   <span className="text-3xl">📚</span>
                   <span className="font-medium text-foreground text-sm">Education</span>
@@ -196,7 +196,7 @@ export default async function HomePage() {
               </div>
             </Link>
             <Link href="/universities">
-              <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-[#3DBDB8] hover:shadow-md">
+              <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-brand-primary hover:shadow-md">
                 <div className="flex flex-col items-center gap-2 p-6 text-center">
                   <span className="text-3xl">🏨</span>
                   <span className="font-medium text-foreground text-sm">Hospitality & Tourism</span>
@@ -204,7 +204,7 @@ export default async function HomePage() {
               </div>
             </Link>
             <Link href="/universities">
-              <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-[#3DBDB8] hover:shadow-md">
+              <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-brand-primary hover:shadow-md">
                 <div className="flex flex-col items-center gap-2 p-6 text-center">
                   <span className="text-3xl">🎨</span>
                   <span className="font-medium text-foreground text-sm">Arts & Design</span>
@@ -222,7 +222,7 @@ export default async function HomePage() {
             <div className="mb-8 flex items-center justify-between">
               <h2 className="text-2xl font-bold text-foreground">{t("home.featuredScholarships")}</h2>
               <Link href="/scholarships">
-                <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-9 px-4 py-2 gap-1 text-[#3DBDB8]">
+                <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-9 px-4 py-2 gap-1 text-brand-primary">
                   {t("home.viewAll")}<ArrowRight className="h-4 w-4" />
                 </button>
               </Link>
@@ -244,22 +244,22 @@ export default async function HomePage() {
                       <p className="line-clamp-2 text-sm text-muted-foreground">{getLocalizedField(s, "description", locale)}</p>
                       <div className="space-y-2 text-sm">
                         <div className="flex items-center gap-2 text-muted-foreground">
-                          <Banknote className="h-4 w-4 shrink-0 text-[#3DBDB8]" />
+                          <Banknote className="h-4 w-4 shrink-0 text-brand-primary" />
                           <span className="line-clamp-1">Full coverage</span>
                         </div>
                         {s.deadline && (
                           <div className="flex items-center gap-2 text-muted-foreground">
-                            <Calendar className="h-4 w-4 shrink-0 text-[#3DBDB8]" />
+                            <Calendar className="h-4 w-4 shrink-0 text-brand-primary" />
                             <span>Deadline: {formatDate(s.deadline, locale)}</span>
                           </div>
                         )}
                         <div className="flex items-center gap-2 text-muted-foreground">
-                          <MapPin className="h-4 w-4 shrink-0 text-[#3DBDB8]" />
+                          <MapPin className="h-4 w-4 shrink-0 text-brand-primary" />
                           <span className="line-clamp-1">Cambodia</span>
                         </div>
                       </div>
                       <div className="mt-auto pt-2">
-                        <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-9 px-4 py-2 w-full bg-[#3DBDB8] text-white hover:bg-[#2da8a3]">
+                        <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-9 px-4 py-2 w-full bg-brand-primary text-white hover:bg-brand-primary-hover">
                           Learn More
                         </button>
                       </div>
@@ -279,7 +279,7 @@ export default async function HomePage() {
             <div className="mb-8 flex items-center justify-between">
               <h2 className="text-2xl font-bold text-foreground">{t("home.featuredSchools") || "Featured Schools"}</h2>
               <Link href="/universities">
-                <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-9 px-4 py-2 gap-1 text-[#E8995E]">
+                <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-9 px-4 py-2 gap-1 text-brand-secondary">
                   {t("home.viewAll")}<ArrowRight className="h-4 w-4" />
                 </button>
               </Link>
@@ -304,16 +304,16 @@ export default async function HomePage() {
                       <p className="line-clamp-2 text-sm text-muted-foreground">{getLocalizedField(u, "description", locale)}</p>
                       <div className="space-y-2 text-sm">
                         <div className="flex items-center gap-2 text-muted-foreground">
-                          <Banknote className="h-4 w-4 shrink-0 text-[#E8995E]" />
+                          <Banknote className="h-4 w-4 shrink-0 text-brand-secondary" />
                           <span>$300 - $1000/year</span>
                         </div>
                         <div className="flex items-center gap-2 text-muted-foreground">
-                          <Award className="h-4 w-4 shrink-0 text-[#E8995E]" />
+                          <Award className="h-4 w-4 shrink-0 text-brand-secondary" />
                           <span>Scholarships available</span>
                         </div>
                       </div>
                       <div className="mt-auto flex gap-2 pt-2">
-                        <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-9 px-4 py-2 flex-1 w-full bg-[#E8995E] text-white hover:bg-[#d88a50]">
+                        <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-9 px-4 py-2 flex-1 w-full bg-brand-secondary text-white hover:bg-brand-secondary-hover">
                           Learn More
                         </button>
                       </div>
