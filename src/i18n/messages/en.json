@@ -350,6 +350,87 @@
     "gateDescription": "Log in to see application details, contact information, and related opportunities.",
     "moreContentBelow": "More details available after login"
   },
+  "careers": {
+    "sectionLabel": "Career Decision Engine",
+    "sectionTitle": "Explore Careers, Make Smart Decisions",
+    "sectionSubtitle": "Discover careers that match your interests, compare options, and connect to education pathways.",
+    "categories": {
+      "realistic": {
+        "title": "Realistic & Accessible",
+        "desc": "Practical careers you can start with vocational training or a bachelor's degree."
+      },
+      "high-income": {
+        "title": "High-Income & Growth",
+        "desc": "Fast-growing industries with strong earning potential and remote opportunities."
+      },
+      "social-impact": {
+        "title": "Social Impact",
+        "desc": "Careers that make a difference in communities and society."
+      }
+    },
+    "filterLabel": "Filter careers",
+    "filterClear": "Clear filters",
+    "filters": {
+      "highDemand": "High demand",
+      "remotePossible": "Remote possible",
+      "growthIndustry": "Growth industry",
+      "universityRequired": "University required",
+      "vocationalPossible": "Vocational possible"
+    },
+    "noResults": "No careers match your filters",
+    "comparison": {
+      "title": "Career Comparison",
+      "selected": "{count} selected",
+      "add": "Add to compare",
+      "remove": "Remove",
+      "compare": "Compare",
+      "close": "Close",
+      "clearAll": "Clear all",
+      "income": "Income range",
+      "education": "Education",
+      "english": "English level",
+      "difficulty": "Skill difficulty",
+      "growth": "Growth potential",
+      "availability": "Availability"
+    },
+    "actions": {
+      "title": "Take the Next Step",
+      "subtitle": "Career browsing should lead to action. Start your journey now.",
+      "programs": "University Programs",
+      "programsDesc": "Find related degree programs",
+      "scholarships": "Scholarships",
+      "scholarshipsDesc": "Discover funding opportunities",
+      "skills": "Learn Skills",
+      "skillsDesc": "Vocational training programs"
+    },
+    "onboarding": {
+      "skip": "Skip",
+      "step": "Step",
+      "englishTitle": "What's your English level?",
+      "englishDesc": "This helps us recommend the right careers for you.",
+      "locationTitle": "Where do you live?",
+      "locationDesc": "Some careers are more available in cities vs. provinces.",
+      "interestTitle": "What interests you most?",
+      "interestDesc": "Pick the one that excites you — we'll personalize your results."
+    },
+    "retakeQuiz": "Retake career quiz",
+    "detail": {
+      "jobDescription": "What You'll Do",
+      "requiredSkills": "Required Skills",
+      "incomeRange": "Income Range",
+      "education": "Education Required",
+      "selfTaught": "Self-taught / online learning possible",
+      "availability": "Where You Can Work",
+      "futureGrowth": "Future Growth",
+      "careerPath": "Career Path",
+      "nextSteps": "Take the Next Step",
+      "viewPrograms": "View University Programs",
+      "viewScholarships": "Find Scholarships",
+      "scholarshipsHint": "Discover funding for your education",
+      "learnSkills": "Start Learning Skills",
+      "skillsHint": "Vocational training programs"
+    }
+  },
   "vocationalGuide": {
     "heroTitle": "Empower Your Future! Complete Guide to the \"Vocational Training Program\"",
     "heroSubtitle": "Are you worried about your future or want to support your family but cannot afford tuition fees? Here is a golden opportunity from the Cambodian government! This isn't just a school — it's a chance to gain professional skills while receiving financial support.",

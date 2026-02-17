@@ -5,6 +5,7 @@ import { GraduationCap, Compass, Heart, Banknote, MapPin, Award, ArrowRight, Cal
 import { Badge } from "@/components/ui/Badge";
 import { getLocalizedField, getScholarshipTypeBadgeColor, formatDate } from "@/lib/utils";
 import type { Locale } from "@/types/database";
+import CareerExplorer from "@/components/careers/CareerExplorer";
 
 export default async function HomePage() {
   const t = await getTranslations();
@@ -280,6 +281,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Career Decision Engine */}
+      <CareerExplorer />
 
       {/* Featured Scholarships */}
       {scholarships && scholarships.length > 0 && (
