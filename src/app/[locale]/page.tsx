@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/Badge";
 import { getLocalizedField, getScholarshipTypeBadgeColor, formatDate } from "@/lib/utils";
 import type { Locale } from "@/types/database";
 import CareerExplorer from "@/components/careers/CareerExplorer";
+import CareerDiagnosis from "@/components/careers/CareerDiagnosis";
 
 export default async function HomePage() {
   const t = await getTranslations();
@@ -281,6 +282,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Career Self-Analysis */}
+      <CareerDiagnosis />
 
       {/* Career Decision Engine */}
       <CareerExplorer />

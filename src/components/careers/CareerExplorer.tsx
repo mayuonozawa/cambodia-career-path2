@@ -775,7 +775,7 @@ export default function CareerExplorer() {
         />
       )}
 
-      <section className="relative bg-gradient-to-b from-gray-50/80 to-white px-4 py-14 sm:py-20 overflow-hidden">
+      <section id="career-explorer" className="relative bg-gradient-to-b from-gray-50/80 to-white px-4 py-14 sm:py-20 overflow-hidden">
         {/* Decorative background */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute -top-24 -right-24 w-64 h-64 rounded-full bg-brand-primary/5 blur-3xl" />

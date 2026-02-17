@@ -513,5 +513,39 @@
       "app": "Search for \"TVET 1.5M\" on the App Store or Google Play."
     },
     "cta": "Browse Vocational Schools"
+  },
+  "diagnosis": {
+    "badge": "Self-Analysis",
+    "ctaTitle": "Find Your Career Type",
+    "ctaDesc": "Answer a few quick questions to discover careers that match your personality and strengths.",
+    "ctaButton": "Start Self-Analysis",
+    "ctaTime": "Takes about 2 minutes",
+    "resultBadge": "Your Result",
+    "resultSubtitle": "Based on your answers, here's what suits you",
+    "yourStrengths": "Your Strengths",
+    "matchingCareers": "Careers That Match You",
+    "senpaiTitle": "Someone Like You",
+    "nextSteps": "Your Next Steps",
+    "cta": {
+      "scholarships": "Find Scholarships",
+      "universities": "Explore Universities",
+      "vocational": "Vocational Training",
+      "explore": "Browse All Careers"
+    },
+    "retake": "Retake Quiz",
+    "scrollToCareers": "Explore careers below",
+    "step1Label": "About You",
+    "step2Label": "Your Joys",
+    "step3Label": "Your Future",
+    "step1Title": "Which sounds more like you?",
+    "step2Title": "What made you happy recently?",
+    "step2Hint": "Select all that apply",
+    "step3": {
+      "education": "After high school, what's your plan?",
+      "location": "Where do you want to work?",
+      "english": "How's your English?"
+    },
+    "seeResults": "See My Results",
+    "next": "Next"
   }
 }
