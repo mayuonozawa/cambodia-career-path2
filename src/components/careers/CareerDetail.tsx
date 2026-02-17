@@ -111,22 +111,30 @@ export default function CareerDetail({
 
       {/* Panel */}
       <div className="relative w-full max-w-lg bg-white shadow-2xl overflow-y-auto animate-[slideInRight_0.35s_cubic-bezier(0.22,1,0.36,1)]">
-        {/* Sticky header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between bg-white/95 backdrop-blur-md border-b border-gray-100 px-5 py-3">
-          <div className="min-w-0">
-            <h2 className="text-base font-bold text-foreground truncate">
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 z-20 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm shadow-md hover:bg-white transition-colors"
+        >
+          <X className="h-4 w-4 text-gray-600" />
+        </button>
+
+        {/* Hero image header */}
+        <div className="relative h-44 sm:h-52 overflow-hidden">
+          <img
+            src={career.image}
+            alt={isKm ? career.nameKm : career.nameEn}
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 p-5">
+            <h2 className="text-lg sm:text-xl font-bold text-white drop-shadow-md mb-0.5">
               {isKm ? career.nameKm : career.nameEn}
             </h2>
-            <p className="text-[11px] text-brand-primary font-medium truncate">
+            <p className="text-xs text-white/80 font-medium drop-shadow-sm">
               {isKm ? d.taglineKm : d.taglineEn}
             </p>
           </div>
-          <button
-            onClick={onClose}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full hover:bg-gray-100 transition-colors ml-3"
-          >
-            <X className="h-4 w-4 text-gray-500" />
-          </button>
         </div>
 
         <div className="px-5 py-6 space-y-7">

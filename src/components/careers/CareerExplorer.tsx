@@ -394,23 +394,35 @@ function CareerCard({
       <button
         onClick={(e) => { e.stopPropagation(); onToggleSelect(career.id); }}
         disabled={!canSelect && !isSelected}
-        className={`absolute -top-2 -right-2 z-10 flex h-7 w-7 items-center justify-center rounded-full border-2 transition-all ${
+        className={`absolute top-2 right-2 z-10 flex h-7 w-7 items-center justify-center rounded-full border-2 transition-all ${
           isSelected
             ? "border-brand-primary bg-brand-primary text-white shadow-md"
             : canSelect
-              ? "border-gray-200 bg-white text-gray-400 hover:border-brand-primary hover:text-brand-primary shadow-sm"
-              : "border-gray-100 bg-gray-50 text-gray-300 cursor-not-allowed"
+              ? "border-white/80 bg-white/90 text-gray-400 hover:border-brand-primary hover:text-brand-primary shadow-sm backdrop-blur-sm"
+              : "border-white/60 bg-white/70 text-gray-300 cursor-not-allowed backdrop-blur-sm"
         }`}
         title={isSelected ? t("comparison.remove") : t("comparison.add")}
       >
         {isSelected ? <Minus className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
       </button>
 
-      {/* Header */}
+      {/* Career Photo */}
+      <div className="relative -mx-4 -mt-4 mb-3 h-36 overflow-hidden rounded-t-2xl">
+        <img
+          src={career.image}
+          alt={isKm ? career.nameKm : career.nameEn}
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 p-3">
+          <h4 className="text-base font-bold text-white leading-tight drop-shadow-md">
+            {isKm ? career.nameKm : career.nameEn}
+          </h4>
+        </div>
+      </div>
+
+      {/* Description */}
       <div className="mb-3">
-        <h4 className="text-base font-bold text-foreground leading-tight mb-1">
-          {isKm ? career.nameKm : career.nameEn}
-        </h4>
         <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
           {isKm ? career.descriptionKm : career.descriptionEn}
         </p>
