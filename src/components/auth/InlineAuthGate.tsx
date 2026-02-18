@@ -18,7 +18,12 @@ export function InlineAuthGate({ redirectPath }: InlineAuthGateProps) {
   const handleLogin = async (provider: "google" | "facebook") => {
     setLoading(provider);
     const supabase = createClient();
-    const callbackUrl = `${window.location.origin}/${locale}/auth/callback?next=${encodeURIComponent(`/${locale}${redirectPath}`)}`;
+
+    // Store redirect target in cookie (more reliable than query params through OAuth chain)
+    const redirectTarget = `/${locale}${redirectPath}`;
+    document.cookie = `auth_redirect=${encodeURIComponent(redirectTarget)};path=/;max-age=600;SameSite=Lax`;
+
+    const callbackUrl = `${window.location.origin}/${locale}/auth/callback`;
 
     await supabase.auth.signInWithOAuth({
       provider,
