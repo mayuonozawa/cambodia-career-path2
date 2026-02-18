@@ -10,16 +10,23 @@ export async function GET(request: Request) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
-      // Read redirect target from cookie (set before OAuth)
+      // Primary: next param in URL (most reliable, Supabase preserves it)
+      const nextParam = searchParams.get("next");
+
+      // Fallback: cookie set before OAuth redirect
       const cookieStore = await cookies();
       const redirectCookie = cookieStore.get("auth_redirect");
-      let redirectTo = "/";
 
-      if (redirectCookie?.value) {
+      let redirectTo = "/";
+      if (nextParam) {
+        redirectTo = nextParam;
+      } else if (redirectCookie?.value) {
         redirectTo = decodeURIComponent(redirectCookie.value);
-      } else {
-        // Fallback: check query param
-        redirectTo = searchParams.get("next") ?? "/";
+      }
+
+      // Ensure it's a relative path (security: prevent open redirect)
+      if (!redirectTo.startsWith("/")) {
+        redirectTo = "/";
       }
 
       // Clear the cookie

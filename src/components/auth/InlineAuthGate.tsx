@@ -19,11 +19,13 @@ export function InlineAuthGate({ redirectPath }: InlineAuthGateProps) {
     setLoading(provider);
     const supabase = createClient();
 
-    // Store redirect target in cookie (more reliable than query params through OAuth chain)
     const redirectTarget = `/${locale}${redirectPath}`;
+
+    // Cookie fallback (may be blocked by some browsers during OAuth)
     document.cookie = `auth_redirect=${encodeURIComponent(redirectTarget)};path=/;max-age=600;SameSite=Lax`;
 
-    const callbackUrl = `${window.location.origin}/${locale}/auth/callback`;
+    // Primary: encode next URL in the callback URL (Supabase preserves query params)
+    const callbackUrl = `${window.location.origin}/${locale}/auth/callback?next=${encodeURIComponent(redirectTarget)}`;
 
     await supabase.auth.signInWithOAuth({
       provider,
