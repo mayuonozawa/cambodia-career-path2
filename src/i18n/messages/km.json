@@ -92,7 +92,15 @@
     "step_interview": "ចូលរួមសម្ភាសន៍ (បើត្រូវបាន)",
     "step_result": "រង់ចាំលទ្ធផល",
     "guideBannerTitle": "ថ្មីមកទេ? សិក្សាពីអាហារូបករណ៍ ៣ ប្រភេទមុនសិន",
-    "guideBannerHint": "មួយណាសមនឹងអ្នក?"
+    "guideBannerHint": "មួយណាសមនឹងអ្នក?",
+    "sortDeadline": "ផុតកំណត់ ▼",
+    "sortNewest": "ថ្មីជាងគេ",
+    "sortName": "ឈ្មោះ A–Z",
+    "urgentDeadline": "ប្រញ៉ាប់ (≤7 ថ្ងៃ)",
+    "soonDeadline": "ជិតផុត (≤30 ថ្ងៃ)",
+    "resultsCount": "រកឃើញ {count} អាហារូបករណ៍",
+    "activeFilters": "ត្រង {count} ដំណើរការ",
+    "resetFilters": "លុបទាំងអស់"
   },
   "universities": {
     "title": "សាកលវិទ្យាល័យ",

@@ -27,6 +27,126 @@ import {
   Users,
 } from "lucide-react";
 
+interface CoverageItem {
+  id: string;
+  icon: string;
+  label: string;
+}
+
+function parseCoverageItems(text: string, locale: Locale): CoverageItem[] {
+  const lowerText = text.toLowerCase();
+  const isKm = locale === "km";
+  const testText = isKm ? text : lowerText;
+  const items: CoverageItem[] = [];
+
+  const definitions: Array<{
+    id: string;
+    icon: string;
+    enLabel: string;
+    kmLabel: string;
+    enPatterns: RegExp[];
+    kmPatterns: RegExp[];
+  }> = [
+    {
+      id: "tuition",
+      icon: "🎓",
+      enLabel: "Tuition",
+      kmLabel: "ថ្លៃសិក្សា",
+      enPatterns: [/tuition/, /fees/],
+      kmPatterns: [/ថ្លៃសិក្សា/],
+    },
+    {
+      id: "stipend",
+      icon: "💰",
+      enLabel: "Living Allowance",
+      kmLabel: "ប្រាក់ឧបត្ថម្ភ",
+      enPatterns: [/allowance/, /stipend/, /\/month/, /monthly/],
+      kmPatterns: [/ប្រាក់ឧបត្ថម្ភ/, /ប្រចាំខែ/],
+    },
+    {
+      id: "airfare",
+      icon: "✈️",
+      enLabel: "Airfare",
+      kmLabel: "សំបុត្រយន្តហោះ",
+      enPatterns: [/airfare/, /travel/, /air fare/],
+      kmPatterns: [/សំបុត្រយន្តហោះ/, /ធ្វើដំណើរ/],
+    },
+    {
+      id: "housing",
+      icon: "🏠",
+      enLabel: "Accommodation",
+      kmLabel: "កន្លែងស្នាក់នៅ",
+      enPatterns: [/accommodation/, /housing/, /dormitory/, /boarding/, /homestay/],
+      kmPatterns: [/កន្លែងស្នាក់នៅ/, /បន្ទប់គេង/, /គ្រួសារ/],
+    },
+    {
+      id: "insurance",
+      icon: "🏥",
+      enLabel: "Health Insurance",
+      kmLabel: "ធានារ៉ាប់រង",
+      enPatterns: [/insurance/],
+      kmPatterns: [/ធានារ៉ាប់រង/],
+    },
+    {
+      id: "books",
+      icon: "📚",
+      enLabel: "Books & Supplies",
+      kmLabel: "សៀវភៅ / សម្ភារៈ",
+      enPatterns: [/books?/, /textbooks?/, /supplies/],
+      kmPatterns: [/សៀវភៅ/, /សម្ភារៈ/],
+    },
+    {
+      id: "meals",
+      icon: "🍽️",
+      enLabel: "Meals",
+      kmLabel: "អាហារ",
+      enPatterns: [/meals?/],
+      kmPatterns: [/អាហារ/],
+    },
+    {
+      id: "pc",
+      icon: "💻",
+      enLabel: "Computer",
+      kmLabel: "កុំព្យូទ័រ",
+      enPatterns: [/\bpc\b/, /computer/, /laptop/],
+      kmPatterns: [/កុំព្យូទ័រ/],
+    },
+    {
+      id: "uniform",
+      icon: "👕",
+      enLabel: "Uniforms",
+      kmLabel: "ឯកសណ្ឋាន",
+      enPatterns: [/uniforms?/],
+      kmPatterns: [/ឯកសណ្ឋាន/],
+    },
+    {
+      id: "bicycle",
+      icon: "🚲",
+      enLabel: "Bicycle",
+      kmLabel: "កង់",
+      enPatterns: [/bicycle/, /bike/],
+      kmPatterns: [/កង់/],
+    },
+    {
+      id: "internship",
+      icon: "💼",
+      enLabel: "Internship",
+      kmLabel: "កម្មសិក្សា",
+      enPatterns: [/internship/],
+      kmPatterns: [/កម្មសិក្សា/],
+    },
+  ];
+
+  for (const def of definitions) {
+    const patterns = isKm ? def.kmPatterns : def.enPatterns;
+    if (patterns.some((p) => p.test(testText))) {
+      items.push({ id: def.id, icon: def.icon, label: isKm ? def.kmLabel : def.enLabel });
+    }
+  }
+
+  return items;
+}
+
 interface ScholarshipDetailProps {
   scholarship: Scholarship;
   relatedUniversities: University[];
@@ -99,6 +219,7 @@ export function ScholarshipDetail({
   const daysRemaining = getDaysRemaining(scholarship.deadline);
   const deadlinePassed = isDeadlinePassed(scholarship.deadline);
   const deadlineApproaching = isDeadlineApproaching(scholarship.deadline);
+  const coverageItems = coverage ? parseCoverageItems(coverage, locale) : [];
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -213,9 +334,30 @@ export function ScholarshipDetail({
               <DollarSign className="w-5 h-5" />
               {t("scholarships.coverage")}
             </h3>
-            <p className="text-green-700 text-sm leading-relaxed whitespace-pre-line">
-              {coverage}
-            </p>
+            {coverageItems.length >= 2 ? (
+              <>
+                <div className="grid grid-cols-2 gap-2 mb-3">
+                  {coverageItems.map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex flex-col items-center gap-1.5 rounded-xl bg-white border border-green-100 p-3 text-center"
+                    >
+                      <span className="text-2xl leading-none">{item.icon}</span>
+                      <span className="text-xs font-semibold text-green-800 leading-tight">
+                        {item.label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-green-600 text-xs leading-relaxed whitespace-pre-line">
+                  {coverage}
+                </p>
+              </>
+            ) : (
+              <p className="text-green-700 text-sm leading-relaxed whitespace-pre-line">
+                {coverage}
+              </p>
+            )}
           </div>
         )}
 

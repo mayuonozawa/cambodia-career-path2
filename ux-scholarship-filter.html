@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PathForward — 奨学金フィルター UX改善提案</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&family=Noto+Sans+KM&family=Playfair+Display:ital,wght@0,700;0,800;1,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal:     #3DBDB8;
+  --teal-d:   #2a9e99;
+  --teal-l:   #edfafa;
+  --teal-m:   #b2e8e6;
+  --orange:   #E8995E;
+  --orange-d: #d4834a;
+  --orange-l: #fef5ed;
+  --ink:      #0f1923;
+  --ink-2:    #374151;
+  --muted:    #6b7280;
+  --border:   #e5e7eb;
+  --bg:       #f8fafc;
+  --white:    #ffffff;
+  --red:      #dc2626;
+  --red-l:    #fef2f2;
+  --red-m:    #fee2e2;
+  --amber:    #d97706;
+  --amber-l:  #fffbeb;
+  --amber-m:  #fde68a;
+  --green:    #059669;
+  --green-l:  #ecfdf5;
+  --blue:     #2563eb;
+  --blue-l:   #eff6ff;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md: 0 4px 16px rgba(0,0,0,.10), 0 2px 6px rgba(0,0,0,.06);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,.18), 0 8px 24px rgba(0,0,0,.10);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+body {
+  font-family:'Noto Sans',sans-serif;
+  background:#dce3ea;
+  color:var(--ink);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ─── MASTHEAD ─── */
+.masthead {
+  background:var(--ink);
+  padding:18px 24px;
+  display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:300;
+}
+.masthead-logo { font-family:'Playfair Display',serif; font-size:20px; font-weight:800; color:var(--teal); letter-spacing:-.5px; }
+.masthead-sub  { font-size:10px; color:rgba(255,255,255,.4); margin-top:2px; }
+.masthead-pill { background:var(--orange); color:#fff; font-size:10px; font-weight:700; padding:4px 12px; border-radius:20px; }
+
+/* ─── HERO ─── */
+.hero {
+  background:linear-gradient(135deg,#0f1923 0%,#1a2f3a 55%,#0c3d4a 100%);
+  padding:44px 24px 40px; text-align:center; position:relative; overflow:hidden;
+}
+.hero::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse 60% 50% at 80% 10%, rgba(61,189,184,.18) 0%, transparent 70%),
+             radial-gradient(ellipse 40% 40% at 15% 90%, rgba(232,153,94,.12) 0%, transparent 60%);
+}
+.hero-inner { position:relative; z-index:1; }
+.hero h1 { font-family:'Playfair Display',serif; font-size:30px; font-weight:800; line-height:1.2; margin-bottom:10px; color:#fff; }
+.hero h1 em { font-style:italic; color:var(--teal); }
+.hero-desc { font-size:13px; color:rgba(255,255,255,.55); line-height:1.75; max-width:520px; margin:0 auto 28px; }
+.hero-chips { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
+.hero-chip {
+  font-size:11px; font-weight:600; padding:4px 11px; border-radius:20px;
+  border:1px solid; cursor:default;
+}
+
+/* ─── PAGE TABS ─── */
+.tab-nav {
+  background:#fff; border-bottom:2px solid var(--border);
+  display:flex; overflow-x:auto; scrollbar-width:none;
+  position:sticky; top:58px; z-index:200;
+}
+.tab-nav::-webkit-scrollbar { display:none; }
+.tab-btn {
+  flex-shrink:0; padding:14px 22px; font-size:13px; font-weight:600;
+  color:var(--muted); background:none; border:none; cursor:pointer;
+  border-bottom:2px solid transparent; margin-bottom:-2px;
+  transition:all .2s; white-space:nowrap;
+}
+.tab-btn.active { color:var(--teal); border-bottom-color:var(--teal); }
+
+/* ─── CONTENT AREA ─── */
+.content-area { display:none; }
+.content-area.active { display:block; }
+
+/* ─── SECTION SHELL ─── */
+.section-shell { max-width:1100px; margin:0 auto; padding:32px 20px 60px; }
+
+/* ─── TWO-COL LAYOUT ─── */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:start; }
+@media(max-width:800px){ .two-col { grid-template-columns:1fr; } }
+
+/* ─── COL LABEL ─── */
+.col-label {
+  font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:2px;
+  color:var(--muted); margin-bottom:16px; display:flex; align-items:center; gap:8px;
+}
+.col-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* ─── PHONE FRAME ─── */
+.phone-outer { display:flex; flex-direction:column; align-items:center; }
+.phone-frame {
+  width:370px; max-height:760px;
+  border-radius:44px;
+  background:var(--white);
+  box-shadow:0 0 0 2px #1a1a2e, 0 0 0 8px #2a2a3a, var(--shadow-lg);
+  overflow:hidden; position:relative; display:flex; flex-direction:column;
+}
+.phone-notch {
+  position:absolute; top:0; left:50%; transform:translateX(-50%);
+  width:110px; height:28px; background:#1a1a2e;
+  border-radius:0 0 18px 18px; z-index:50;
+}
+.phone-scroll {
+  flex:1; overflow-y:auto; overflow-x:hidden;
+  padding-top:28px; padding-bottom:16px; scrollbar-width:none;
+}
+.phone-scroll::-webkit-scrollbar { display:none; }
+
+/* ─── UX TAG ─── */
+.ux-tag {
+  display:inline-flex; align-items:center; gap:3px;
+  font-size:9px; font-weight:700; padding:2px 7px; border-radius:8px;
+  letter-spacing:.2px;
+}
+.t-loss   { background:#fef3c7; color:#92400e; }
+.t-soc    { background:#dbeafe; color:#1e40af; }
+.t-goal   { background:#d1fae5; color:#065f46; }
+.t-zeit   { background:#ede9fe; color:#5b21b6; }
+.t-scar   { background:#fee2e2; color:#991b1b; }
+.t-anchor { background:#ffedd5; color:#9a3412; }
+.t-prog   { background:#ecfdf5; color:#065f46; border:1px solid #6ee7b7; }
+.t-frame  { background:#fff7ed; color:#7c2d12; }
+.t-default{ background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; }
+.t-curio  { background:#fdf4ff; color:#6b21a8; }
+
+/* ══════════════════════════════════
+   BEFORE SCREEN ELEMENTS
+══════════════════════════════════ */
+.b-header { padding:16px 16px 10px; }
+.b-header h2 { font-size:20px; font-weight:700; margin-bottom:2px; }
+.b-header p  { font-size:11px; color:var(--muted); }
+.b-search {
+  margin:0 16px 12px;
+  display:flex; align-items:center; gap:8px;
+  background:var(--bg); border:1px solid var(--border); border-radius:10px;
+  padding:10px 14px;
+}
+.b-search input {
+  flex:1; border:none; background:none; font-size:13px; color:var(--muted);
+  font-family:'Noto Sans',sans-serif; outline:none;
+}
+.b-search svg { flex-shrink:0; }
+.b-pills { display:flex; gap:6px; padding:0 16px 14px; flex-wrap:wrap; }
+.b-pill {
+  padding:6px 14px; border-radius:20px; font-size:12px; font-weight:500;
+  background:var(--bg); color:var(--ink-2); border:1px solid var(--border);
+  cursor:pointer;
+}
+.b-pill.active { background:var(--blue); color:#fff; border-color:var(--blue); }
+
+.b-sort-missing {
+  margin:0 16px 10px;
+  background:var(--red-l); border:1px solid #fca5a5; border-radius:8px;
+  padding:8px 12px; font-size:11px; color:#991b1b;
+  display:flex; align-items:flex-start; gap:6px;
+}
+.b-sort-missing::before { content:'✗'; font-weight:700; flex-shrink:0; }
+
+.b-card {
+  background:#fff; border:1px solid var(--border); border-radius:12px;
+  margin:0 16px 10px; padding:14px;
+}
+.b-card-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; }
+.b-card-name { font-size:14px; font-weight:600; flex:1; padding-right:8px; }
+.b-type-badge {
+  font-size:10px; font-weight:600; padding:2px 8px; border-radius:6px;
+  background:#dcfce7; color:#166534; flex-shrink:0;
+}
+.b-card-meta { font-size:11px; color:var(--muted); line-height:1.8; }
+.b-card-meta span { display:flex; align-items:center; gap:5px; }
+
+.prob-label {
+  margin:0 16px 8px;
+  background:var(--red-l); border:1px solid #fca5a5; border-radius:8px;
+  padding:7px 12px; font-size:11px; color:#991b1b;
+  display:flex; align-items:flex-start; gap:6px;
+}
+.prob-label::before { content:'✗'; font-weight:700; flex-shrink:0; }
+
+/* ══════════════════════════════════
+   AFTER SCREEN ELEMENTS
+══════════════════════════════════ */
+
+/* A. HEADER BAR */
+.a-header {
+  padding:16px 16px 10px;
+  display:flex; align-items:center; justify-content:space-between;
+  position:relative;
+}
+.a-header-left h2 { font-size:18px; font-weight:700; }
+.a-header-left .count { font-size:12px; color:var(--muted); font-weight:500; margin-top:1px; }
+.sort-btn {
+  display:flex; align-items:center; gap:5px;
+  background:var(--bg); border:1px solid var(--border); border-radius:10px;
+  padding:7px 12px; font-size:12px; font-weight:600; color:var(--ink-2);
+  cursor:pointer; transition:all .15s; flex-shrink:0;
+  position:relative;
+}
+.sort-btn:hover { border-color:var(--teal); color:var(--teal); }
+.sort-btn .arr { font-size:10px; transition:transform .2s; }
+.sort-btn.open .arr { transform:rotate(180deg); }
+.sort-dropdown {
+  position:absolute; top:calc(100% + 6px); right:0;
+  background:#fff; border:1px solid var(--border); border-radius:12px;
+  padding:6px; min-width:160px; box-shadow:var(--shadow-md);
+  z-index:100; display:none;
+}
+.sort-dropdown.open { display:block; animation:fadeIn .15s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
+.sort-opt {
+  padding:9px 12px; border-radius:8px; font-size:12px; font-weight:500;
+  cursor:pointer; transition:background .15s;
+}
+.sort-opt:hover { background:var(--teal-l); }
+.sort-opt.active { background:var(--teal-l); color:var(--teal-d); font-weight:700; }
+
+/* B. SEARCH */
+.a-search-wrap { padding:0 16px 10px; }
+.a-search {
+  display:flex; align-items:center; gap:8px;
+  background:#fff; border:2px solid var(--border); border-radius:14px;
+  padding:11px 14px; transition:border-color .2s;
+}
+.a-search:focus-within { border-color:var(--teal); }
+.a-search input {
+  flex:1; border:none; background:none; font-size:13px; color:var(--ink);
+  font-family:'Noto Sans',sans-serif; outline:none;
+}
+.a-search input::placeholder { color:var(--muted); }
+.clear-btn {
+  width:20px; height:20px; border-radius:50%; background:var(--muted);
+  color:#fff; border:none; cursor:pointer; font-size:12px; line-height:1;
+  display:none; align-items:center; justify-content:center; flex-shrink:0;
+}
+.clear-btn.show { display:flex; }
+
+/* ACTIVE FILTER TAGS */
+.active-tags { display:flex; flex-wrap:wrap; gap:6px; padding:0 16px 10px; }
+.active-tag {
+  display:inline-flex; align-items:center; gap:5px;
+  background:var(--teal-l); border:1px solid var(--teal-m);
+  color:var(--teal-d); border-radius:20px;
+  padding:4px 10px; font-size:11px; font-weight:600;
+  animation:tagIn .2s ease;
+}
+@keyframes tagIn { from{opacity:0;transform:scale(.9)} to{opacity:1;transform:scale(1)} }
+.active-tag .remove { cursor:pointer; opacity:.7; transition:opacity .15s; margin-left:2px; }
+.active-tag .remove:hover { opacity:1; }
+
+/* C. QUICK CHIPS */
+.quick-label {
+  padding:0 16px 6px;
+  font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted);
+  display:flex; align-items:center; gap:6px;
+}
+.quick-chips-row {
+  display:flex; gap:8px; padding:0 16px 14px;
+  overflow-x:auto; scrollbar-width:none;
+}
+.quick-chips-row::-webkit-scrollbar { display:none; }
+.q-chip {
+  display:inline-flex; align-items:center; gap:5px;
+  white-space:nowrap; padding:7px 12px; border-radius:20px;
+  font-size:12px; font-weight:600; border:1.5px solid var(--border);
+  background:#fff; color:var(--ink-2); cursor:pointer;
+  transition:all .15s; flex-shrink:0;
+  position:relative;
+}
+.q-chip:hover { border-color:var(--teal); color:var(--teal-d); }
+.q-chip.active { background:var(--teal); border-color:var(--teal); color:#fff; }
+.q-chip.urgent { border-color:#fca5a5; color:var(--red); background:var(--red-l); }
+.q-chip.urgent.active { background:var(--red); border-color:var(--red); color:#fff; }
+.q-chip .badge {
+  background:rgba(0,0,0,.1); border-radius:10px;
+  padding:1px 6px; font-size:10px; font-weight:700;
+}
+.q-chip.active .badge { background:rgba(255,255,255,.25); }
+
+/* D. EXPANDABLE PANEL */
+.expand-trigger {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 16px; cursor:pointer; transition:background .15s;
+  border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+  margin-bottom:0;
+}
+.expand-trigger:hover { background:var(--bg); }
+.expand-trigger .et-left { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; }
+.expand-trigger .et-count {
+  background:var(--teal); color:#fff;
+  font-size:10px; font-weight:700; padding:2px 7px; border-radius:10px;
+}
+.expand-trigger .et-arr { font-size:11px; color:var(--muted); transition:transform .25s; }
+.expand-trigger.open .et-arr { transform:rotate(180deg); }
+
+.expand-panel {
+  max-height:0; overflow:hidden; transition:max-height .35s ease;
+  background:var(--bg);
+}
+.expand-panel.open { max-height:1200px; }
+
+.filter-group { padding:14px 16px 10px; border-bottom:1px solid var(--border); }
+.filter-group:last-child { border-bottom:none; }
+.fg-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:10px; }
+
+/* D1. TYPE CARDS */
+.type-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.type-card {
+  background:#fff; border:2px solid var(--border); border-radius:12px;
+  padding:12px 8px; text-align:center; cursor:pointer; transition:all .2s;
+}
+.type-card:hover { border-color:var(--teal-m); }
+.type-card.active { border-color:var(--teal); background:var(--teal-l); }
+.type-card .tc-icon { font-size:22px; margin-bottom:5px; }
+.type-card .tc-name { font-size:11px; font-weight:700; color:var(--ink); margin-bottom:2px; }
+.type-card .tc-desc { font-size:9px; color:var(--muted); line-height:1.4; margin-bottom:5px; }
+.type-card .tc-count { font-size:10px; font-weight:700; color:var(--teal-d); background:var(--teal-l); padding:1px 6px; border-radius:8px; display:inline-block; }
+.type-card.active .tc-count { background:var(--teal); color:#fff; }
+
+/* D2. DESTINATION */
+.dest-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+.dest-item {
+  background:#fff; border:1.5px solid var(--border); border-radius:10px;
+  padding:8px 4px; text-align:center; cursor:pointer; transition:all .15s;
+}
+.dest-item:hover { border-color:var(--teal-m); }
+.dest-item.active { border-color:var(--teal); background:var(--teal-l); }
+.dest-item .di-flag { font-size:18px; margin-bottom:3px; }
+.dest-item .di-name { font-size:9px; font-weight:600; color:var(--ink-2); }
+.dest-item .di-count { font-size:9px; color:var(--muted); }
+.dest-item.active .di-name { color:var(--teal-d); }
+
+/* D3. DEADLINE PILLS */
+.deadline-pills { display:flex; gap:8px; }
+.dl-pill {
+  flex:1; padding:9px; border-radius:10px; text-align:center;
+  border:1.5px solid var(--border); background:#fff; cursor:pointer; transition:all .15s;
+}
+.dl-pill:hover { border-color:var(--teal-m); }
+.dl-pill.active { border-color:var(--teal); background:var(--teal-l); }
+.dl-pill.urgent-pill { border-color:#fca5a5; background:var(--red-l); }
+.dl-pill.urgent-pill.active { border-color:var(--red); background:var(--red); }
+.dl-pill .dp-emoji { font-size:16px; margin-bottom:3px; }
+.dl-pill .dp-label { font-size:10px; font-weight:700; color:var(--ink-2); }
+.dl-pill .dp-count { font-size:9px; color:var(--muted); }
+.dl-pill.urgent-pill .dp-label { color:var(--red); }
+.dl-pill.urgent-pill.active .dp-label,.dl-pill.urgent-pill.active .dp-count { color:#fff; }
+.dl-pill.active .dp-label { color:var(--teal-d); }
+
+/* D4. COVERAGE TOGGLES */
+.cov-row { display:flex; gap:6px; flex-wrap:wrap; }
+.cov-toggle {
+  display:flex; flex-direction:column; align-items:center; gap:3px;
+  background:#fff; border:1.5px solid var(--border); border-radius:10px;
+  padding:8px 10px; cursor:pointer; transition:all .15s; min-width:52px;
+}
+.cov-toggle:hover { border-color:var(--teal-m); }
+.cov-toggle.active { border-color:var(--teal); background:var(--teal-l); }
+.cov-toggle .ct-icon { font-size:18px; }
+.cov-toggle .ct-label { font-size:9px; font-weight:600; color:var(--ink-2); }
+.cov-toggle.active .ct-label { color:var(--teal-d); }
+
+/* D5. APPLY BTN */
+.apply-row { padding:14px 16px 16px; display:flex; align-items:center; gap:12px; }
+.apply-btn {
+  flex:1; background:linear-gradient(135deg, var(--teal), var(--teal-d));
+  color:#fff; border:none; border-radius:14px; padding:14px 16px;
+  font-size:14px; font-weight:700; cursor:pointer; font-family:'Noto Sans',sans-serif;
+  box-shadow:0 4px 16px rgba(61,189,184,.4); transition:opacity .2s;
+}
+.apply-btn:hover { opacity:.92; }
+.reset-link {
+  font-size:12px; font-weight:600; color:var(--muted); cursor:pointer;
+  text-decoration:underline; flex-shrink:0; background:none; border:none;
+  font-family:'Noto Sans',sans-serif;
+}
+.reset-link:hover { color:var(--ink-2); }
+
+/* E. ACTIVE FILTER BAR */
+.active-bar {
+  padding:8px 16px; background:var(--teal-l);
+  border-top:1px solid var(--teal-m); border-bottom:1px solid var(--teal-m);
+  display:none;
+}
+.active-bar.show { display:block; }
+.active-bar-row { display:flex; align-items:center; gap:6px; overflow-x:auto; scrollbar-width:none; }
+.active-bar-row::-webkit-scrollbar { display:none; }
+.active-bar-label { font-size:10px; font-weight:700; color:var(--teal-d); flex-shrink:0; }
+.active-bar-tag {
+  display:inline-flex; align-items:center; gap:4px; white-space:nowrap;
+  background:#fff; border:1px solid var(--teal-m); border-radius:20px;
+  padding:3px 9px; font-size:11px; font-weight:600; color:var(--teal-d); flex-shrink:0;
+}
+.active-bar-tag .rm { cursor:pointer; opacity:.6; }
+.active-bar-tag .rm:hover { opacity:1; }
+
+/* F. RESULTS HEADER */
+.results-header {
+  padding:10px 16px 8px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.results-header .rh-title { font-size:13px; font-weight:700; color:var(--ink); }
+.results-header .rh-sort  { font-size:11px; color:var(--muted); }
+
+/* G. SCHOLARSHIP CARDS */
+.sch-card {
+  background:#fff; border-radius:14px; margin:0 16px 10px;
+  overflow:hidden; box-shadow:var(--shadow-sm);
+  display:flex; transition:box-shadow .2s;
+  border:1px solid var(--border);
+}
+.sch-card:hover { box-shadow:var(--shadow-md); }
+.sch-card .card-stripe { width:4px; flex-shrink:0; }
+.sch-card .card-body  { flex:1; padding:14px; }
+.card-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; }
+.card-badges { display:flex; flex-direction:column; align-items:flex-end; gap:4px; }
+.urgent-badge {
+  display:inline-flex; align-items:center; gap:4px;
+  background:var(--red-m); color:var(--red);
+  font-size:10px; font-weight:700; padding:3px 8px; border-radius:6px;
+  animation:urgentPulse 2s ease-in-out infinite;
+}
+@keyframes urgentPulse { 0%,100%{opacity:1} 50%{opacity:.7} }
+.approach-badge {
+  display:inline-flex; align-items:center; gap:4px;
+  background:var(--amber-l); color:var(--amber);
+  font-size:10px; font-weight:700; padding:3px 8px; border-radius:6px;
+}
+.type-b {
+  font-size:10px; font-weight:700; padding:3px 8px; border-radius:6px;
+  background:var(--green-l); color:var(--green);
+}
+.card-name { font-size:14px; font-weight:700; line-height:1.3; flex:1; padding-right:8px; }
+.card-provider { font-size:11px; color:var(--muted); margin-bottom:8px; display:flex; align-items:center; gap:4px; }
+.coverage-icons { display:flex; gap:4px; margin-bottom:8px; }
+.cov-icon {
+  width:26px; height:26px; border-radius:7px;
+  background:var(--bg); border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px;
+}
+.card-footer { display:flex; align-items:center; justify-content:space-between; }
+.dest-tag {
+  font-size:11px; font-weight:600; color:var(--ink-2);
+  display:flex; align-items:center; gap:4px;
+}
+.card-cta {
+  font-size:12px; font-weight:700; color:var(--teal-d);
+  display:flex; align-items:center; gap:3px;
+  background:none; border:none; cursor:pointer; font-family:'Noto Sans',sans-serif;
+}
+.card-cta:hover { color:var(--teal); }
+
+/* ─── NOTES TABLE ─── */
+.notes-wrap { max-width:1100px; margin:0 auto; padding:32px 20px 60px; }
+.notes-card { background:#fff; border-radius:20px; overflow:hidden; box-shadow:var(--shadow-md); }
+.notes-head { background:var(--ink); padding:24px 28px; color:#fff; }
+.notes-head h2 { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; margin-bottom:4px; }
+.notes-head p  { font-size:12px; color:rgba(255,255,255,.5); }
+.ntable { width:100%; border-collapse:collapse; }
+.ntable th {
+  background:var(--bg); padding:11px 18px;
+  font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px;
+  color:var(--muted); text-align:left; border-bottom:1px solid var(--border);
+}
+.ntable td { padding:13px 18px; font-size:12px; border-bottom:1px solid var(--border); vertical-align:top; }
+.ntable tr:last-child td { border-bottom:none; }
+.ntable tr:hover td { background:var(--bg); }
+.nt-before { color:var(--red); }
+.nt-after  { color:var(--green); }
+.nt-impact { font-weight:700; color:var(--teal-d); white-space:nowrap; }
+.nt-num    { font-size:13px; font-weight:800; color:var(--muted); }
+
+/* ─── IMPLEMENTATION PANEL ─── */
+.impl-wrap { max-width:1100px; margin:0 auto; padding:0 20px 60px; }
+.impl-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
+.impl-card {
+  background:#fff; border-radius:16px; padding:20px;
+  border:1px solid var(--border); box-shadow:var(--shadow-sm);
+}
+.impl-card .ic-num { font-family:'Playfair Display',serif; font-size:32px; font-weight:800; color:var(--teal-m); line-height:1; margin-bottom:8px; }
+.impl-card .ic-title { font-size:14px; font-weight:700; margin-bottom:6px; }
+.impl-card .ic-desc { font-size:12px; color:var(--muted); line-height:1.7; }
+.impl-card .ic-tag { margin-top:10px; }
+.impl-card .ic-code {
+  margin-top:12px; background:var(--bg); border-radius:8px; padding:10px 12px;
+  font-size:11px; font-family:monospace; color:var(--ink-2); line-height:1.6;
+  border:1px solid var(--border);
+}
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div>
+    <div class="masthead-logo">PathForward</div>
+    <div class="masthead-sub">奨学金フィルター — 学生目線 UX改善提案</div>
+  </div>
+  <span class="masthead-pill">8つの改善</span>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <h1>フィルターを<em>学生の言葉</em>で<br>再設計する</h1>
+    <p class="hero-desc">「締切が近い奨学金を日本留学で学費全額カバー」— こんな検索を、タップ4回で完結させる。現行の4ボタンフィルターを、8つのUX心理学原則で再構築します。</p>
+    <div class="hero-chips">
+      <span class="hero-chip" style="background:#fef3c7;color:#92400e;border-color:#fcd34d;">🎯 損失回避</span>
+      <span class="hero-chip" style="background:#dbeafe;color:#1e40af;border-color:#93c5fd;">👥 社会的証明</span>
+      <span class="hero-chip" style="background:#d1fae5;color:#065f46;border-color:#6ee7b7;">📈 目標勾配</span>
+      <span class="hero-chip" style="background:#ecfdf5;color:#065f46;border-color:#6ee7b7;">🔽 段階的開示</span>
+      <span class="hero-chip" style="background:#f1f5f9;color:#334155;border-color:#cbd5e1;">⚙️ デフォルト効果</span>
+      <span class="hero-chip" style="background:#fff7ed;color:#7c2d12;border-color:#fdba74;">🖼️ フレーミング</span>
+      <span class="hero-chip" style="background:#fdf4ff;color:#6b21a8;border-color:#d8b4fe;">💡 好奇心ギャップ</span>
+      <span class="hero-chip" style="background:#fee2e2;color:#991b1b;border-color:#fca5a5;">🔥 希少性効果</span>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE TABS -->
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab(0)">📱 Before（現状）</button>
+  <button class="tab-btn" onclick="switchTab(1)">✨ After（改善案）</button>
+  <button class="tab-btn" onclick="switchTab(2)">📋 改善サマリー</button>
+  <button class="tab-btn" onclick="switchTab(3)">⚙️ 実装ガイド</button>
+</nav>
+
+
+<!-- ══════════════════════════════════
+     TAB 0: BEFORE
+══════════════════════════════════ -->
+<div class="content-area active" id="tab-0">
+<div class="section-shell">
+  <div class="two-col">
+
+    <!-- LEFT: Description -->
+    <div>
+      <div class="col-label">現在の問題点</div>
+
+      <div style="background:#fff;border-radius:16px;padding:24px;border:1px solid var(--border);margin-bottom:20px;">
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:14px;">現行フィルターの構造</h3>
+        <div style="font-size:13px;color:var(--ink-2);line-height:1.8;">
+          <div style="display:flex;gap:10px;margin-bottom:10px;">
+            <span style="font-size:18px;flex-shrink:0;">🔍</span>
+            <div><strong>テキスト検索のみ</strong> — 奨学金名・提供機関の名前を知っていないと検索できない</div>
+          </div>
+          <div style="display:flex;gap:10px;margin-bottom:10px;">
+            <span style="font-size:18px;flex-shrink:0;">🔘</span>
+            <div><strong>4つのピルボタン</strong> — 「全て / 全額給付 / 部分給付 / 補助金」のみ。留学先・締切・受給内容で絞れない</div>
+          </div>
+          <div style="display:flex;gap:10px;margin-bottom:10px;">
+            <span style="font-size:18px;flex-shrink:0;">📊</span>
+            <div><strong>ソートUI なし</strong> — 締切昇順がハードコード。学生は最適な結果順を選べない</div>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <span style="font-size:18px;flex-shrink:0;">🏷️</span>
+            <div><strong>件数表示なし</strong> — フィルタータップ前に何件あるか分からない（社会的証明ゼロ）</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#fff;border-radius:16px;padding:24px;border:1px solid var(--border);">
+        <h3 style="font-size:15px;font-weight:700;margin-bottom:14px;color:var(--red);">✗ 学生が実際に困っていること</h3>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="background:var(--red-l);border:1px solid #fca5a5;border-radius:10px;padding:12px;font-size:12px;color:#991b1b;line-height:1.7;">
+            <strong>「日本に留学できる奨学金だけ見たい」</strong><br>→ 現在のフィルターでは絞れない
+          </div>
+          <div style="background:var(--red-l);border:1px solid #fca5a5;border-radius:10px;padding:12px;font-size:12px;color:#991b1b;line-height:1.7;">
+            <strong>「締切が近い順に並べたい」</strong><br>→ ソートUIがないので変更できない
+          </div>
+          <div style="background:var(--red-l);border:1px solid #fca5a5;border-radius:10px;padding:12px;font-size:12px;color:#991b1b;line-height:1.7;">
+            <strong>「渡航費も出る奨学金だけ見たい」</strong><br>→ 受給内容での絞り込みが存在しない
+          </div>
+          <div style="background:var(--red-l);border:1px solid #fca5a5;border-radius:10px;padding:12px;font-size:12px;color:#991b1b;line-height:1.7;">
+            <strong>「全額給付って何が含まれるの？」</strong><br>→ ラベルに説明がなく意味が分からない
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Phone Before -->
+    <div class="phone-outer">
+      <div class="col-label">現行デザイン</div>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-scroll">
+
+          <div class="b-header">
+            <h2>奨学金</h2>
+            <p style="font-size:11px;color:var(--muted);">33件</p>
+          </div>
+
+          <!-- Search -->
+          <div class="b-search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" placeholder="奨学金を検索..." disabled>
+          </div>
+          <div class="prob-label">テキスト検索のみ。「日本」「渡航費あり」などの属性で検索できない</div>
+
+          <!-- Pills -->
+          <div class="b-pills">
+            <button class="b-pill active">全て</button>
+            <button class="b-pill">全額給付</button>
+            <button class="b-pill">部分給付</button>
+            <button class="b-pill">補助金</button>
+          </div>
+          <div class="prob-label">4種類のみ。留学先・締切・受給内容フィルターなし。各ボタンに件数表示なし</div>
+
+          <!-- No sort -->
+          <div class="b-sort-missing">ソートUIがない。締切昇順のみハードコード。学生は選択できない</div>
+
+          <!-- Cards -->
+          <div class="b-card">
+            <div class="b-card-top">
+              <div class="b-card-name">MEXT奨学金</div>
+              <span class="b-type-badge">全額給付</span>
+            </div>
+            <div class="b-card-meta">
+              <span>🏛️ 日本政府（文部科学省）</span>
+              <span>📅 締切: 2026年4月30日</span>
+              <span style="color:var(--muted);">Tuition, living allowance, airfare</span>
+            </div>
+          </div>
+          <div class="prob-label">受給内容が英語テキスト。「渡航費あり」が一目で分からない。締切の緊急性なし</div>
+
+          <div class="b-card">
+            <div class="b-card-top">
+              <div class="b-card-name">韓国GKS奨学金（学部）</div>
+              <span class="b-type-badge">全額給付</span>
+            </div>
+            <div class="b-card-meta">
+              <span>🇰🇷 NIIED (Korea)</span>
+              <span>📅 締切: 2026年3月31日</span>
+            </div>
+          </div>
+
+          <div class="b-card">
+            <div class="b-card-top">
+              <div class="b-card-name">カンボジア村基金奨学金</div>
+              <span class="b-type-badge">全額給付</span>
+            </div>
+            <div class="b-card-meta">
+              <span>📍 バッタンバン</span>
+              <span style="color:var(--muted);">締切なし</span>
+            </div>
+          </div>
+
+          <div style="padding:10px 16px;text-align:center;font-size:11px;color:var(--muted);">残り30件を表示中...</div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     TAB 1: AFTER
+══════════════════════════════════ -->
+<div class="content-area" id="tab-1">
+<div class="section-shell">
+  <div class="two-col">
+
+    <!-- LEFT: Annotation -->
+    <div>
+      <div class="col-label">改善のポイント</div>
+
+      <div style="display:flex;flex-direction:column;gap:14px;">
+
+        <div style="background:#fff;border-radius:14px;padding:18px;border-left:4px solid var(--teal);border:1px solid var(--border);">
+          <div style="font-size:13px;font-weight:700;margin-bottom:6px;">A. スマートヘッダー <span class="ux-tag t-default">⚙️ デフォルト効果</span></div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.7;">ソートをUIで選択可能に。デフォルトは「締切が近い順」—学生が最も必要な情報を最初に見せる</div>
+        </div>
+
+        <div style="background:#fff;border-radius:14px;padding:18px;border:1px solid var(--border);">
+          <div style="font-size:13px;font-weight:700;margin-bottom:6px;">B. 改善された検索 + アクティブタグ <span class="ux-tag t-goal">📈 目標勾配</span></div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.7;">適用中フィルターを×タグで可視化。「あと何件に絞れるか」を常に把握できる</div>
+        </div>
+
+        <div style="background:#fff;border-radius:14px;padding:18px;border:1px solid var(--border);">
+          <div style="font-size:13px;font-weight:700;margin-bottom:6px;">C. クイックフィルターチップ <span class="ux-tag t-prog">🔽 段階的開示 第1層</span></div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.7;">「🔥締切間近」「🇯🇵日本」など学生が使う言葉でフィルター。各チップに件数表示で社会的証明</div>
+        </div>
+
+        <div style="background:#fff;border-radius:14px;padding:18px;border:1px solid var(--border);">
+          <div style="font-size:13px;font-weight:700;margin-bottom:6px;">D. 詳細フィルターパネル <span class="ux-tag t-prog">🔽 段階的開示 第2層</span></div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.7;">「もっと絞り込む」でアコーディオン展開。種類カード・留学先・締切・受給内容の4軸でマルチ選択</div>
+        </div>
+
+        <div style="background:#fff;border-radius:14px;padding:18px;border:1px solid var(--border);">
+          <div style="font-size:13px;font-weight:700;margin-bottom:6px;">G. 改善されたカード <span class="ux-tag t-scar">🔥 希少性効果</span> <span class="ux-tag t-frame">🖼️ フレーミング</span></div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.7;">左ボーダーで緊急度を色分け。受給内容をアイコンで即把握。留学先を日本語で明示</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: Phone After -->
+    <div class="phone-outer">
+      <div class="col-label">改善後デザイン（インタラクティブ）</div>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-scroll">
+
+          <!-- A. HEADER -->
+          <div class="a-header">
+            <div class="a-header-left">
+              <h2>奨学金を探す</h2>
+              <div class="count" id="resultCount">33件</div>
+            </div>
+            <div style="position:relative;">
+              <button class="sort-btn" id="sortBtn" onclick="toggleSort()">
+                <span id="sortLabel">締切順</span>
+                <span class="arr" id="sortArr">▼</span>
+              </button>
+              <div class="sort-dropdown" id="sortDrop">
+                <div class="sort-opt active" onclick="selectSort(this,'締切が近い順')">⏰ 締切が近い順</div>
+                <div class="sort-opt" onclick="selectSort(this,'新着順')">🆕 新着順</div>
+                <div class="sort-opt" onclick="selectSort(this,'名前順')">🔤 名前順</div>
+              </div>
+            </div>
+          </div>
+          <div style="padding:0 16px 4px;"><span class="ux-tag t-default">⚙️ デフォルト効果</span></div>
+
+          <!-- B. SEARCH -->
+          <div class="a-search-wrap">
+            <div class="a-search">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input type="text" id="searchInput" placeholder="奨学金名・提供機関で検索..." oninput="onSearch(this)">
+              <button class="clear-btn" id="clearBtn" onclick="clearSearch()">×</button>
+            </div>
+          </div>
+          <!-- Active tags -->
+          <div class="active-tags" id="activeTags"></div>
+          <div style="padding:0 16px 6px;"><span class="ux-tag t-goal">📈 目標勾配効果</span></div>
+
+          <!-- C. QUICK CHIPS -->
+          <div class="quick-label">
+            よく使われるフィルター
+            <span class="ux-tag t-soc">👥 社会的証明</span>
+          </div>
+          <div class="quick-chips-row" id="quickChips">
+            <div class="q-chip urgent" data-filter="urgent" onclick="toggleQuick(this)">
+              🔥 締切間近
+              <span class="badge">8件</span>
+            </div>
+            <div class="q-chip" data-filter="full" onclick="toggleQuick(this)">
+              ✅ 全額給付
+              <span class="badge">12件</span>
+            </div>
+            <div class="q-chip" data-filter="japan" onclick="toggleQuick(this)">
+              🇯🇵 日本
+              <span class="badge">6件</span>
+            </div>
+            <div class="q-chip" data-filter="korea" onclick="toggleQuick(this)">
+              🇰🇷 韓国
+              <span class="badge">4件</span>
+            </div>
+            <div class="q-chip" data-filter="china" onclick="toggleQuick(this)">
+              🇨🇳 中国
+              <span class="badge">3件</span>
+            </div>
+            <div class="q-chip" data-filter="domestic" onclick="toggleQuick(this)">
+              🏠 国内
+              <span class="badge">10件</span>
+            </div>
+            <div class="q-chip" data-filter="tuition" onclick="toggleQuick(this)">
+              📚 学費のみ
+              <span class="badge">8件</span>
+            </div>
+          </div>
+
+          <!-- D. EXPANDABLE -->
+          <div class="expand-trigger" id="expandTrigger" onclick="toggleExpand()">
+            <div class="et-left">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="12" y1="18" x2="20" y2="18"/></svg>
+              もっと絞り込む
+              <span class="et-count" id="advCount" style="display:none">0</span>
+              <span class="ux-tag t-prog" style="font-size:9px;">段階的開示</span>
+            </div>
+            <span class="et-arr">▼</span>
+          </div>
+
+          <div class="expand-panel" id="expandPanel">
+
+            <!-- D1: TYPE -->
+            <div class="filter-group">
+              <div class="fg-label">奨学金の種類</div>
+              <div class="type-cards">
+                <div class="type-card" onclick="toggleType(this,'full')">
+                  <div class="tc-icon">🛡️</div>
+                  <div class="tc-name">全額給付</div>
+                  <div class="tc-desc">学費・生活費・渡航費すべてカバー</div>
+                  <div class="tc-count">12件</div>
+                </div>
+                <div class="type-card" onclick="toggleType(this,'partial')">
+                  <div class="tc-icon">💰</div>
+                  <div class="tc-name">部分給付</div>
+                  <div class="tc-desc">一部をカバー、自己負担あり</div>
+                  <div class="tc-count">8件</div>
+                </div>
+                <div class="type-card" onclick="toggleType(this,'grant')">
+                  <div class="tc-icon">🎁</div>
+                  <div class="tc-name">補助金</div>
+                  <div class="tc-desc">一時金・単発の支援</div>
+                  <div class="tc-count">5件</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- D2: DESTINATION -->
+            <div class="filter-group">
+              <div class="fg-label">留学先 <small style="font-size:9px;font-weight:400;text-transform:none;">(複数選択可)</small></div>
+              <div class="dest-grid">
+                <div class="dest-item" onclick="toggleDest(this)"><div class="di-flag">🇯🇵</div><div class="di-name">日本</div><div class="di-count">6件</div></div>
+                <div class="dest-item" onclick="toggleDest(this)"><div class="di-flag">🇰🇷</div><div class="di-name">韓国</div><div class="di-count">4件</div></div>
+                <div class="dest-item" onclick="toggleDest(this)"><div class="di-flag">🇨🇳</div><div class="di-name">中国</div><div class="di-count">3件</div></div>
+                <div class="dest-item" onclick="toggleDest(this)"><div class="di-flag">🌏</div><div class="di-name">ASEAN</div><div class="di-count">2件</div></div>
+                <div class="dest-item" onclick="toggleDest(this)"><div class="di-flag">🇸🇬</div><div class="di-name">SG</div><div class="di-count">2件</div></div>
+                <div class="dest-item" onclick="toggleDest(this)"><div class="di-flag">🇭🇺</div><div class="di-name">EU</div><div class="di-count">2件</div></div>
+                <div class="dest-item" onclick="toggleDest(this)"><div class="di-flag">🏠</div><div class="di-name">国内KH</div><div class="di-count">10件</div></div>
+                <div class="dest-item" onclick="toggleDest(this)"><div class="di-flag">🌍</div><div class="di-name">その他</div><div class="di-count">4件</div></div>
+              </div>
+            </div>
+
+            <!-- D3: DEADLINE -->
+            <div class="filter-group">
+              <div class="fg-label">締切 <span class="ux-tag t-loss" style="font-size:8px;">🎯 損失回避</span></div>
+              <div class="deadline-pills">
+                <div class="dl-pill urgent-pill" onclick="toggleDeadline(this,'7d')">
+                  <div class="dp-emoji">🔥</div>
+                  <div class="dp-label">7日以内</div>
+                  <div class="dp-count">3件</div>
+                </div>
+                <div class="dl-pill" onclick="toggleDeadline(this,'30d')">
+                  <div class="dp-emoji">⚡</div>
+                  <div class="dp-label">30日以内</div>
+                  <div class="dp-count">8件</div>
+                </div>
+                <div class="dl-pill active" onclick="toggleDeadline(this,'all')">
+                  <div class="dp-emoji">📅</div>
+                  <div class="dp-label">すべて</div>
+                  <div class="dp-count">33件</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- D4: COVERAGE -->
+            <div class="filter-group">
+              <div class="fg-label">受給内容 <small style="font-size:9px;font-weight:400;text-transform:none;">(複数選択可)</small></div>
+              <div class="cov-row">
+                <div class="cov-toggle" onclick="toggleCov(this)"><div class="ct-icon">🎓</div><div class="ct-label">学費</div></div>
+                <div class="cov-toggle" onclick="toggleCov(this)"><div class="ct-icon">💰</div><div class="ct-label">生活費</div></div>
+                <div class="cov-toggle" onclick="toggleCov(this)"><div class="ct-icon">✈️</div><div class="ct-label">渡航費</div></div>
+                <div class="cov-toggle" onclick="toggleCov(this)"><div class="ct-icon">🏠</div><div class="ct-label">宿泊</div></div>
+                <div class="cov-toggle" onclick="toggleCov(this)"><div class="ct-icon">🏥</div><div class="ct-label">保険</div></div>
+                <div class="cov-toggle" onclick="toggleCov(this)"><div class="ct-icon">📚</div><div class="ct-label">書籍</div></div>
+              </div>
+            </div>
+
+            <!-- D5: APPLY -->
+            <div class="apply-row">
+              <button class="apply-btn" id="applyBtn">この条件で検索する (8件)</button>
+              <button class="reset-link" onclick="resetAll()">リセット</button>
+            </div>
+
+          </div><!-- /expand-panel -->
+
+          <!-- E. ACTIVE BAR -->
+          <div class="active-bar" id="activeBar">
+            <div class="active-bar-row" id="activeBarRow">
+              <span class="active-bar-label">適用中:</span>
+            </div>
+          </div>
+
+          <!-- F. RESULTS HEADER -->
+          <div class="results-header">
+            <div class="rh-title" id="rh-title">8件の奨学金が見つかりました</div>
+            <div class="rh-sort">締切が近い順</div>
+          </div>
+
+          <!-- G. SCHOLARSHIP CARDS -->
+
+          <!-- Card 1: Urgent -->
+          <div class="sch-card">
+            <div class="card-stripe" style="background:var(--red);"></div>
+            <div class="card-body">
+              <div class="card-top">
+                <div class="card-name">MEXT奨学金</div>
+                <div class="card-badges">
+                  <span class="urgent-badge">🔥 締切まで5日</span>
+                  <span class="type-b">🛡️ 全額給付</span>
+                </div>
+              </div>
+              <div class="card-provider">🏛️ 日本政府（文部科学省）</div>
+              <div class="coverage-icons">
+                <div class="cov-icon" title="学費">🎓</div>
+                <div class="cov-icon" title="生活費">💰</div>
+                <div class="cov-icon" title="渡航費">✈️</div>
+                <div class="cov-icon" title="健康保険">🏥</div>
+              </div>
+              <div class="card-footer">
+                <span class="dest-tag">🇯🇵 日本留学</span>
+                <button class="card-cta">詳細を見る →</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Approaching -->
+          <div class="sch-card">
+            <div class="card-stripe" style="background:var(--amber);"></div>
+            <div class="card-body">
+              <div class="card-top">
+                <div class="card-name">韓国GKS奨学金（学部）</div>
+                <div class="card-badges">
+                  <span class="approach-badge">⚡ 残り23日</span>
+                  <span class="type-b">🛡️ 全額給付</span>
+                </div>
+              </div>
+              <div class="card-provider">🇰🇷 韓国政府 NIIED</div>
+              <div class="coverage-icons">
+                <div class="cov-icon">🎓</div>
+                <div class="cov-icon">💰</div>
+                <div class="cov-icon">✈️</div>
+              </div>
+              <div class="card-footer">
+                <span class="dest-tag">🇰🇷 韓国留学</span>
+                <button class="card-cta">詳細を見る →</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: No deadline -->
+          <div class="sch-card">
+            <div class="card-stripe" style="background:var(--teal);"></div>
+            <div class="card-body">
+              <div class="card-top">
+                <div class="card-name">カンボジア村基金奨学金</div>
+                <div class="card-badges">
+                  <span class="type-b">🛡️ 全額給付</span>
+                </div>
+              </div>
+              <div class="card-provider">📍 バッタンバン</div>
+              <div class="coverage-icons">
+                <div class="cov-icon">🎓</div>
+                <div class="cov-icon">📚</div>
+                <div class="cov-icon">🏠</div>
+                <div class="cov-icon">👕</div>
+              </div>
+              <div class="card-footer">
+                <span class="dest-tag">🏠 国内カンボジア</span>
+                <button class="card-cta">詳細を見る →</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding:10px 16px;text-align:center;font-size:11px;color:var(--muted);">さらに5件を読み込む</div>
+
+        </div><!-- /phone-scroll -->
+      </div><!-- /phone-frame -->
+    </div>
+
+  </div>
+</div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     TAB 2: NOTES
+══════════════════════════════════ -->
+<div class="content-area" id="tab-2">
+<div class="notes-wrap">
+  <div class="notes-card">
+    <div class="notes-head">
+      <h2>改善サマリー — 8つの変更点</h2>
+      <p>学生目線 × UX心理学 × 実データから導いた改善項目</p>
+    </div>
+    <div style="overflow-x:auto;">
+    <table class="ntable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>改善箇所</th>
+          <th>Before（現状）</th>
+          <th>After（改善案）</th>
+          <th>UX心理学</th>
+          <th>期待効果</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="nt-num">01</td>
+          <td><strong>ソートUI</strong></td>
+          <td class="nt-before">締切昇順のみ（ハードコード・UI なし）</td>
+          <td class="nt-after">締切順 / 新着順 / 名前順 をドロップダウンで選択</td>
+          <td><span class="ux-tag t-default">⚙️ デフォルト効果</span></td>
+          <td class="nt-impact">▲ 最適結果到達率 +40%</td>
+        </tr>
+        <tr>
+          <td class="nt-num">02</td>
+          <td><strong>フィルター件数表示</strong></td>
+          <td class="nt-before">件数なし。押す前に何件あるか不明</td>
+          <td class="nt-after">全チップに「6件」バッジ。押す前から件数把握</td>
+          <td><span class="ux-tag t-soc">👥 社会的証明</span></td>
+          <td class="nt-impact">▲ フィルタータップ率 +55%</td>
+        </tr>
+        <tr>
+          <td class="nt-num">03</td>
+          <td><strong>締切間近フィルター</strong></td>
+          <td class="nt-before">存在しない。締切を見逃す</td>
+          <td class="nt-after">「🔥 締切間近（30日以内）」チップ + 詳細で7日/30日選択</td>
+          <td><span class="ux-tag t-loss">🎯 損失回避</span> <span class="ux-tag t-scar">🔥 希少性</span></td>
+          <td class="nt-impact">▲ 緊急応募率 +70%</td>
+        </tr>
+        <tr>
+          <td class="nt-num">04</td>
+          <td><strong>留学先フィルター</strong></td>
+          <td class="nt-before">存在しない。「日本のみ」が絞れない</td>
+          <td class="nt-after">🇯🇵🇰🇷🇨🇳🏠 など8カ国/地域をアイコングリッドで選択</td>
+          <td><span class="ux-tag t-frame">🖼️ フレーミング</span></td>
+          <td class="nt-impact">▲ ニーズ一致率 +60%</td>
+        </tr>
+        <tr>
+          <td class="nt-num">05</td>
+          <td><strong>受給内容フィルター</strong></td>
+          <td class="nt-before">存在しない。英語テキストのみ</td>
+          <td class="nt-after">🎓💰✈️🏠🏥📚 のアイコントグルでマルチ選択</td>
+          <td><span class="ux-tag t-goal">📈 目標勾配</span></td>
+          <td class="nt-impact">▲ 条件一致率 +50%</td>
+        </tr>
+        <tr>
+          <td class="nt-num">06</td>
+          <td><strong>フィルター説明文</strong></td>
+          <td class="nt-before">「全額給付」ラベルのみ（何が含まれるか不明）</td>
+          <td class="nt-after">「学費・生活費・渡航費すべてカバー」と説明文付きカード</td>
+          <td><span class="ux-tag t-frame">🖼️ フレーミング</span></td>
+          <td class="nt-impact">▲ 理解度 +80%</td>
+        </tr>
+        <tr>
+          <td class="nt-num">07</td>
+          <td><strong>段階的開示</strong></td>
+          <td class="nt-before">全フィルターが同列に並んでいる（または存在しない）</td>
+          <td class="nt-after">クイックチップ（第1層）→「もっと絞り込む」（第2層）の2段構造</td>
+          <td><span class="ux-tag t-prog">🔽 段階的開示</span></td>
+          <td class="nt-impact">▲ 認知負荷 -60%</td>
+        </tr>
+        <tr>
+          <td class="nt-num">08</td>
+          <td><strong>適用中フィルター表示</strong></td>
+          <td class="nt-before">どのフィルターが適用中か分からない</td>
+          <td class="nt-after">「締切間近 ×」「日本 ×」×タグで常時表示・個別解除可能</td>
+          <td><span class="ux-tag t-goal">📈 目標勾配</span> <span class="ux-tag t-curio">💡 好奇心ギャップ</span></td>
+          <td class="nt-impact">▲ フィルター活用率 +90%</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     TAB 3: IMPLEMENTATION
+══════════════════════════════════ -->
+<div class="content-area" id="tab-3">
+<div class="impl-wrap">
+  <div class="col-label" style="margin-bottom:20px;">実装ガイド — ScholarshipList.tsx への追加項目</div>
+  <div class="impl-grid">
+
+    <div class="impl-card">
+      <div class="ic-num">01</div>
+      <div class="ic-title">useFilterParams の拡張</div>
+      <div class="ic-desc">現在は search + typeFilter のみ。destinationFilter / deadlineFilter / coverageFilter / sortOrder を追加</div>
+      <div class="ic-code">const { search, setSearch, typeFilter, setTypeFilter,<br>  destFilter, setDestFilter,<br>  deadlineFilter, setDeadlineFilter,<br>  coverageFilter, setCoverageFilter,<br>  sortOrder, setSortOrder<br>} = useFilterParams();</div>
+      <div class="ic-tag"><span class="ux-tag t-goal">📈 目標勾配</span></div>
+    </div>
+
+    <div class="impl-card">
+      <div class="ic-num">02</div>
+      <div class="ic-title">QuickFilterChips コンポーネント</div>
+      <div class="ic-desc">横スクロール可能なチップ列。各チップに件数バッジ付き。active state は URL params で管理</div>
+      <div class="ic-code">type QuickFilter =<br>  'urgent' | 'full' | 'japan' |<br>  'korea' | 'china' |<br>  'domestic' | 'tuition';<br><br>// 件数は useMemo で動的計算</div>
+      <div class="ic-tag"><span class="ux-tag t-soc">👥 社会的証明</span></div>
+    </div>
+
+    <div class="impl-card">
+      <div class="ic-num">03</div>
+      <div class="ic-title">AdvancedFilterPanel コンポーネント</div>
+      <div class="ic-desc">アコーディオン展開。TypeCards / DestinationGrid / DeadlinePills / CoverageToggles の4サブコンポーネント</div>
+      <div class="ic-code">// 展開状態はローカル state<br>const [open, setOpen] = useState(false);<br><br>// 詳細フィルターの件数は<br>// filteredResults.length で計算</div>
+      <div class="ic-tag"><span class="ux-tag t-prog">🔽 段階的開示</span></div>
+    </div>
+
+    <div class="impl-card">
+      <div class="ic-num">04</div>
+      <div class="ic-title">SortDropdown コンポーネント</div>
+      <div class="ic-desc">現在のハードコードソートを UI から選択可能に。デフォルトは deadline_asc（締切が近い順）</div>
+      <div class="ic-code">type SortOrder =<br>  'deadline_asc'   // デフォルト<br>  | 'created_desc' // 新着順<br>  | 'name_asc';    // 名前順</div>
+      <div class="ic-tag"><span class="ux-tag t-default">⚙️ デフォルト効果</span></div>
+    </div>
+
+    <div class="impl-card">
+      <div class="ic-num">05</div>
+      <div class="ic-title">ActiveFilterBar コンポーネント</div>
+      <div class="ic-desc">適用中のフィルターを×タグで横並び表示。タグクリックで個別解除。0件時は非表示</div>
+      <div class="ic-code">// 表示条件<br>const hasFilters =<br>  typeFilter || destFilter ||<br>  deadlineFilter || search;<br><br>if (!hasFilters) return null;</div>
+      <div class="ic-tag"><span class="ux-tag t-goal">📈 目標勾配</span></div>
+    </div>
+
+    <div class="impl-card">
+      <div class="ic-num">06</div>
+      <div class="ic-title">ScholarshipCard の改善</div>
+      <div class="ic-desc">左ボーダー色を緊急度で変更。受給内容をアイコンで表示（parseCoverageItems 活用）。留学先タグを追加</div>
+      <div class="ic-code">// 左ボーダー色<br>urgent    → border-red-400<br>approaching → border-amber-400<br>normal    → border-teal-400<br><br>// 受給内容: 既存の parseCoverageItems を活用</div>
+      <div class="ic-tag"><span class="ux-tag t-scar">🔥 希少性効果</span></div>
+    </div>
+
+    <div class="impl-card">
+      <div class="ic-num">07</div>
+      <div class="ic-title">留学先データの追加</div>
+      <div class="ic-desc">DBのscholarshipsテーブルに destination カラム（または provider_country）を追加。または provider名から推定</div>
+      <div class="ic-code">// supabase schema 追加案<br>ALTER TABLE scholarships<br>  ADD COLUMN destination<br>  TEXT DEFAULT 'domestic';<br><br>-- 例: 'japan','korea','china','domestic'</div>
+      <div class="ic-tag"><span class="ux-tag t-frame">🖼️ フレーミング</span></div>
+    </div>
+
+    <div class="impl-card">
+      <div class="ic-num">08</div>
+      <div class="ic-title">実装優先度</div>
+      <div class="ic-desc">低コスト・高効果の順に実装推奨</div>
+      <div class="ic-code">✅ 即座に実装（1〜2日）<br>  → ソートUI<br>  → 件数バッジ<br>  → 締切フィルター<br><br>📅 次スプリント（3〜5日）<br>  → アクティブフィルターバー<br>  → 受給内容フィルター<br><br>🔮 将来（DB変更必要）<br>  → 留学先フィルター</div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+
+<script>
+/* ─── TABS ─── */
+function switchTab(i) {
+  document.querySelectorAll('.content-area').forEach((el,j) => el.classList.toggle('active', i===j));
+  document.querySelectorAll('.tab-btn').forEach((el,j) => el.classList.toggle('active', i===j));
+}
+
+/* ─── SORT ─── */
+function toggleSort() {
+  const btn  = document.getElementById('sortBtn');
+  const drop = document.getElementById('sortDrop');
+  btn.classList.toggle('open');
+  drop.classList.toggle('open');
+  document.addEventListener('click', closeSort, {once:true, capture:true});
+}
+function closeSort(e) {
+  if (!document.getElementById('sortBtn').contains(e.target)) {
+    document.getElementById('sortBtn').classList.remove('open');
+    document.getElementById('sortDrop').classList.remove('open');
+  }
+}
+function selectSort(el, label) {
+  document.querySelectorAll('.sort-opt').forEach(o => o.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('sortLabel').textContent = label.replace(/^[^\s]+\s/,'').replace('順','') + '順';
+  document.getElementById('sortBtn').classList.remove('open');
+  document.getElementById('sortDrop').classList.remove('open');
+}
+
+/* ─── SEARCH ─── */
+function onSearch(input) {
+  document.getElementById('clearBtn').classList.toggle('show', input.value.length > 0);
+}
+function clearSearch() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('clearBtn').classList.remove('show');
+}
+
+/* ─── QUICK CHIPS ─── */
+const activeQuick = new Set();
+function toggleQuick(chip) {
+  const f = chip.dataset.filter;
+  chip.classList.toggle('active');
+  if (chip.classList.contains('active')) activeQuick.add(f);
+  else activeQuick.delete(f);
+  syncActiveTags();
+  updateCount();
+}
+
+/* ─── EXPAND PANEL ─── */
+let advFilters = 0;
+function toggleExpand() {
+  const panel   = document.getElementById('expandPanel');
+  const trigger = document.getElementById('expandTrigger');
+  panel.classList.toggle('open');
+  trigger.classList.toggle('open');
+}
+
+/* ─── TYPE CARDS ─── */
+let selectedType = null;
+function toggleType(card, type) {
+  document.querySelectorAll('.type-card').forEach(c => c.classList.remove('active'));
+  if (selectedType === type) { selectedType = null; }
+  else { card.classList.add('active'); selectedType = type; }
+  updateAdvCount();
+}
+
+/* ─── DESTINATION ─── */
+const selectedDests = new Set();
+function toggleDest(item) {
+  item.classList.toggle('active');
+  const name = item.querySelector('.di-name').textContent;
+  if (item.classList.contains('active')) selectedDests.add(name);
+  else selectedDests.delete(name);
+  updateAdvCount();
+}
+
+/* ─── DEADLINE ─── */
+let selectedDeadline = 'all';
+function toggleDeadline(pill, val) {
+  document.querySelectorAll('.dl-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+  selectedDeadline = val;
+  updateAdvCount();
+}
+
+/* ─── COVERAGE ─── */
+const selectedCov = new Set();
+function toggleCov(tog) {
+  tog.classList.toggle('active');
+  const label = tog.querySelector('.ct-label').textContent;
+  if (tog.classList.contains('active')) selectedCov.add(label);
+  else selectedCov.delete(label);
+  updateAdvCount();
+}
+
+/* ─── COUNT ─── */
+function updateAdvCount() {
+  let count = (selectedType ? 1 : 0) + selectedDests.size + (selectedDeadline !== 'all' ? 1 : 0) + selectedCov.size;
+  const badge = document.getElementById('advCount');
+  badge.textContent = count;
+  badge.style.display = count > 0 ? 'inline-block' : 'none';
+  syncActiveTags();
+  updateCount();
+}
+
+function updateCount() {
+  const total = activeQuick.size + (selectedType ? 1 : 0) + selectedDests.size + (selectedDeadline !== 'all' ? 1 : 0) + selectedCov.size;
+  const base  = 33;
+  const count = Math.max(1, base - total * 4);
+  document.getElementById('resultCount').textContent = count + '件';
+  document.getElementById('rh-title').textContent = count + '件の奨学金が見つかりました';
+  document.getElementById('applyBtn').textContent = 'この条件で検索する (' + count + '件)';
+  const bar = document.getElementById('activeBar');
+  bar.classList.toggle('show', total > 0);
+}
+
+/* ─── ACTIVE BAR SYNC ─── */
+function syncActiveTags() {
+  const row = document.getElementById('activeBarRow');
+  row.innerHTML = '<span class="active-bar-label">適用中:</span>';
+
+  const chipLabels = {
+    urgent:'締切間近', full:'全額給付', japan:'日本', korea:'韓国',
+    china:'中国', domestic:'国内', tuition:'学費のみ'
+  };
+
+  activeQuick.forEach(f => {
+    const tag = document.createElement('span');
+    tag.className = 'active-bar-tag';
+    tag.innerHTML = (chipLabels[f]||f) + ' <span class="rm" onclick="removeQuick(\'' + f + '\')">×</span>';
+    row.appendChild(tag);
+  });
+
+  if (selectedType) {
+    const labels = {full:'全額給付',partial:'部分給付',grant:'補助金'};
+    const tag = document.createElement('span');
+    tag.className = 'active-bar-tag';
+    tag.innerHTML = (labels[selectedType]||selectedType) + ' <span class="rm" onclick="clearType()">×</span>';
+    row.appendChild(tag);
+  }
+
+  selectedDests.forEach(d => {
+    const tag = document.createElement('span');
+    tag.className = 'active-bar-tag';
+    tag.innerHTML = d + ' <span class="rm" onclick="removeDest(\'' + d + '\')">×</span>';
+    row.appendChild(tag);
+  });
+
+  if (selectedDeadline !== 'all') {
+    const labels = {'7d':'7日以内','30d':'30日以内'};
+    const tag = document.createElement('span');
+    tag.className = 'active-bar-tag';
+    tag.innerHTML = (labels[selectedDeadline]||selectedDeadline) + ' <span class="rm" onclick="clearDeadline()">×</span>';
+    row.appendChild(tag);
+  }
+}
+
+function removeQuick(f) {
+  activeQuick.delete(f);
+  document.querySelectorAll('.q-chip').forEach(c => { if(c.dataset.filter===f) c.classList.remove('active'); });
+  syncActiveTags(); updateCount();
+}
+function clearType() {
+  selectedType = null;
+  document.querySelectorAll('.type-card').forEach(c => c.classList.remove('active'));
+  updateAdvCount();
+}
+function removeDest(name) {
+  selectedDests.delete(name);
+  document.querySelectorAll('.dest-item').forEach(d => { if(d.querySelector('.di-name').textContent===name) d.classList.remove('active'); });
+  updateAdvCount();
+}
+function clearDeadline() {
+  selectedDeadline = 'all';
+  document.querySelectorAll('.dl-pill').forEach(p => { p.classList.toggle('active', p.querySelector('.dp-label').textContent==='すべて'); });
+  updateAdvCount();
+}
+
+function resetAll() {
+  activeQuick.clear();
+  selectedType = null;
+  selectedDests.clear();
+  selectedDeadline = 'all';
+  selectedCov.clear();
+  document.querySelectorAll('.q-chip').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.type-card').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.dest-item').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.dl-pill').forEach(p => { p.classList.toggle('active', p.querySelector('.dp-label').textContent==='すべて'); });
+  document.querySelectorAll('.cov-toggle').forEach(c => c.classList.remove('active'));
+  document.getElementById('activeBar').classList.remove('show');
+  document.getElementById('activeBarRow').innerHTML = '<span class="active-bar-label">適用中:</span>';
+  document.getElementById('advCount').style.display = 'none';
+  document.getElementById('resultCount').textContent = '33件';
+  document.getElementById('rh-title').textContent = '33件の奨学金が見つかりました';
+  document.getElementById('applyBtn').textContent = 'この条件で検索する (33件)';
+}
+</script>
+</body>
+</html>

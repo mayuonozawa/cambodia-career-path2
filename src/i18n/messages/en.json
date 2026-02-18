@@ -92,7 +92,15 @@
     "step_interview": "Attend interview (if required)",
     "step_result": "Wait for the result announcement",
     "guideBannerTitle": "New here? Learn about the 3 types of scholarships first",
-    "guideBannerHint": "which one fits you?"
+    "guideBannerHint": "which one fits you?",
+    "sortDeadline": "Deadline ▼",
+    "sortNewest": "Newest first",
+    "sortName": "Name A–Z",
+    "urgentDeadline": "Urgent (≤7 days)",
+    "soonDeadline": "Approaching (≤30 days)",
+    "resultsCount": "{count} scholarships found",
+    "activeFilters": "{count} filter(s) active",
+    "resetFilters": "Clear all"
   },
   "universities": {
     "title": "Universities",

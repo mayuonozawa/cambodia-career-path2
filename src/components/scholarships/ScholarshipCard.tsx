@@ -11,6 +11,20 @@ interface ScholarshipCardProps {
   scholarship: Scholarship;
 }
 
+function getCoverageIcons(text: string): string[] {
+  const t = text.toLowerCase();
+  const icons: string[] = [];
+  if (/tuition|fees?|ថ្លៃសិក្សា/.test(t)) icons.push("🎓");
+  if (/allowance|stipend|living|\$\d+.*month|monthly|ប្រាក់ឧបត្ថម្ភ|ប្រចាំខែ/.test(t)) icons.push("💰");
+  if (/airfare|travel|flight|air fare|សំបុត្រ/.test(t)) icons.push("✈️");
+  if (/accommodation|housing|dormitory|boarding|homestay|kn|house|room|dorm|stay|kn|kn/.test(t)) icons.push("🏠");
+  if (/insurance|ធានា/.test(t)) icons.push("🏥");
+  if (/books?|textbooks?|supplies|សៀវភៅ/.test(t)) icons.push("📚");
+  if (/meals?|food|អាហារ/.test(t)) icons.push("🍽️");
+  if (/\bpc\b|computer|laptop|កុំព្យូទ័រ/.test(t)) icons.push("💻");
+  return icons.slice(0, 5);
+}
+
 function getDaysRemaining(deadline: string | null): number | null {
   if (!deadline) return null;
   const deadlineDate = new Date(deadline);
@@ -27,6 +41,7 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
   const name = getLocalizedField(scholarship, "name", locale);
   const provider = getLocalizedField(scholarship, "provider", locale);
   const coverage = getLocalizedField(scholarship, "coverage", locale);
+  const coverageIcons = coverage ? getCoverageIcons(coverage) : [];
 
   const daysRemaining = getDaysRemaining(scholarship.deadline);
   const isClosed = daysRemaining !== null && daysRemaining <= 0;
@@ -36,14 +51,14 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
   return (
     <Link
       href={`/scholarships/${scholarship.id}`}
-      className={`block p-5 bg-white border rounded-xl hover:shadow-md transition-all ${
+      className={`block p-5 bg-white border rounded-xl hover:shadow-md transition-all border-l-4 ${
         isClosed
-          ? "border-gray-200 opacity-70"
+          ? "border-gray-200 border-l-gray-300 opacity-70"
           : isUrgent
-          ? "border-red-300 hover:border-red-400 ring-1 ring-red-100"
+          ? "border-red-200 border-l-red-500 ring-1 ring-red-50"
           : isApproaching
-          ? "border-amber-200 hover:border-amber-300"
-          : "border-gray-200 hover:border-brand-primary-300"
+          ? "border-amber-200 border-l-amber-400"
+          : "border-gray-200 border-l-brand-primary hover:border-brand-primary-300"
       }`}
     >
       <div className="flex items-start justify-between gap-3 mb-3">
@@ -94,7 +109,18 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
           </div>
         )}
         {coverage && (
-          <p className="text-gray-500 line-clamp-2 mt-2">{coverage}</p>
+          <div className="mt-2">
+            {coverageIcons.length > 0 && (
+              <div className="flex gap-2 mb-1">
+                {coverageIcons.map((icon) => (
+                  <span key={icon} className="text-base leading-none" title={coverage}>
+                    {icon}
+                  </span>
+                ))}
+              </div>
+            )}
+            <p className="text-gray-400 line-clamp-1 text-xs">{coverage}</p>
+          </div>
         )}
       </div>
     </Link>
