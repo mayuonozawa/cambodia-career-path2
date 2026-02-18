@@ -89,7 +89,7 @@ export function Header() {
                 </>
               ) : (
                 <Link
-                  href={{ pathname: "/auth", query: { next: pathname } }}
+                  href={{ pathname: "/auth", query: { next: "/" } }}
                   className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-8 rounded-md gap-1.5 px-3 bg-brand-primary text-white hover:bg-brand-primary-hover"
                 >
                   {t("login")}
