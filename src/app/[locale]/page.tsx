@@ -169,38 +169,38 @@ export default async function HomePage() {
       {/* How it works Section */}
       <section className="border-t border-border bg-card px-4 py-12">
         <div className="mx-auto max-w-2xl">
-          <h2 className="mb-8 text-xl font-bold text-foreground">How it works</h2>
+          <h2 className="mb-8 text-xl font-bold text-foreground">{t("home.howItWorks")}</h2>
           <div className="flex flex-col gap-4">
-            <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm border border-border">
-              <div className="flex items-start gap-4 p-4">
+            <div className="bg-card text-card-foreground rounded-xl shadow-sm border border-border">
+              <div className="flex items-start gap-4 p-6">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-primary-light">
                   <GraduationCap className="h-6 w-6 text-brand-primary" />
                 </div>
                 <div>
-                  <h3 className="mb-1 font-bold text-foreground">1. Find Scholarships!</h3>
-                  <p className="text-sm text-muted-foreground">Just select your grade, interests, and financial situation — and discover scholarships that match you today.</p>
+                  <h3 className="mb-1 font-bold text-foreground">1. {t("home.step1")}</h3>
+                  <p className="text-sm text-muted-foreground">{t("home.step1Desc")}</p>
                 </div>
               </div>
             </div>
-            <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm border border-border">
-              <div className="flex items-start gap-4 p-4">
+            <div className="bg-card text-card-foreground rounded-xl shadow-sm border border-border">
+              <div className="flex items-start gap-4 p-6">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-primary-light">
                   <Compass className="h-6 w-6 text-brand-primary" />
                 </div>
                 <div>
-                  <h3 className="mb-1 font-bold text-foreground">2. See the pathways!</h3>
-                  <p className="text-sm text-muted-foreground">We show you schools and career paths you can pursue with each scholarship.</p>
+                  <h3 className="mb-1 font-bold text-foreground">2. {t("home.step2")}</h3>
+                  <p className="text-sm text-muted-foreground">{t("home.step2Desc")}</p>
                 </div>
               </div>
             </div>
-            <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm border border-border">
-              <div className="flex items-start gap-4 p-4">
+            <div className="bg-card text-card-foreground rounded-xl shadow-sm border border-border">
+              <div className="flex items-start gap-4 p-6">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-secondary-light">
                   <Heart className="h-6 w-6 text-brand-secondary" />
                 </div>
                 <div>
-                  <h3 className="mb-1 font-bold text-foreground">3. Apply</h3>
-                  <p className="text-sm text-muted-foreground">Get application info and contact details.</p>
+                  <h3 className="mb-1 font-bold text-foreground">3. {t("home.step3")}</h3>
+                  <p className="text-sm text-muted-foreground">{t("home.step3Desc")}</p>
                 </div>
               </div>
             </div>
@@ -213,72 +213,27 @@ export default async function HomePage() {
       {/* Fields of Study */}
       <section className="bg-card px-4 py-16">
         <div className="mx-auto max-w-7xl">
-          <h2 className="mb-8 text-center text-2xl font-bold text-foreground">Fields of Study</h2>
+          <h2 className="mb-8 text-center text-2xl font-bold text-foreground">{t("home.fieldsOfStudy")}</h2>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-            <Link href="/universities">
-              <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-brand-primary hover:shadow-md">
-                <div className="flex flex-col items-center gap-2 p-6 text-center">
-                  <span className="text-3xl">💻</span>
-                  <span className="font-medium text-foreground text-sm">Information Technology</span>
+            {([
+              { emoji: "💻", labelKey: "home.fieldIT" },
+              { emoji: "🏥", labelKey: "home.fieldHealthcare" },
+              { emoji: "💼", labelKey: "home.fieldBusiness" },
+              { emoji: "🌾", labelKey: "home.fieldAgriculture" },
+              { emoji: "⚙️", labelKey: "home.fieldEngineering" },
+              { emoji: "📚", labelKey: "home.fieldEducation" },
+              { emoji: "🏨", labelKey: "home.fieldHospitality" },
+              { emoji: "🎨", labelKey: "home.fieldArts" },
+            ] as const).map(({ emoji, labelKey }) => (
+              <Link key={labelKey} href="/universities">
+                <div className="bg-card text-card-foreground rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-brand-primary hover:shadow-md">
+                  <div className="flex flex-col items-center gap-2 p-4 text-center">
+                    <span className="text-3xl">{emoji}</span>
+                    <span className="font-medium text-foreground text-sm">{t(labelKey)}</span>
+                  </div>
                 </div>
-              </div>
-            </Link>
-            <Link href="/universities">
-              <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-brand-primary hover:shadow-md">
-                <div className="flex flex-col items-center gap-2 p-6 text-center">
-                  <span className="text-3xl">🏥</span>
-                  <span className="font-medium text-foreground text-sm">Healthcare</span>
-                </div>
-              </div>
-            </Link>
-            <Link href="/universities">
-              <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-brand-primary hover:shadow-md">
-                <div className="flex flex-col items-center gap-2 p-6 text-center">
-                  <span className="text-3xl">💼</span>
-                  <span className="font-medium text-foreground text-sm">Business</span>
-                </div>
-              </div>
-            </Link>
-            <Link href="/universities">
-              <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-brand-primary hover:shadow-md">
-                <div className="flex flex-col items-center gap-2 p-6 text-center">
-                  <span className="text-3xl">🌾</span>
-                  <span className="font-medium text-foreground text-sm">Agriculture</span>
-                </div>
-              </div>
-            </Link>
-            <Link href="/universities">
-              <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-brand-primary hover:shadow-md">
-                <div className="flex flex-col items-center gap-2 p-6 text-center">
-                  <span className="text-3xl">⚙️</span>
-                  <span className="font-medium text-foreground text-sm">Engineering</span>
-                </div>
-              </div>
-            </Link>
-            <Link href="/universities">
-              <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-brand-primary hover:shadow-md">
-                <div className="flex flex-col items-center gap-2 p-6 text-center">
-                  <span className="text-3xl">📚</span>
-                  <span className="font-medium text-foreground text-sm">Education</span>
-                </div>
-              </div>
-            </Link>
-            <Link href="/universities">
-              <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-brand-primary hover:shadow-md">
-                <div className="flex flex-col items-center gap-2 p-6 text-center">
-                  <span className="text-3xl">🏨</span>
-                  <span className="font-medium text-foreground text-sm">Hospitality & Tourism</span>
-                </div>
-              </div>
-            </Link>
-            <Link href="/universities">
-              <div className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm cursor-pointer border border-border transition-all hover:border-brand-primary hover:shadow-md">
-                <div className="flex flex-col items-center gap-2 p-6 text-center">
-                  <span className="text-3xl">🎨</span>
-                  <span className="font-medium text-foreground text-sm">Arts & Design</span>
-                </div>
-              </div>
-            </Link>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
@@ -317,24 +272,22 @@ export default async function HomePage() {
                     <div className="px-6 flex flex-1 flex-col gap-4">
                       <p className="line-clamp-2 text-sm text-muted-foreground">{getLocalizedField(s, "description", locale)}</p>
                       <div className="space-y-2 text-sm">
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                          <Banknote className="h-4 w-4 shrink-0 text-brand-primary" />
-                          <span className="line-clamp-1">Full coverage</span>
-                        </div>
+                        {getLocalizedField(s, "coverage", locale) && (
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <Banknote className="h-4 w-4 shrink-0 text-brand-primary" />
+                            <span className="line-clamp-1">{getLocalizedField(s, "coverage", locale)}</span>
+                          </div>
+                        )}
                         {s.deadline && (
                           <div className="flex items-center gap-2 text-muted-foreground">
                             <Calendar className="h-4 w-4 shrink-0 text-brand-primary" />
-                            <span>Deadline: {formatDate(s.deadline, locale)}</span>
+                            <span>{t("scholarships.deadline")}: {formatDate(s.deadline, locale)}</span>
                           </div>
                         )}
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                          <MapPin className="h-4 w-4 shrink-0 text-brand-primary" />
-                          <span className="line-clamp-1">Cambodia</span>
-                        </div>
                       </div>
                       <div className="mt-auto pt-2">
                         <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-9 px-4 py-2 w-full bg-brand-primary text-white hover:bg-brand-primary-hover">
-                          Learn More
+                          {t("common.viewDetails")}
                         </button>
                       </div>
                     </div>
@@ -378,17 +331,13 @@ export default async function HomePage() {
                       <p className="line-clamp-2 text-sm text-muted-foreground">{getLocalizedField(u, "description", locale)}</p>
                       <div className="space-y-2 text-sm">
                         <div className="flex items-center gap-2 text-muted-foreground">
-                          <Banknote className="h-4 w-4 shrink-0 text-brand-secondary" />
-                          <span>$300 - $1000/year</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-muted-foreground">
                           <Award className="h-4 w-4 shrink-0 text-brand-secondary" />
-                          <span>Scholarships available</span>
+                          <span>{t("universities.availableScholarships")}</span>
                         </div>
                       </div>
                       <div className="mt-auto flex gap-2 pt-2">
                         <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-9 px-4 py-2 flex-1 w-full bg-brand-secondary text-white hover:bg-brand-secondary-hover">
-                          Learn More
+                          {t("common.viewDetails")}
                         </button>
                       </div>
                     </div>

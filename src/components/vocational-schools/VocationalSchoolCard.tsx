@@ -21,11 +21,18 @@ export function VocationalSchoolCard({ school }: VocationalSchoolCardProps) {
   return (
     <Link
       href={`/vocational-schools/${school.id}`}
-      className="block p-5 bg-white border border-gray-200 rounded-xl hover:shadow-md hover:border-green-300 transition-all"
+      className="block p-5 bg-white border border-gray-200 rounded-xl hover:shadow-md hover:border-brand-primary/40 transition-all"
     >
-      <h3 className="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">
-        {name}
-      </h3>
+      <div className="flex items-start justify-between gap-2 mb-3">
+        <h3 className="text-base font-semibold text-gray-900 line-clamp-2 flex-1">
+          {name}
+        </h3>
+        {programs.length > 0 && (
+          <span className="shrink-0 text-xs font-semibold bg-brand-primary/10 text-brand-primary px-2 py-0.5 rounded-full">
+            {t("vocationalSchools.programsCount", { count: programs.length })}
+          </span>
+        )}
+      </div>
 
       <div className="space-y-2 text-sm text-gray-600">
         {location && (
@@ -39,7 +46,7 @@ export function VocationalSchoolCard({ school }: VocationalSchoolCardProps) {
             {programs.slice(0, 3).map((p) => (
               <span
                 key={p}
-                className="px-2 py-0.5 bg-green-50 text-green-700 rounded text-xs"
+                className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-xs"
               >
                 {p}
               </span>

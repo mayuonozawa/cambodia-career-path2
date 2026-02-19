@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>奨学金とは何か — PathForward UX Proposal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&family=Noto+Sans+Khmer:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #3DBDB8;
+  --teal-light: #e8f8f8;
+  --teal-mid: #b2e8e6;
+  --teal-dark: #2a9a96;
+  --orange: #E8995E;
+  --orange-light: #fdf0e6;
+  --green: #22c55e;
+  --green-light: #f0fdf4;
+  --blue: #3b82f6;
+  --blue-light: #eff6ff;
+  --amber: #f59e0b;
+  --amber-light: #fffbeb;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-700: #374151;
+  --gray-900: #111827;
+  --radius: 16px;
+  --font: 'Noto Sans', 'Noto Sans Khmer', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #e8eff0;
+  font-family: var(--font);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px 64px;
+  gap: 24px;
+}
+
+/* ── Page title ── */
+.page-label {
+  text-align: center;
+  color: var(--gray-500);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.page-label strong { color: var(--teal-dark); }
+
+/* ── Phone frame ── */
+.phone {
+  width: 390px;
+  max-width: 100%;
+  background: #f8fafb;
+  border-radius: 44px;
+  box-shadow: 0 32px 80px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.06);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Status bar */
+.status-bar {
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 24px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-900);
+}
+.status-icons { display: flex; gap: 6px; align-items: center; }
+.status-icons span { font-size: 13px; }
+
+/* Scroll area */
+.scroll-area {
+  height: 780px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+.scroll-area::-webkit-scrollbar { display: none; }
+
+/* ── UX Tag chips ── */
+.ux-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+  letter-spacing: 0.02em;
+  margin-bottom: 8px;
+}
+.tag-blue   { background: #dbeafe; color: #1d4ed8; }
+.tag-purple { background: #ede9fe; color: #7c3aed; }
+.tag-green  { background: #dcfce7; color: #15803d; }
+.tag-orange { background: #ffedd5; color: #c2410c; }
+.tag-pink   { background: #fce7f3; color: #9d174d; }
+.tag-teal   { background: var(--teal-mid); color: var(--teal-dark); }
+
+/* ── SECTION A: HERO ── */
+.hero {
+  background: linear-gradient(160deg, #1a9e9a 0%, var(--teal) 45%, #5dd5cf 100%);
+  padding: 32px 20px 36px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.08);
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -30px; left: -20px;
+  width: 140px; height: 140px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.06);
+}
+.hero-content { position: relative; z-index: 1; }
+.hero-emoji {
+  font-size: 52px;
+  display: block;
+  text-align: center;
+  margin-bottom: 14px;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,.15));
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.hero-headline {
+  font-size: 26px;
+  font-weight: 800;
+  color: #fff;
+  text-align: center;
+  line-height: 1.25;
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+.hero-headline em {
+  font-style: normal;
+  color: #ffe58a;
+}
+.hero-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,.88);
+  text-align: center;
+  line-height: 1.6;
+  margin-bottom: 18px;
+  padding: 0 4px;
+}
+.hero-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.3);
+  border-radius: 40px;
+  padding: 8px 16px;
+  font-size: 13px;
+  color: #fff;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+  width: fit-content;
+  margin: 0 auto;
+}
+
+/* ── SECTION wrapper ── */
+.section {
+  padding: 24px 16px;
+  background: #fff;
+  border-bottom: 1px solid var(--gray-100);
+}
+.section:nth-child(even) { background: var(--gray-50); }
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  gap: 8px;
+}
+.section-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+/* ── SECTION B: 3-step flow ── */
+.flow-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 14px;
+}
+.flow-card {
+  flex: 1;
+  background: var(--teal-light);
+  border-radius: 14px;
+  padding: 12px 6px;
+  text-align: center;
+  border: 1.5px solid var(--teal-mid);
+}
+.flow-card .fc-emoji { font-size: 22px; margin-bottom: 4px; display: block; }
+.flow-card .fc-label { font-size: 11px; font-weight: 700; color: var(--teal-dark); }
+.flow-arrow {
+  font-size: 16px;
+  color: var(--teal);
+  padding: 0 4px;
+  flex-shrink: 0;
+}
+.no-repay-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--green-light);
+  border: 1.5px solid #bbf7d0;
+  border-radius: 40px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #16a34a;
+  width: 100%;
+  justify-content: center;
+}
+
+/* ── SECTION C: Type cards ── */
+.type-card {
+  border-radius: 14px;
+  border: 1.5px solid var(--gray-200);
+  border-left-width: 5px;
+  padding: 14px 14px 12px;
+  margin-bottom: 10px;
+  background: #fff;
+  cursor: pointer;
+  transition: box-shadow .2s, transform .15s;
+}
+.type-card:last-child { margin-bottom: 0; }
+.type-card:hover, .type-card:active { box-shadow: 0 4px 20px rgba(0,0,0,.08); transform: translateY(-1px); }
+.type-card.green  { border-left-color: var(--green); }
+.type-card.blue   { border-left-color: var(--blue); }
+.type-card.amber  { border-left-color: var(--amber); }
+
+.tc-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.tc-title-wrap { display: flex; align-items: center; gap: 6px; }
+.tc-emoji { font-size: 20px; }
+.tc-title { font-size: 15px; font-weight: 700; color: var(--gray-900); }
+.tc-tag {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+.tag-green-fill  { background: #dcfce7; color: #15803d; }
+.tag-blue-fill   { background: #dbeafe; color: #1d4ed8; }
+.tag-amber-fill  { background: #fef3c7; color: #d97706; }
+
+.tc-sub { font-size: 12px; color: var(--gray-500); margin-bottom: 8px; line-height: 1.5; }
+
+.coverage-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+.cov-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: var(--gray-100);
+  border-radius: 20px;
+  padding: 3px 8px;
+  font-size: 11px;
+  color: var(--gray-700);
+  font-weight: 500;
+}
+.cov-chip span { font-size: 13px; }
+
+.tc-example {
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 11px;
+  line-height: 1.5;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.tc-example.green { background: var(--green-light); color: #15803d; }
+.tc-example.blue  { background: var(--blue-light);  color: #1d4ed8; }
+.tc-example.amber { background: var(--amber-light); color: #b45309; }
+.tc-example strong { font-weight: 700; }
+
+.tc-footer { font-size: 11px; color: var(--gray-400); }
+.tc-footer::before { content: "💡 "; }
+
+/* ── SECTION D: Eligibility check ── */
+.eligibility-section {
+  background: linear-gradient(135deg, var(--teal-light), #fff);
+}
+.eq-question { margin-bottom: 14px; }
+.eq-q-label { font-size: 13px; font-weight: 600; color: var(--gray-700); margin-bottom: 8px; display: block; }
+.eq-chips { display: flex; gap: 8px; }
+.eq-chip {
+  flex: 1;
+  padding: 9px 0;
+  border-radius: 40px;
+  border: 2px solid var(--gray-200);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  background: #fff;
+  color: var(--gray-500);
+  transition: all .2s;
+}
+.eq-chip.yes-chip.active { background: var(--teal); border-color: var(--teal); color: #fff; }
+.eq-chip.no-chip.active  { background: #ef4444; border-color: #ef4444; color: #fff; }
+.eq-chip:hover { border-color: var(--teal); color: var(--teal-dark); }
+
+.eq-result {
+  border-radius: 14px;
+  padding: 14px;
+  margin-top: 16px;
+  display: none;
+  animation: fadeIn .3s ease;
+}
+.eq-result.show { display: block; }
+.eq-result.success {
+  background: var(--green-light);
+  border: 1.5px solid #bbf7d0;
+}
+.eq-result.partial {
+  background: #fffbeb;
+  border: 1.5px solid #fde68a;
+}
+.eq-result-text {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+.eq-result.success .eq-result-text { color: #15803d; }
+.eq-result.partial .eq-result-text { color: #d97706; }
+.eq-cta-btn {
+  display: block;
+  width: 100%;
+  padding: 11px;
+  background: var(--teal);
+  color: #fff;
+  border: none;
+  border-radius: 40px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: var(--font);
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  transition: background .2s, transform .15s;
+}
+.eq-cta-btn:hover { background: var(--teal-dark); transform: translateY(-1px); }
+
+/* ── SECTION E: Timeline steps ── */
+.timeline {
+  position: relative;
+  padding-left: 40px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  bottom: 16px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--teal), var(--teal-mid));
+  border-radius: 2px;
+}
+.timeline-step {
+  position: relative;
+  padding: 0 0 20px 16px;
+  animation: slideIn .4s ease both;
+}
+.timeline-step:last-child { padding-bottom: 0; }
+.tl-circle {
+  position: absolute;
+  left: -40px;
+  top: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--teal);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 4px var(--teal-light);
+}
+.tl-circle.final { background: var(--orange); box-shadow: 0 0 0 4px var(--orange-light); }
+.tl-content {
+  background: #fff;
+  border-radius: 14px;
+  border: 1.5px solid var(--gray-100);
+  padding: 12px 14px;
+}
+.tl-text { font-size: 14px; font-weight: 600; color: var(--gray-900); display: flex; align-items: center; gap: 6px; }
+.tl-emoji { font-size: 18px; }
+.tl-hint { font-size: 12px; color: var(--gray-400); margin-top: 3px; }
+
+/* ── SECTION F: Tips ── */
+.tip-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #fff;
+  border-radius: 14px;
+  margin-bottom: 8px;
+  border: 1.5px solid var(--gray-100);
+}
+.tip-item:last-child { margin-bottom: 0; }
+.tip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+.tip-emoji { font-size: 20px; flex-shrink: 0; }
+.tip-text { font-size: 13px; color: var(--gray-700); line-height: 1.55; font-weight: 500; }
+
+/* ── SECTION G: CTA ── */
+.cta-section {
+  background: linear-gradient(145deg, var(--teal-dark) 0%, var(--teal) 60%, #5dd5cf 100%);
+  padding: 32px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.07);
+}
+.cta-section::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: -40px;
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.05);
+}
+.cta-star {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,.2));
+  position: relative; z-index: 1;
+}
+.cta-headline {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.3;
+  margin-bottom: 6px;
+  position: relative; z-index: 1;
+}
+.cta-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,.82);
+  margin-bottom: 22px;
+  position: relative; z-index: 1;
+}
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #fff;
+  color: var(--teal-dark);
+  font-size: 15px;
+  font-weight: 800;
+  padding: 14px 28px;
+  border-radius: 40px;
+  text-decoration: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,.18);
+  transition: transform .2s, box-shadow .2s;
+  position: relative; z-index: 1;
+  cursor: pointer;
+  border: none;
+  font-family: var(--font);
+}
+.cta-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,.22); }
+.cta-note {
+  font-size: 12px;
+  color: rgba(255,255,255,.6);
+  margin-top: 12px;
+  position: relative; z-index: 1;
+}
+
+/* ── Animations ── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Bottom nav bar (fake) ── */
+.bottom-nav {
+  background: #fff;
+  border-top: 1px solid var(--gray-100);
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0 14px;
+}
+.nav-item { text-align: center; cursor: pointer; }
+.nav-item .nav-icon { font-size: 20px; display: block; opacity: .4; }
+.nav-item .nav-label { font-size: 10px; color: var(--gray-400); display: block; margin-top: 2px; }
+.nav-item.active .nav-icon { opacity: 1; }
+.nav-item.active .nav-label { color: var(--teal); }
+</style>
+</head>
+<body>
+
+<p class="page-label"><strong>PathForward</strong> · 奨学金ガイドページ UX改善案</p>
+
+<!-- Phone frame -->
+<div class="phone">
+
+  <!-- Status bar -->
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="status-icons">
+      <span>●●●</span>
+      <span>WiFi</span>
+      <span>🔋</span>
+    </div>
+  </div>
+
+  <div class="scroll-area" id="scrollArea">
+
+    <!-- ════════ A: HERO ════════ -->
+    <div class="hero">
+      <div class="hero-content">
+        <span class="hero-emoji">🎓</span>
+        <h1 class="hero-headline">奨学金 = <em>返さなくて</em><br>いいお金</h1>
+        <p class="hero-sub">成績や状況に合わせて、学費・生活費・<br>渡航費が無料になる制度です</p>
+        <div class="hero-badge">
+          <span>🇰🇭</span>
+          <span>カンボジアの学生なら申請できます</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ B: WHAT IS IT ════════ -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-title">どんな仕組み？</span>
+        <span class="ux-tag tag-blue">🧠 認知負荷軽減</span>
+      </div>
+
+      <div class="flow-row">
+        <div class="flow-card">
+          <span class="fc-emoji">📋</span>
+          <span class="fc-label">申請する</span>
+        </div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-card">
+          <span class="fc-emoji">✅</span>
+          <span class="fc-label">合格</span>
+        </div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-card">
+          <span class="fc-emoji">🎓</span>
+          <span class="fc-label">学費ゼロで通う</span>
+        </div>
+      </div>
+
+      <div class="no-repay-badge">
+        ✅&nbsp; 返済不要 — <strong>返さなくてOKです！</strong>
+      </div>
+    </div>
+
+    <!-- ════════ C: 3 TYPES ════════ -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-title">奨学金の3つの種類</span>
+        <span class="ux-tag tag-orange">⚓ アンカー効果</span>
+      </div>
+
+      <!-- Full scholarship -->
+      <div class="type-card green">
+        <div class="tc-header">
+          <div class="tc-title-wrap">
+            <span class="tc-emoji">🛡️</span>
+            <span class="tc-title">全額給付奨学金</span>
+          </div>
+          <span class="tc-tag tag-green-fill">最も充実</span>
+        </div>
+        <p class="tc-sub">学費・生活費・渡航費まですべてカバー</p>
+        <div class="coverage-row">
+          <span class="cov-chip"><span>🎓</span>学費</span>
+          <span class="cov-chip"><span>💰</span>生活費</span>
+          <span class="cov-chip"><span>✈️</span>渡航費</span>
+          <span class="cov-chip"><span>🏠</span>宿泊</span>
+          <span class="cov-chip"><span>🏥</span>医療</span>
+        </div>
+        <div class="tc-example green">
+          <strong>例：MEXT奨学金（日本政府）</strong><br>
+          月14万円 + 学費全額 + 往復航空券
+        </div>
+        <p class="tc-footer">競争率高め — でも挑戦する価値あり</p>
+      </div>
+
+      <!-- Partial scholarship -->
+      <div class="type-card blue">
+        <div class="tc-header">
+          <div class="tc-title-wrap">
+            <span class="tc-emoji">💰</span>
+            <span class="tc-title">部分給付奨学金</span>
+          </div>
+          <span class="tc-tag tag-blue-fill">取り組みやすい</span>
+        </div>
+        <p class="tc-sub">学費の一部をカバー。残りは自己負担</p>
+        <div class="coverage-row">
+          <span class="cov-chip"><span>🎓</span>学費（一部）</span>
+        </div>
+        <div class="tc-example blue">
+          <strong>例：RUPP Merit奨学金</strong><br>
+          授業料免除（成績優秀者向け）
+        </div>
+        <p class="tc-footer">成績Aなら申請チャンスあり</p>
+      </div>
+
+      <!-- Grant -->
+      <div class="type-card amber">
+        <div class="tc-header">
+          <div class="tc-title-wrap">
+            <span class="tc-emoji">🎁</span>
+            <span class="tc-title">補助金・一時金</span>
+          </div>
+          <span class="tc-tag tag-amber-fill">一時金</span>
+        </div>
+        <p class="tc-sub">一度だけ受け取れる支援金</p>
+        <div class="coverage-row">
+          <span class="cov-chip"><span>💵</span>一時金</span>
+        </div>
+        <div class="tc-example amber">
+          <strong>例：地方出身者向け補助金</strong><br>
+          $150の一時金（入学時に支給）
+        </div>
+        <p class="tc-footer">経済的に苦しい方が優先されます</p>
+      </div>
+    </div>
+
+    <!-- ════════ D: ELIGIBILITY CHECK ════════ -->
+    <div class="section eligibility-section">
+      <div class="section-header">
+        <span class="section-title">あなたは申請できる？</span>
+        <span class="ux-tag tag-purple">🔮 好奇心ギャップ</span>
+      </div>
+
+      <div id="eqForm">
+        <div class="eq-question">
+          <span class="eq-q-label">🇰🇭 カンボジア国籍ですか？</span>
+          <div class="eq-chips">
+            <button class="eq-chip yes-chip" data-q="0" data-v="yes" onclick="selectChip(this)">はい ✓</button>
+            <button class="eq-chip no-chip"  data-q="0" data-v="no"  onclick="selectChip(this)">いいえ</button>
+          </div>
+        </div>
+        <div class="eq-question">
+          <span class="eq-q-label">🎂 15〜25歳ですか？</span>
+          <div class="eq-chips">
+            <button class="eq-chip yes-chip" data-q="1" data-v="yes" onclick="selectChip(this)">はい ✓</button>
+            <button class="eq-chip no-chip"  data-q="1" data-v="no"  onclick="selectChip(this)">いいえ</button>
+          </div>
+        </div>
+        <div class="eq-question">
+          <span class="eq-q-label">📚 学校に通っている / 進学予定ですか？</span>
+          <div class="eq-chips">
+            <button class="eq-chip yes-chip" data-q="2" data-v="yes" onclick="selectChip(this)">はい ✓</button>
+            <button class="eq-chip no-chip"  data-q="2" data-v="no"  onclick="selectChip(this)">いいえ</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="eq-result success" id="resultSuccess">
+        <p class="eq-result-text">✅ あなたは多くの奨学金に<br>申請できます！</p>
+        <button class="eq-cta-btn" onclick="scrollToBottom()">🔍 今すぐ奨学金を探す →</button>
+      </div>
+      <div class="eq-result partial" id="resultPartial">
+        <p class="eq-result-text">⚡ 条件が合う奨学金を一緒に探しましょう</p>
+        <button class="eq-cta-btn" onclick="scrollToBottom()">🔍 奨学金を探してみる →</button>
+      </div>
+    </div>
+
+    <!-- ════════ E: HOW TO FIND ════════ -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-title">奨学金の見つけ方</span>
+        <span class="ux-tag tag-green">🏁 目標勾配</span>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-step" style="animation-delay:.05s">
+          <div class="tl-circle">1</div>
+          <div class="tl-content">
+            <p class="tl-text"><span class="tl-emoji">🔍</span>このサイトで奨学金を探す</p>
+            <p class="tl-hint">フィルターで絞り込めます</p>
+          </div>
+        </div>
+        <div class="timeline-step" style="animation-delay:.1s">
+          <div class="tl-circle">2</div>
+          <div class="tl-content">
+            <p class="tl-text"><span class="tl-emoji">📋</span>条件（資格）を確認する</p>
+            <p class="tl-hint">年齢・成績・国籍など</p>
+          </div>
+        </div>
+        <div class="timeline-step" style="animation-delay:.15s">
+          <div class="tl-circle">3</div>
+          <div class="tl-content">
+            <p class="tl-text"><span class="tl-emoji">📄</span>書類を早めに準備する</p>
+            <p class="tl-hint">成績証明書・推薦状など</p>
+          </div>
+        </div>
+        <div class="timeline-step" style="animation-delay:.2s">
+          <div class="tl-circle final">4</div>
+          <div class="tl-content">
+            <p class="tl-text"><span class="tl-emoji">📮</span>締切前に申請する！ 🏆</p>
+            <p class="tl-hint">締切を過ぎると応募不可</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ F: TIPS ════════ -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-title">合格のコツ</span>
+        <span class="ux-tag tag-teal">✨ ツァイガルニク</span>
+      </div>
+
+      <div class="tip-item">
+        <span class="tip-emoji">🗓️</span>
+        <p class="tip-text">締切を<strong>必ずカレンダーに入れる</strong>。締切が過ぎたら申請できません。</p>
+      </div>
+      <div class="tip-item">
+        <span class="tip-emoji">📄</span>
+        <p class="tip-text">書類は<strong>早めに準備</strong>。成績証明書の発行に時間がかかることがあります。</p>
+      </div>
+      <div class="tip-item">
+        <span class="tip-emoji">🤝</span>
+        <p class="tip-text"><strong>複数の奨学金に同時申請OK</strong>。1つに絞らなくて大丈夫です。</p>
+      </div>
+      <div class="tip-item">
+        <span class="tip-emoji">💬</span>
+        <p class="tip-text">先生や<strong>学校のカウンセラーに相談</strong>すると申請書のアドバイスがもらえます。</p>
+      </div>
+      <div class="tip-item">
+        <span class="tip-emoji">🔄</span>
+        <p class="tip-text">もし落ちても<strong>再挑戦できます</strong>。次回の申請期間を確認しましょう。</p>
+      </div>
+    </div>
+
+    <!-- ════════ G: CTA ════════ -->
+    <div class="cta-section" id="ctaSection">
+      <span class="cta-star">🌟</span>
+      <h2 class="cta-headline">あなたの夢を、<br>お金の問題で諦めないで</h2>
+      <p class="cta-sub">今すぐ奨学金を探してみよう</p>
+      <button class="cta-btn">🔍 奨学金を探す →</button>
+      <p class="cta-note">登録不要 · 無料で利用できます</p>
+    </div>
+
+    <!-- Bottom nav -->
+    <div class="bottom-nav">
+      <div class="nav-item">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">ホーム</span>
+      </div>
+      <div class="nav-item active">
+        <span class="nav-icon">🎓</span>
+        <span class="nav-label">奨学金</span>
+      </div>
+      <div class="nav-item">
+        <span class="nav-icon">🏫</span>
+        <span class="nav-label">大学</span>
+      </div>
+      <div class="nav-item">
+        <span class="nav-icon">👤</span>
+        <span class="nav-label">プロフィール</span>
+      </div>
+    </div>
+
+  </div><!-- end scroll-area -->
+</div><!-- end phone -->
+
+<!-- ── UX Psychology notes ── -->
+<div style="max-width:390px;width:100%;margin-top:8px;">
+  <div style="background:#fff;border-radius:16px;padding:16px;border:1px solid #e5e7eb;">
+    <p style="font-size:12px;font-weight:700;color:#374151;margin-bottom:10px;">🧠 UX心理学 改善ポイント</p>
+    <div style="display:flex;flex-direction:column;gap:7px;font-size:11px;line-height:1.5;color:#6b7280;">
+      <div><span style="font-weight:700;color:#1d4ed8;">認知負荷軽減</span> → 3ステップフロー図で「申請→合格→通学」を瞬時に理解</div>
+      <div><span style="font-weight:700;color:#c2410c;">フレーミング</span> → 「返さなくていいお金」= 損失回避でなく利得として提示</div>
+      <div><span style="font-weight:700;color:#b45309;">アンカー効果</span> → 「月14万円 + 学費全額」の具体額でイメージを固定</div>
+      <div><span style="font-weight:700;color:#7c3aed;">好奇心ギャップ</span> → YES/NO自己診断で「自分は申請できる？」を解消</div>
+      <div><span style="font-weight:700;color:#15803d;">目標勾配</span> → 4ステップタイムラインで「あと何をすればいい」が明確</div>
+      <div><span style="font-weight:700;color:#2a9a96;">ピーク・エンド</span> → 「夢を諦めないで」の感情的CTAで記憶に残る終わり方</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Eligibility checker ──
+const answers = { 0: null, 1: null, 2: null };
+
+function selectChip(btn) {
+  const q = parseInt(btn.dataset.q);
+  const v = btn.dataset.v;
+  // Deselect siblings
+  btn.closest('.eq-chips').querySelectorAll('.eq-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  answers[q] = v;
+  evaluateResult();
+}
+
+function evaluateResult() {
+  const answered = Object.values(answers).filter(v => v !== null).length;
+  if (answered < 3) return;
+
+  const allYes = Object.values(answers).every(v => v === 'yes');
+  const resultSuccess = document.getElementById('resultSuccess');
+  const resultPartial = document.getElementById('resultPartial');
+
+  if (allYes) {
+    resultSuccess.classList.add('show');
+    resultPartial.classList.remove('show');
+  } else {
+    resultPartial.classList.add('show');
+    resultSuccess.classList.remove('show');
+  }
+}
+
+function scrollToBottom() {
+  document.getElementById('scrollArea').scrollTo({ top: 99999, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>

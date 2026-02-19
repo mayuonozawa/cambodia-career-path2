@@ -26,7 +26,7 @@ export function UniversityCard({
   return (
     <Link
       href={`/universities/${university.id}`}
-      className="block p-5 bg-white border border-gray-200 rounded-xl hover:shadow-md hover:border-blue-300 transition-all"
+      className="block p-5 bg-white border border-gray-200 rounded-xl hover:shadow-md hover:border-brand-primary/40 transition-all"
     >
       <div className="flex items-start justify-between gap-3 mb-3">
         <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">
@@ -68,8 +68,8 @@ export function UniversityCard({
           </div>
         )}
         {typeof scholarshipCount === "number" && scholarshipCount > 0 && (
-          <p className="text-blue-600 font-medium mt-2">
-            {t("universities.availableScholarships")}: {scholarshipCount}
+          <p className="text-brand-primary font-medium mt-2 text-sm">
+            🎓 {t("universities.scholarshipsAvailable", { count: scholarshipCount })}
           </p>
         )}
       </div>

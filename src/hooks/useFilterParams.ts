@@ -15,6 +15,9 @@ export function useFilterParams() {
   const deadlineFilter = searchParams.get("dl") ?? "";
   const sortOrder = searchParams.get("sort") ?? "";
   const destinationFilter = searchParams.get("dest") ?? "";
+  const locationFilter = searchParams.get("loc") ?? "";
+  const programFilter = searchParams.get("prog") ?? "";
+  const hasScholarshipFilter = searchParams.get("schol") === "1";
 
   // Local state for debounced search input
   const [searchInput, setSearchInput] = useState(search);
@@ -72,9 +75,22 @@ export function useFilterParams() {
   );
 
   const setDestinationFilter = useCallback(
-    (value: string) => {
-      updateParams("dest", value);
-    },
+    (value: string) => { updateParams("dest", value); },
+    [updateParams]
+  );
+
+  const setLocationFilter = useCallback(
+    (value: string) => { updateParams("loc", value); },
+    [updateParams]
+  );
+
+  const setProgramFilter = useCallback(
+    (value: string) => { updateParams("prog", value); },
+    [updateParams]
+  );
+
+  const setHasScholarshipFilter = useCallback(
+    (value: boolean) => { updateParams("schol", value ? "1" : ""); },
     [updateParams]
   );
 
@@ -96,5 +112,11 @@ export function useFilterParams() {
     setSortOrder,
     destinationFilter,
     setDestinationFilter,
+    locationFilter,
+    setLocationFilter,
+    programFilter,
+    setProgramFilter,
+    hasScholarshipFilter,
+    setHasScholarshipFilter,
   };
 }
