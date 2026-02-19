@@ -100,7 +100,11 @@
     "soonDeadline": "ជិតផុត (≤30 ថ្ងៃ)",
     "resultsCount": "រកឃើញ {count} អាហារូបករណ៍",
     "activeFilters": "ត្រង {count} ដំណើរការ",
-    "resetFilters": "លុបទាំងអស់"
+    "resetFilters": "លុបទាំងអស់",
+    "destinationLabel": "សិក្សានៅណា?",
+    "destAll": "ទាំងអស់",
+    "destDomestic": "ក្នុងប្រទេស",
+    "destOverseas": "ទៅក្រៅប្រទេស"
   },
   "universities": {
     "title": "សាកលវិទ្យាល័យ",

@@ -14,6 +14,7 @@ export function useFilterParams() {
   const typeFilter = searchParams.get("type") ?? "";
   const deadlineFilter = searchParams.get("dl") ?? "";
   const sortOrder = searchParams.get("sort") ?? "";
+  const destinationFilter = searchParams.get("dest") ?? "";
 
   // Local state for debounced search input
   const [searchInput, setSearchInput] = useState(search);
@@ -70,6 +71,13 @@ export function useFilterParams() {
     [updateParams]
   );
 
+  const setDestinationFilter = useCallback(
+    (value: string) => {
+      updateParams("dest", value);
+    },
+    [updateParams]
+  );
+
   // Cleanup timer on unmount
   useEffect(() => {
     return () => {
@@ -86,5 +94,7 @@ export function useFilterParams() {
     setDeadlineFilter,
     sortOrder,
     setSortOrder,
+    destinationFilter,
+    setDestinationFilter,
   };
 }

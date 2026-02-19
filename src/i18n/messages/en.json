@@ -100,7 +100,11 @@
     "soonDeadline": "Approaching (≤30 days)",
     "resultsCount": "{count} scholarships found",
     "activeFilters": "{count} filter(s) active",
-    "resetFilters": "Clear all"
+    "resetFilters": "Clear all",
+    "destinationLabel": "Where to study?",
+    "destAll": "All",
+    "destDomestic": "In Cambodia",
+    "destOverseas": "Study Abroad"
   },
   "universities": {
     "title": "Universities",
