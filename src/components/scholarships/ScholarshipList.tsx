@@ -2,6 +2,7 @@
 
 import { useMemo, useState, useRef, useEffect } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { clsx } from "clsx";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { ScholarshipCard } from "./ScholarshipCard";
 import type { Scholarship, Locale } from "@/types/database";
@@ -10,10 +11,7 @@ import { useFilterParams } from "@/hooks/useFilterParams";
 import { ChevronDown, X } from "lucide-react";
 
 // ── Destination detection ────────────────────────────────────────────────────
-// Detects whether a scholarship is for studying domestically (Cambodia)
-// or overseas, based on name/provider/description text.
 const OVERSEAS_KEYWORDS = [
-  // Countries
   "japan", "japanese", "jica", "mext",
   "korea", "korean", "gks", "niied", "koica",
   "china", "chinese", "csc",
@@ -22,31 +20,27 @@ const OVERSEAS_KEYWORDS = [
   "russia", "russian", "turkey", "turkish",
   "india", "indian", "taiwan", "vietnam",
   "europe", "european",
-  // Programs / keywords
   "uwc", "uwcsea",
-  "study in",
-  "exchange program",
-  "overseas",
-  "abroad",
+  "study in", "exchange program", "overseas", "abroad",
   "asian development bank",
 ];
 
 function detectDestination(s: Scholarship): "domestic" | "overseas" {
-  const text = [s.name_en, s.provider_en, s.description_en]
-    .join(" ")
-    .toLowerCase();
-  return OVERSEAS_KEYWORDS.some((kw) => text.includes(kw))
-    ? "overseas"
-    : "domestic";
+  const text = [s.name_en, s.provider_en, s.description_en].join(" ").toLowerCase();
+  return OVERSEAS_KEYWORDS.some((kw) => text.includes(kw)) ? "overseas" : "domestic";
 }
 
-// ── Helper ───────────────────────────────────────────────────────────────────
 function getDaysRemaining(deadline: string | null): number | null {
   if (!deadline) return null;
   return Math.ceil(
     (new Date(deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
   );
 }
+
+// ── Shared pill style ────────────────────────────────────────────────────────
+const pillBase = "px-3 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap";
+const pillActive = "bg-brand-primary text-white";
+const pillInactive = "bg-gray-100 text-gray-700 hover:bg-gray-200";
 
 interface ScholarshipListProps {
   scholarships: Scholarship[];
@@ -58,22 +52,16 @@ export function ScholarshipList({ scholarships }: ScholarshipListProps) {
   const tCommon = useTranslations("common");
 
   const {
-    search,
-    setSearch,
-    typeFilter,
-    setTypeFilter,
-    deadlineFilter,
-    setDeadlineFilter,
-    sortOrder,
-    setSortOrder,
-    destinationFilter,
-    setDestinationFilter,
+    search, setSearch,
+    typeFilter, setTypeFilter,
+    deadlineFilter, setDeadlineFilter,
+    sortOrder, setSortOrder,
+    destinationFilter, setDestinationFilter,
   } = useFilterParams();
 
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
 
-  // Close sort dropdown on outside click
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (sortRef.current && !sortRef.current.contains(e.target as Node)) {
@@ -84,74 +72,44 @@ export function ScholarshipList({ scholarships }: ScholarshipListProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Pre-compute badge counts from the full dataset
-  const counts = useMemo(() => {
-    const now = Date.now();
-    const domestic = scholarships.filter(
-      (s) => detectDestination(s) === "domestic"
-    ).length;
-    const overseas = scholarships.filter(
-      (s) => detectDestination(s) === "overseas"
-    ).length;
-    return {
-      domestic,
-      overseas,
-      urgent: scholarships.filter((s) => {
-        const d = getDaysRemaining(s.deadline);
-        return d !== null && d > 0 && d <= 7;
-      }).length,
-      soon: scholarships.filter((s) => {
-        const d = getDaysRemaining(s.deadline);
-        return d !== null && d > 0 && d <= 30;
-      }).length,
-      full: scholarships.filter((s) => s.type === "full").length,
-      partial: scholarships.filter((s) => s.type === "partial").length,
-      grant: scholarships.filter((s) => s.type === "grant").length,
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scholarships]);
+  // Badge counts from full dataset
+  const counts = useMemo(() => ({
+    domestic: scholarships.filter((s) => detectDestination(s) === "domestic").length,
+    overseas: scholarships.filter((s) => detectDestination(s) === "overseas").length,
+    urgent: scholarships.filter((s) => { const d = getDaysRemaining(s.deadline); return d !== null && d > 0 && d <= 7; }).length,
+    soon:   scholarships.filter((s) => { const d = getDaysRemaining(s.deadline); return d !== null && d > 0 && d <= 30; }).length,
+    full:    scholarships.filter((s) => s.type === "full").length,
+    partial: scholarships.filter((s) => s.type === "partial").length,
+    grant:   scholarships.filter((s) => s.type === "grant").length,
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }), [scholarships]);
 
   const filtered = useMemo(() => {
     const now = Date.now();
-
     const results = scholarships.filter((s) => {
-      // Text search
-      const name = getLocalizedField(s, "name", locale).toLowerCase();
+      const name     = getLocalizedField(s, "name", locale).toLowerCase();
       const provider = getLocalizedField(s, "provider", locale).toLowerCase();
-      const q = search.toLowerCase();
-      const matchesSearch = !q || name.includes(q) || provider.includes(q);
-
-      // Type filter
-      const matchesType = !typeFilter || s.type === typeFilter;
-
-      // Deadline filter
-      let matchesDeadline = true;
+      const q        = search.toLowerCase();
+      if (q && !name.includes(q) && !provider.includes(q)) return false;
+      if (typeFilter && s.type !== typeFilter) return false;
       if (deadlineFilter === "urgent") {
         const d = getDaysRemaining(s.deadline);
-        matchesDeadline = d !== null && d > 0 && d <= 7;
+        if (d === null || d <= 0 || d > 7) return false;
       } else if (deadlineFilter === "soon") {
         const d = getDaysRemaining(s.deadline);
-        matchesDeadline = d !== null && d > 0 && d <= 30;
+        if (d === null || d <= 0 || d > 30) return false;
       }
-
-      // Destination filter
-      const matchesDestination =
-        !destinationFilter || detectDestination(s) === destinationFilter;
-
-      return matchesSearch && matchesType && matchesDeadline && matchesDestination;
+      if (destinationFilter && detectDestination(s) !== destinationFilter) return false;
+      return true;
     });
 
-    // Sort
     return results.sort((a, b) => {
       if (sortOrder === "name") {
-        const nameA = getLocalizedField(a, "name", locale).toLowerCase();
-        const nameB = getLocalizedField(b, "name", locale).toLowerCase();
-        return nameA.localeCompare(nameB);
+        return getLocalizedField(a, "name", locale).localeCompare(getLocalizedField(b, "name", locale));
       }
       if (sortOrder === "newest") {
         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       }
-      // Default: active nearest deadline first, no deadline next, closed last
       const dA = a.deadline ? new Date(a.deadline).getTime() : null;
       const dB = b.deadline ? new Date(b.deadline).getTime() : null;
       const closedA = dA !== null && dA < now;
@@ -159,38 +117,44 @@ export function ScholarshipList({ scholarships }: ScholarshipListProps) {
       if (closedA && !closedB) return 1;
       if (!closedA && closedB) return -1;
       if (dA !== null && dB !== null) return dA - dB;
-      if (dA !== null && dB === null) return -1;
-      if (dA === null && dB !== null) return 1;
+      if (dA !== null) return -1;
+      if (dB !== null) return 1;
       return 0;
     });
   }, [scholarships, search, typeFilter, deadlineFilter, destinationFilter, sortOrder, locale]);
 
-  // Active filter tags (removable)
+  // Active filter tags
   const activeFilters: { key: string; label: string; clear: () => void }[] = [];
   if (destinationFilter === "domestic")
     activeFilters.push({ key: "dest-dom", label: `🏠 ${t("destDomestic")}`, clear: () => setDestinationFilter("") });
   if (destinationFilter === "overseas")
-    activeFilters.push({ key: "dest-ov", label: `✈️ ${t("destOverseas")}`, clear: () => setDestinationFilter("") });
+    activeFilters.push({ key: "dest-ov",  label: `✈️ ${t("destOverseas")}`, clear: () => setDestinationFilter("") });
   if (typeFilter === "full")
-    activeFilters.push({ key: "type-full", label: `✅ ${t("full")}`, clear: () => setTypeFilter("") });
+    activeFilters.push({ key: "type-full",    label: t("full"),    clear: () => setTypeFilter("") });
   if (typeFilter === "partial")
-    activeFilters.push({ key: "type-partial", label: `💰 ${t("partial")}`, clear: () => setTypeFilter("") });
+    activeFilters.push({ key: "type-partial", label: t("partial"), clear: () => setTypeFilter("") });
   if (typeFilter === "grant")
-    activeFilters.push({ key: "type-grant", label: `🎁 ${t("grant")}`, clear: () => setTypeFilter("") });
+    activeFilters.push({ key: "type-grant",   label: t("grant"),   clear: () => setTypeFilter("") });
   if (deadlineFilter === "urgent")
     activeFilters.push({ key: "dl-urgent", label: `🔥 ${t("urgentDeadline")}`, clear: () => setDeadlineFilter("") });
   if (deadlineFilter === "soon")
-    activeFilters.push({ key: "dl-soon", label: `⚡ ${t("soonDeadline")}`, clear: () => setDeadlineFilter("") });
+    activeFilters.push({ key: "dl-soon",   label: `⚡ ${t("soonDeadline")}`,   clear: () => setDeadlineFilter("") });
 
   const currentSortLabel =
     sortOrder === "newest" ? t("sortNewest")
-    : sortOrder === "name" ? t("sortName")
+    : sortOrder === "name"   ? t("sortName")
     : t("sortDeadline");
 
+  // Toggle helper: if already selected, clear it
+  const toggleType     = (v: string) => setTypeFilter(typeFilter === v ? "" : v);
+  const toggleDeadline = (v: string) => setDeadlineFilter(deadlineFilter === v ? "" : v);
+  const toggleDest     = (v: string) => setDestinationFilter(destinationFilter === v ? "" : v);
+
   return (
-    <div>
-      {/* ── Header: result count + sort ── */}
-      <div className="flex items-center justify-between mb-3">
+    <div className="space-y-3">
+
+      {/* ── Header: count + sort ── */}
+      <div className="flex items-center justify-between">
         <p className="text-sm text-gray-500">
           {t("resultsCount", { count: filtered.length })}
         </p>
@@ -198,7 +162,7 @@ export function ScholarshipList({ scholarships }: ScholarshipListProps) {
         <div className="relative" ref={sortRef}>
           <button
             onClick={() => setSortDropdownOpen((v) => !v)}
-            className="flex items-center gap-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-full px-3 py-1.5 hover:border-brand-primary transition-colors"
+            className={clsx(pillBase, "flex items-center gap-1.5 border border-gray-200 bg-white hover:bg-gray-50")}
           >
             {currentSortLabel}
             <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
@@ -207,18 +171,17 @@ export function ScholarshipList({ scholarships }: ScholarshipListProps) {
           {sortDropdownOpen && (
             <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg py-1 z-10 min-w-44">
               {[
-                { value: "", label: t("sortDeadline") },
-                { value: "newest", label: t("sortNewest") },
-                { value: "name", label: t("sortName") },
+                { value: "",        label: t("sortDeadline") },
+                { value: "newest",  label: t("sortNewest") },
+                { value: "name",    label: t("sortName") },
               ].map((opt) => (
                 <button
                   key={opt.value}
                   onClick={() => { setSortOrder(opt.value); setSortDropdownOpen(false); }}
-                  className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 transition-colors ${
-                    sortOrder === opt.value
-                      ? "text-brand-primary font-semibold"
-                      : "text-gray-700"
-                  }`}
+                  className={clsx(
+                    "w-full text-left px-4 py-2 text-sm hover:bg-gray-50 transition-colors",
+                    sortOrder === opt.value ? "text-brand-primary font-semibold" : "text-gray-700"
+                  )}
                 >
                   {opt.label}
                 </button>
@@ -228,44 +191,32 @@ export function ScholarshipList({ scholarships }: ScholarshipListProps) {
         </div>
       </div>
 
-      {/* ── Search bar ── */}
-      <div className="mb-3">
-        <SearchBar
-          placeholder={t("searchPlaceholder")}
-          value={search}
-          onChange={setSearch}
-        />
-      </div>
+      {/* ── Search ── */}
+      <SearchBar
+        placeholder={t("searchPlaceholder")}
+        value={search}
+        onChange={setSearch}
+      />
 
-      {/* ── Destination segmented control ── */}
-      <div className="mb-3">
-        <p className="text-xs font-medium text-gray-400 mb-1.5 px-0.5">
-          {t("destinationLabel")}
-        </p>
-        <div className="flex rounded-xl border border-gray-200 bg-gray-50 p-1 gap-1">
+      {/* ── Destination filter ── */}
+      <div>
+        <p className="text-xs text-gray-400 font-medium mb-1.5">{t("destinationLabel")}</p>
+        <div className="flex flex-wrap gap-2">
           {[
-            { value: "", icon: "🌐", label: t("destAll"), count: scholarships.length },
-            { value: "domestic", icon: "🏠", label: t("destDomestic"), count: counts.domestic },
-            { value: "overseas", icon: "✈️", label: t("destOverseas"), count: counts.overseas },
+            { value: "",         label: t("destAll"),     count: scholarships.length },
+            { value: "domestic", label: `🏠 ${t("destDomestic")}`, count: counts.domestic },
+            { value: "overseas", label: `✈️ ${t("destOverseas")}`, count: counts.overseas },
           ].map((opt) => (
             <button
               key={opt.value}
-              onClick={() => setDestinationFilter(opt.value)}
-              className={`flex-1 flex items-center justify-center gap-1 px-2 py-2 rounded-lg text-sm font-medium transition-all ${
-                destinationFilter === opt.value
-                  ? "bg-white text-gray-900 shadow-sm border border-gray-200"
-                  : "text-gray-500 hover:text-gray-700 hover:bg-white/60"
-              }`}
+              onClick={() => toggleDest(opt.value)}
+              className={clsx(pillBase, destinationFilter === opt.value ? pillActive : pillInactive)}
             >
-              <span className="text-base leading-none">{opt.icon}</span>
-              <span className="hidden xs:inline truncate">{opt.label}</span>
-              <span
-                className={`text-xs rounded-full px-1.5 py-0.5 font-semibold leading-none ${
-                  destinationFilter === opt.value
-                    ? "bg-brand-primary/10 text-brand-primary"
-                    : "bg-gray-200 text-gray-500"
-                }`}
-              >
+              {opt.label}
+              <span className={clsx(
+                "ml-1.5 text-xs font-semibold rounded-full px-1.5 py-0.5",
+                destinationFilter === opt.value ? "bg-white/20" : "bg-gray-200 text-gray-500"
+              )}>
                 {opt.count}
               </span>
             </button>
@@ -273,63 +224,72 @@ export function ScholarshipList({ scholarships }: ScholarshipListProps) {
         </div>
       </div>
 
-      {/* ── Quick filter chips ── */}
-      <div className="flex gap-2 overflow-x-auto pb-1 mb-3" style={{ scrollbarWidth: "none" }}>
-        <QuickChip
-          active={deadlineFilter === "urgent"}
-          onClick={() => setDeadlineFilter(deadlineFilter === "urgent" ? "" : "urgent")}
-          label={`🔥 ${t("urgentDeadline")}`}
-          count={counts.urgent}
-          activeClass="bg-red-500 border-red-500 text-white"
-          inactiveClass="bg-white border-red-200 text-red-700 hover:bg-red-50"
-          countActiveClass="bg-red-400 text-white"
-          countInactiveClass="bg-red-100 text-red-600"
-        />
-        <QuickChip
-          active={typeFilter === "full"}
-          onClick={() => setTypeFilter(typeFilter === "full" ? "" : "full")}
-          label={`✅ ${t("full")}`}
-          count={counts.full}
-          activeClass="bg-green-600 border-green-600 text-white"
-          inactiveClass="bg-white border-green-200 text-green-700 hover:bg-green-50"
-          countActiveClass="bg-green-500 text-white"
-          countInactiveClass="bg-green-100 text-green-700"
-        />
-        <QuickChip
-          active={deadlineFilter === "soon"}
-          onClick={() => setDeadlineFilter(deadlineFilter === "soon" ? "" : "soon")}
-          label={`⚡ ${t("soonDeadline")}`}
-          count={counts.soon}
-          activeClass="bg-amber-500 border-amber-500 text-white"
-          inactiveClass="bg-white border-amber-200 text-amber-700 hover:bg-amber-50"
-          countActiveClass="bg-amber-400 text-white"
-          countInactiveClass="bg-amber-100 text-amber-700"
-        />
-        <QuickChip
-          active={typeFilter === "partial"}
-          onClick={() => setTypeFilter(typeFilter === "partial" ? "" : "partial")}
-          label={`💰 ${t("partial")}`}
-          count={counts.partial}
-          activeClass="bg-blue-600 border-blue-600 text-white"
-          inactiveClass="bg-white border-blue-200 text-blue-700 hover:bg-blue-50"
-          countActiveClass="bg-blue-500 text-white"
-          countInactiveClass="bg-blue-100 text-blue-700"
-        />
-        <QuickChip
-          active={typeFilter === "grant"}
-          onClick={() => setTypeFilter(typeFilter === "grant" ? "" : "grant")}
-          label={`🎁 ${t("grant")}`}
-          count={counts.grant}
-          activeClass="bg-amber-700 border-amber-700 text-white"
-          inactiveClass="bg-white border-amber-200 text-amber-800 hover:bg-amber-50"
-          countActiveClass="bg-amber-600 text-white"
-          countInactiveClass="bg-amber-100 text-amber-800"
-        />
+      {/* ── Type filter ── */}
+      <div>
+        <p className="text-xs text-gray-400 font-medium mb-1.5">{t("type")}</p>
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => setTypeFilter("")}
+            className={clsx(pillBase, typeFilter === "" ? pillActive : pillInactive)}
+          >
+            {tCommon("filter")}
+          </button>
+          {[
+            { value: "full",    label: t("full"),    count: counts.full },
+            { value: "partial", label: t("partial"), count: counts.partial },
+            { value: "grant",   label: t("grant"),   count: counts.grant },
+          ].map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => toggleType(opt.value)}
+              className={clsx(pillBase, typeFilter === opt.value ? pillActive : pillInactive)}
+            >
+              {opt.label}
+              <span className={clsx(
+                "ml-1.5 text-xs font-semibold rounded-full px-1.5 py-0.5",
+                typeFilter === opt.value ? "bg-white/20" : "bg-gray-200 text-gray-500"
+              )}>
+                {opt.count}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Deadline filter ── */}
+      <div>
+        <p className="text-xs text-gray-400 font-medium mb-1.5">{t("deadline")}</p>
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => setDeadlineFilter("")}
+            className={clsx(pillBase, deadlineFilter === "" ? pillActive : pillInactive)}
+          >
+            {tCommon("filter")}
+          </button>
+          {[
+            { value: "urgent", label: `🔥 ${t("urgentDeadline")}`, count: counts.urgent },
+            { value: "soon",   label: `⚡ ${t("soonDeadline")}`,   count: counts.soon },
+          ].map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => toggleDeadline(opt.value)}
+              className={clsx(pillBase, deadlineFilter === opt.value ? pillActive : pillInactive)}
+            >
+              {opt.label}
+              <span className={clsx(
+                "ml-1.5 text-xs font-semibold rounded-full px-1.5 py-0.5",
+                deadlineFilter === opt.value ? "bg-white/20" : "bg-gray-200 text-gray-500"
+              )}>
+                {opt.count}
+              </span>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* ── Active filter bar ── */}
       {activeFilters.length > 0 && (
-        <div className="flex flex-wrap items-center gap-2 mb-4 px-3 py-2.5 bg-brand-primary/5 rounded-xl border border-brand-primary/15">
+        <div className="flex flex-wrap items-center gap-2 px-3 py-2.5 bg-brand-primary/5 rounded-xl border border-brand-primary/15">
           <span className="text-xs text-brand-primary font-medium shrink-0">
             {t("activeFilters", { count: activeFilters.length })}
           </span>
@@ -344,11 +304,7 @@ export function ScholarshipList({ scholarships }: ScholarshipListProps) {
             </button>
           ))}
           <button
-            onClick={() => {
-              setTypeFilter("");
-              setDeadlineFilter("");
-              setDestinationFilter("");
-            }}
+            onClick={() => { setTypeFilter(""); setDeadlineFilter(""); setDestinationFilter(""); }}
             className="text-xs text-gray-400 hover:text-gray-600 underline ml-auto shrink-0"
           >
             {t("resetFilters")}
@@ -369,46 +325,5 @@ export function ScholarshipList({ scholarships }: ScholarshipListProps) {
         </div>
       )}
     </div>
-  );
-}
-
-// ── Sub-component: Quick filter chip ────────────────────────────────────────
-interface QuickChipProps {
-  active: boolean;
-  onClick: () => void;
-  label: string;
-  count: number;
-  activeClass: string;
-  inactiveClass: string;
-  countActiveClass: string;
-  countInactiveClass: string;
-}
-
-function QuickChip({
-  active,
-  onClick,
-  label,
-  count,
-  activeClass,
-  inactiveClass,
-  countActiveClass,
-  countInactiveClass,
-}: QuickChipProps) {
-  return (
-    <button
-      onClick={onClick}
-      className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors border ${
-        active ? activeClass : inactiveClass
-      }`}
-    >
-      <span>{label}</span>
-      <span
-        className={`text-xs rounded-full px-1.5 py-0.5 font-semibold ${
-          active ? countActiveClass : countInactiveClass
-        }`}
-      >
-        {count}
-      </span>
-    </button>
   );
 }
