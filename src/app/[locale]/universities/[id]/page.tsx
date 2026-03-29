@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const location = locale === "km" ? university.location_km : university.location_en;
 
   return {
-    title: `${name} | PathForward`,
+    title: `${name} | BrightDoorHub`,
     description: description?.slice(0, 160) || `${name} - ${location}`,
     openGraph: {
       title: name,

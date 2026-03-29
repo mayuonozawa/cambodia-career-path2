@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Vocational Training Guide | PathForward",
+  title: "Vocational Training Guide | BrightDoorHub",
   description:
     "Complete guide to vocational training programs in Cambodia. Learn for free, get paid, and start your career.",
 };

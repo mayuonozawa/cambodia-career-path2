@@ -10,19 +10,19 @@ import { BackButtonWrapper } from "@/components/ui/BackButtonWrapper";
 // ① メタデータの設定
 export const metadata: Metadata = {
   title: {
-    default: "PathForward - ផ្លូវអនាគត | Cambodia Career Path",
-    template: "%s | PathForward",
+    default: "BrightDoorHub | Cambodia Career Path",
+    template: "%s | BrightDoorHub",
   },
   description:
-    "Find scholarships, universities, and vocational schools in Cambodia. Discover your future path with PathForward.",
+    "Find scholarships, universities, and vocational schools in Cambodia. Discover your future path with BrightDoorHub.",
   keywords: [
     "Cambodia", "scholarships", "universities", "vocational schools",
     "education", "អាហារូបករណ៍", "សាកលវិទ្យាល័យ",
   ],
   openGraph: {
     type: "website",
-    siteName: "PathForward",
-    title: "PathForward - ផ្លូវអនាគត",
+    siteName: "BrightDoorHub",
+    title: "BrightDoorHub",
     description: "Find scholarships, universities, and vocational schools in Cambodia",
   },
 };
