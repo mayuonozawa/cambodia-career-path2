@@ -1,13 +1,15 @@
 import Script from "next/script";
+import { getLocale } from "next-intl/server";
 import "./globals.css";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await getLocale();
   return (
-    <html lang="km" dir="ltr">
+    <html lang={locale} dir="ltr">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
         <meta name="theme-color" content="#3b82f6" />

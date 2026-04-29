@@ -133,6 +133,8 @@ export function UniversityList({ universities }: UniversityListProps) {
 
   // Active filter tags
   const activeFilters: { key: string; label: string; clear: () => void }[] = [];
+  if (search)
+    activeFilters.push({ key: "search", label: `🔍 "${search}"`, clear: () => setSearch("") });
   if (typeFilter === "public")
     activeFilters.push({ key: "type-pub", label: `🏫 ${t("public")}`, clear: () => setTypeFilter("") });
   if (typeFilter === "private")
@@ -285,7 +287,7 @@ export function UniversityList({ universities }: UniversityListProps) {
             </button>
           ))}
           <button
-            onClick={() => { setTypeFilter(""); setLocationFilter(""); setProgramFilter(""); setHasScholarshipFilter(false); }}
+            onClick={() => { setSearch(""); setTypeFilter(""); setLocationFilter(""); setProgramFilter(""); setHasScholarshipFilter(false); }}
             className="text-xs text-gray-400 hover:text-gray-600 underline ml-auto shrink-0"
           >
             {t("resetFilters")}

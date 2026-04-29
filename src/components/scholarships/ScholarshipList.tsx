@@ -125,6 +125,8 @@ export function ScholarshipList({ scholarships }: ScholarshipListProps) {
 
   // Active filter tags
   const activeFilters: { key: string; label: string; clear: () => void }[] = [];
+  if (search)
+    activeFilters.push({ key: "search", label: `🔍 "${search}"`, clear: () => setSearch("") });
   if (destinationFilter === "domestic")
     activeFilters.push({ key: "dest-dom", label: `🏠 ${t("destDomestic")}`, clear: () => setDestinationFilter("") });
   if (destinationFilter === "overseas")
@@ -304,7 +306,7 @@ export function ScholarshipList({ scholarships }: ScholarshipListProps) {
             </button>
           ))}
           <button
-            onClick={() => { setTypeFilter(""); setDeadlineFilter(""); setDestinationFilter(""); }}
+            onClick={() => { setSearch(""); setTypeFilter(""); setDeadlineFilter(""); setDestinationFilter(""); }}
             className="text-xs text-gray-400 hover:text-gray-600 underline ml-auto shrink-0"
           >
             {t("resetFilters")}

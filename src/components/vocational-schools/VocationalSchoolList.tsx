@@ -116,6 +116,8 @@ export function VocationalSchoolList({ schools }: VocationalSchoolListProps) {
 
   // Active filter tags
   const activeFilters: { key: string; label: string; clear: () => void }[] = [];
+  if (search)
+    activeFilters.push({ key: "search", label: `🔍 "${search}"`, clear: () => setSearch("") });
   if (locationFilter)
     activeFilters.push({ key: "loc", label: `📍 ${locationFilter}`, clear: () => setLocationFilter("") });
   if (programFilter) {
@@ -232,7 +234,7 @@ export function VocationalSchoolList({ schools }: VocationalSchoolListProps) {
             </button>
           ))}
           <button
-            onClick={() => { setLocationFilter(""); setProgramFilter(""); }}
+            onClick={() => { setSearch(""); setLocationFilter(""); setProgramFilter(""); }}
             className="text-xs text-gray-400 hover:text-gray-600 underline ml-auto shrink-0"
           >
             {t("resetFilters")}
