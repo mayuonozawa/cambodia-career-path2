@@ -14,6 +14,7 @@ export interface Scholarship {
   application_url: string | null;
   deadline: string | null;
   is_active: boolean;
+  is_domestic: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -23,6 +24,7 @@ export interface University {
   name_en: string;
   name_km: string;
   type: "public" | "private";
+  is_domestic: boolean;
   location_en: string;
   location_km: string;
   description_en: string;

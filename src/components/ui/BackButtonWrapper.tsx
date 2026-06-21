@@ -6,10 +6,11 @@ import { BackButton } from "./BackButton";
 export function BackButtonWrapper() {
   const pathname = usePathname();
   
-  // トップページ（ホームページ）ではボタンを表示しない
+  // トップページと管理画面ではレイアウトのBackボタンを非表示（管理画面は独自のBack制御を持つ）
   const isHomePage = pathname === "/" || pathname === "";
-  
-  if (isHomePage) {
+  const isAdminPage = pathname.startsWith("/admin");
+
+  if (isHomePage || isAdminPage) {
     return null;
   }
 
