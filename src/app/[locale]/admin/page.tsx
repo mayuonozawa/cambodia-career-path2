@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "@/i18n/routing";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Home } from "lucide-react";
 
 const ADMIN_EMAIL = "mayuonozawa.taylors@gmail.com";
 
@@ -75,7 +75,7 @@ export default function AdminPage() {
       setShowForm(false);
       setEditItem(null);
     } else {
-      router.back();
+      router.push("/");
     }
   };
 
@@ -96,8 +96,8 @@ export default function AdminPage() {
         onClick={handleBack}
         className="flex items-center gap-1 text-gray-600 hover:text-blue-600 text-sm font-medium transition-colors mb-6"
       >
-        <ArrowLeft className="w-4 h-4" />
-        {showForm ? "一覧に戻る" : "戻る"}
+        {showForm ? <ArrowLeft className="w-4 h-4" /> : <Home className="w-4 h-4" />}
+        {showForm ? "一覧に戻る" : "トップへ"}
       </button>
 
       <h1 className="text-2xl font-bold mb-6">管理画面</h1>

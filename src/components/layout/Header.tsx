@@ -3,10 +3,12 @@
 import { useTranslations } from "next-intl";
 import { Link, usePathname, useRouter } from "@/i18n/routing";
 import { useLocale } from "next-intl";
-import { Menu, X, Globe, LogOut } from "lucide-react";
+import { Menu, X, Globe, LogOut, Settings } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { createClient } from "@/lib/supabase/client";
+
+const ADMIN_EMAIL = "mayuonozawa.taylors@gmail.com";
 
 export function Header() {
   const t = useTranslations("common");
@@ -74,6 +76,15 @@ export function Header() {
             <>
               {user ? (
                 <>
+                  {user.email === ADMIN_EMAIL && (
+                    <Link
+                      href="/admin"
+                      className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-8 rounded-md gap-1.5 px-3 hover:bg-accent hover:text-accent-foreground"
+                    >
+                      <Settings className="h-4 w-4" />
+                      Admin
+                    </Link>
+                  )}
                   <Link
                     href="/profile"
                     className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-8 rounded-md gap-1.5 px-3 hover:bg-accent hover:text-accent-foreground"
@@ -129,6 +140,15 @@ export function Header() {
             ))}
             {user && (
               <>
+                {user.email === ADMIN_EMAIL && (
+                  <Link
+                    href="/admin"
+                    className="text-foreground hover:text-brand-primary font-medium py-2"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Admin
+                  </Link>
+                )}
                 <Link
                   href="/profile"
                   className="text-foreground hover:text-brand-primary font-medium py-2"
