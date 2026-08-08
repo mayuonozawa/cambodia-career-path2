@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
@@ -408,10 +409,12 @@ function CareerCard({
 
       {/* Career Photo */}
       <div className="relative -mx-4 -mt-4 mb-3 h-36 overflow-hidden rounded-t-2xl">
-        <img
+        <Image
           src={career.image}
           alt={isKm ? career.nameKm : career.nameEn}
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-3">

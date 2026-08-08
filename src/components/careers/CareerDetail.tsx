@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
 import {
@@ -121,10 +122,12 @@ export default function CareerDetail({
 
         {/* Hero image header */}
         <div className="relative h-44 sm:h-52 overflow-hidden">
-          <img
+          <Image
             src={career.image}
             alt={isKm ? career.nameKm : career.nameEn}
-            className="h-full w-full object-cover"
+            fill
+            sizes="(max-width: 640px) 100vw, 512px"
+            className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-5">

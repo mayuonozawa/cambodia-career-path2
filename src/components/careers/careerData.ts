@@ -80,7 +80,7 @@ export const CAREERS: Career[] = [
     nameKm: "ជំនួយការគណនេយ្យ",
     descriptionEn: "Support businesses with bookkeeping, invoices, and financial records.",
     descriptionKm: "ជួយគ្រប់គ្រងសៀវភៅគណនេយ្យ វិក្កយបត្រ និងកំណត់ត្រាហិរញ្ញវត្ថុ។",
-    image: "/images/careers/accounting.jpg",
+    image: "/images/careers/accounting.webp",
     category: "realistic",
     skills: [
       { en: "Excel", km: "Excel" },
@@ -137,7 +137,7 @@ export const CAREERS: Career[] = [
     nameKm: "បុគ្គលិកសណ្ឋាគារ និងបដិសណ្ឋារកិច្ច",
     descriptionEn: "Work in hotels, resorts, and restaurants serving local and international guests.",
     descriptionKm: "ធ្វើការនៅសណ្ឋាគារ រមណីយដ្ឋាន និងភោជនីយដ្ឋាន បម្រើភ្ញៀវក្នុង និងក្រៅប្រទេស។",
-    image: "/images/careers/hospitality.jpg",
+    image: "/images/careers/hospitality.webp",
     category: "realistic",
     skills: [
       { en: "Customer Service", km: "សេវាអតិថិជន" },
@@ -194,7 +194,7 @@ export const CAREERS: Career[] = [
     nameKm: "ជាងបច្ចេកទេorg សំណង់",
     descriptionEn: "Build and maintain structures — electrical, plumbing, and structural work.",
     descriptionKm: "សាងសង់ និងថែទាំអគារ — ការងារអគ្គិសនី ទឹក និងរចនាសម្ព័ន្ធ។",
-    image: "/images/careers/construction.jpg",
+    image: "/images/careers/construction.webp",
     category: "realistic",
     skills: [
       { en: "Technical Skills", km: "ជំនាញបច្ចេកទេស" },
@@ -251,7 +251,7 @@ export const CAREERS: Career[] = [
     nameKm: "គ្រូបង្រៀន",
     descriptionEn: "Educate the next generation in schools across Cambodia.",
     descriptionKm: "បង្រៀនមេរៀនដល់កុមារគ្រប់សាលានៅទូទាំងកម្ពុជា។",
-    image: "/images/careers/teacher.jpg",
+    image: "/images/careers/teacher.webp",
     category: "realistic",
     skills: [
       { en: "Teaching", km: "ការបង្រៀន" },
@@ -310,7 +310,7 @@ export const CAREERS: Career[] = [
     nameKm: "អ្នកអភិវឌ្ឍន៍កម្មវិធី",
     descriptionEn: "Build web and mobile applications for local and global companies.",
     descriptionKm: "បង្កើតកម្មវិធីគេហទំព័រ និងទូរស័ព្ទសម្រាប់ក្រុមហ៊ុនក្នុង និងក្រៅប្រទេស។",
-    image: "/images/careers/software-dev.jpg",
+    image: "/images/careers/software-dev.webp",
     category: "high-income",
     skills: [
       { en: "JavaScript", km: "JavaScript" },
@@ -371,7 +371,7 @@ export const CAREERS: Career[] = [
     nameKm: "អ្នកទីផ្សារឌីជីថល",
     descriptionEn: "Run social media, ads, and online campaigns for businesses.",
     descriptionKm: "គ្រប់គ្រងបណ្តាញសង្គម ការផ្សាយពាណិជ្ជកម្ម និងយុទ្ធនាការអនឡាញ។",
-    image: "/images/careers/digital-marketing.jpg",
+    image: "/images/careers/digital-marketing.webp",
     category: "high-income",
     skills: [
       { en: "Social Media", km: "បណ្តាញសង្គម" },
@@ -427,7 +427,7 @@ export const CAREERS: Career[] = [
     nameKm: "អ្នករចនា UI/UX",
     descriptionEn: "Design user interfaces and experiences for apps and websites.",
     descriptionKm: "រចនាចំណុចប្រទាក់ និងបទពិសោធន៍អ្នកប្រើប្រាស់សម្រាប់កម្មវិធី និងគេហទំព័រ។",
-    image: "/images/careers/ui-ux.jpg",
+    image: "/images/careers/ui-ux.webp",
     category: "high-income",
     skills: [
       { en: "Figma", km: "Figma" },
@@ -483,7 +483,7 @@ export const CAREERS: Career[] = [
     nameKm: "ហិរញ្ញវត្ថុ និងធនាគារ",
     descriptionEn: "Work in banks, microfinance, or investment firms managing money.",
     descriptionKm: "ធ្វើការនៅធនាគារ មីក្រូហិរញ្ញវត្ថុ ឬក្រុមហ៊ុនវិនិយោគ។",
-    image: "/images/careers/finance.jpg",
+    image: "/images/careers/finance.webp",
     category: "high-income",
     skills: [
       { en: "Financial Analysis", km: "វិភាគហិរញ្ញវត្ថុ" },
@@ -541,7 +541,7 @@ export const CAREERS: Career[] = [
     nameKm: "អ្នកគ្រប់គ្រងគម្រោង NGO",
     descriptionEn: "Lead development projects that improve communities across Cambodia.",
     descriptionKm: "ដឹកនាំគម្រោងអភិវឌ្ឍន៍ដែលកែលម្អសហគមន៍នៅទូទាំងកម្ពុជា។",
-    image: "/images/careers/ngo.jpg",
+    image: "/images/careers/ngo.webp",
     category: "social-impact",
     skills: [
       { en: "Project Management", km: "គ្រប់គ្រងគម្រោង" },
@@ -597,7 +597,7 @@ export const CAREERS: Career[] = [
     nameKm: "បុគ្គលិកសុខាភិបាល",
     descriptionEn: "Provide medical care and health education in communities.",
     descriptionKm: "ផ្តល់ការថែទាំសុខភាព និងការអប់រំសុខភាពក្នុងសហគមន៍។",
-    image: "/images/careers/healthcare.jpg",
+    image: "/images/careers/healthcare.webp",
     category: "social-impact",
     skills: [
       { en: "Medical Knowledge", km: "ចំណេះដឹងវេជ្ជសាស្ត្រ" },
@@ -653,7 +653,7 @@ export const CAREERS: Career[] = [
     nameKm: "បុគ្គលិកសង្គមកិច្ច",
     descriptionEn: "Help vulnerable people access services, education, and support.",
     descriptionKm: "ជួយមនុស្សងាយរងគ្រោះឱ្យទទួលបានសេវា ការអប់រំ និងការគាំទ្រ។",
-    image: "/images/careers/social-work.jpg",
+    image: "/images/careers/social-work.webp",
     category: "social-impact",
     skills: [
       { en: "Counseling", km: "ការប្រឹក្សា" },
@@ -709,7 +709,7 @@ export const CAREERS: Career[] = [
     nameKm: "អ្នកជំនាញបរិស្ថាន",
     descriptionEn: "Protect natural resources and lead sustainability projects.",
     descriptionKm: "ការពារធនធានធម្មជាតិ និងដឹកនាំគម្រោងនិរន្តរភាព។",
-    image: "/images/careers/environment.jpg",
+    image: "/images/careers/environment.webp",
     category: "social-impact",
     skills: [
       { en: "Research", km: "ស្រាវជ្រាវ" },

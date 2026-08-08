@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link, usePathname, useRouter } from "@/i18n/routing";
 import { useLocale } from "next-intl";
@@ -41,9 +42,12 @@ export function Header() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
         {/* Logo */}
         <Link href="/" className="flex items-center">
-          <img 
-            src="/images/brightdoor-logo.png" 
-            alt="Bright Door Logo" 
+          <Image
+            src="/images/brightdoor-logo.webp"
+            alt="Bright Door Logo"
+            width={320}
+            height={131}
+            priority
             className="w-40 h-auto"
           />
         </Link>

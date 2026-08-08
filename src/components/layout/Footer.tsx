@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { MessageCircle } from "lucide-react";
@@ -28,9 +29,11 @@ export function Footer() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           <div>
             <div className="mb-4">
-              <img
-                src="/images/brightdoor-logo.png"
+              <Image
+                src="/images/brightdoor-logo.webp"
                 alt="Bright Door Logo"
+                width={320}
+                height={131}
                 className="w-40 h-auto"
               />
             </div>

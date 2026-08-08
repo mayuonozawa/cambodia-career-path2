@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getTranslations, getLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { createClient } from "@/lib/supabase/server";
@@ -33,9 +34,13 @@ export default async function HomePage() {
       <section className="relative overflow-hidden">
         {/* Hero Image with Gradient Overlay */}
         <div className="relative w-full">
-          <img
-            src="/images/hero-banner.png"
+          <Image
+            src="/images/hero-banner.webp"
             alt="Cambodia Career Path - Find Your Future"
+            width={1920}
+            height={960}
+            priority
+            sizes="100vw"
             className="w-full h-auto block"
           />
           {/* Gradient overlay - bottom fade into content */}
