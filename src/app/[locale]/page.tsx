@@ -1,32 +1,21 @@
+import { Suspense } from "react";
 import Image from "next/image";
-import { getTranslations, getLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
-import { createClient } from "@/lib/supabase/server";
-import { GraduationCap, Compass, Heart, Banknote, MapPin, Award, ArrowRight, Calendar, ChevronRight, Wrench, Sparkles, BookOpen, Users } from "lucide-react";
-import { Badge } from "@/components/ui/Badge";
-import { getLocalizedField, getScholarshipTypeBadgeColor, formatDate } from "@/lib/utils";
-import type { Locale } from "@/types/database";
+import { GraduationCap, Compass, Heart, ArrowRight, ChevronRight, Wrench, Sparkles, BookOpen, Users } from "lucide-react";
 import CareerExplorer from "@/components/careers/CareerExplorer";
 import CareerDiagnosis from "@/components/careers/CareerDiagnosis";
+import FeaturedScholarships from "@/components/home/FeaturedScholarships";
+import FeaturedSchools from "@/components/home/FeaturedSchools";
+import { FeaturedScholarshipsSkeleton, FeaturedSchoolsSkeleton } from "@/components/home/FeaturedSectionSkeleton";
 
+// Supabaseへの問い合わせは FeaturedScholarships / FeaturedSchools に切り出し、
+// それぞれ個別のSuspenseで包んでいる。ここを非同期のままSupabaseまで
+// await していると、loading.tsx がページ全体（ヒーローやキャリア探索を含む）
+// をブロックしてしまい、データ到着時に一瞬でページ全体が入れ替わる巨大な
+// レイアウトシフト（CLS）が発生していたため。
 export default async function HomePage() {
   const t = await getTranslations();
-  const locale = (await getLocale()) as Locale;
-  const supabase = await createClient();
-
-  const { data: scholarships } = await supabase
-    .from("scholarships")
-    .select("*")
-    .eq("is_active", true)
-    .order("created_at", { ascending: false })
-    .limit(3);
-
-  const { data: universities } = await supabase
-    .from("universities")
-    .select("*")
-    .eq("is_active", true)
-    .order("created_at", { ascending: false })
-    .limit(3);
 
   return (
     <div>
@@ -249,110 +238,15 @@ export default async function HomePage() {
       {/* Career Decision Engine */}
       <CareerExplorer />
 
-      {/* Featured Scholarships */}
-      {scholarships && scholarships.length > 0 && (
-        <section className="px-4 py-16">
-          <div className="mx-auto max-w-7xl">
-            <div className="mb-8 flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-foreground">{t("home.featuredScholarships")}</h2>
-              <Link href="/scholarships">
-                <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-9 px-4 py-2 gap-1 text-brand-primary">
-                  {t("home.viewAll")}<ArrowRight className="h-4 w-4" />
-                </button>
-              </Link>
-            </div>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {scholarships.map((s) => (
-                <Link key={s.id} href={`/scholarships/${s.id}`}>
-                  <div className="bg-card text-card-foreground gap-6 rounded-xl border py-6 shadow-sm flex h-full flex-col transition-shadow hover:shadow-lg">
-                    <div className="grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 pb-3">
-                      <div className="flex items-start justify-between gap-2">
-                        <div>
-                          <h3 className="line-clamp-2 text-lg font-semibold text-foreground">{getLocalizedField(s, "name", locale)}</h3>
-                          <p className="mt-1 text-sm text-muted-foreground">{getLocalizedField(s, "provider", locale)}</p>
-                        </div>
-                        <Badge className={`${getScholarshipTypeBadgeColor(s.type)} text-xs font-medium`}>{t(`scholarships.${s.type}`)}</Badge>
-                      </div>
-                    </div>
-                    <div className="px-6 flex flex-1 flex-col gap-4">
-                      <p className="line-clamp-2 text-sm text-muted-foreground">{getLocalizedField(s, "description", locale)}</p>
-                      <div className="space-y-2 text-sm">
-                        {getLocalizedField(s, "coverage", locale) && (
-                          <div className="flex items-center gap-2 text-muted-foreground">
-                            <Banknote className="h-4 w-4 shrink-0 text-brand-primary" />
-                            <span className="line-clamp-1">{getLocalizedField(s, "coverage", locale)}</span>
-                          </div>
-                        )}
-                        {s.deadline && (
-                          <div className="flex items-center gap-2 text-muted-foreground">
-                            <Calendar className="h-4 w-4 shrink-0 text-brand-primary" />
-                            <span>{t("scholarships.deadline")}: {formatDate(s.deadline, locale)}</span>
-                          </div>
-                        )}
-                      </div>
-                      <div className="mt-auto pt-2">
-                        <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-9 px-4 py-2 w-full bg-brand-primary text-white hover:bg-brand-primary-hover">
-                          {t("common.viewDetails")}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      {/* Featured Scholarships (Supabase取得部分のみ個別Suspense化) */}
+      <Suspense fallback={<FeaturedScholarshipsSkeleton />}>
+        <FeaturedScholarships />
+      </Suspense>
 
-      {/* Featured Schools */}
-      {universities && universities.length > 0 && (
-        <section className="bg-card px-4 py-16">
-          <div className="mx-auto max-w-7xl">
-            <div className="mb-8 flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-foreground">{t("home.featuredSchools") || "Featured Schools"}</h2>
-              <Link href="/universities">
-                <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-9 px-4 py-2 gap-1 text-brand-secondary">
-                  {t("home.viewAll")}<ArrowRight className="h-4 w-4" />
-                </button>
-              </Link>
-            </div>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {universities.map((u) => (
-                <Link key={u.id} href={`/universities/${u.id}`}>
-                  <div className="bg-card text-card-foreground gap-6 rounded-xl border py-6 shadow-sm flex h-full flex-col transition-shadow hover:shadow-lg">
-                    <div className="grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 pb-3">
-                      <div className="flex items-start justify-between gap-2">
-                        <div>
-                          <h3 className="line-clamp-2 text-lg font-semibold text-foreground">{getLocalizedField(u, "name", locale)}</h3>
-                          <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
-                            <MapPin className="h-4 w-4" />
-                            {getLocalizedField(u, "location", locale)}
-                          </div>
-                        </div>
-                        <Badge className="bg-primary text-primary-foreground text-xs font-medium">University</Badge>
-                      </div>
-                    </div>
-                    <div className="px-6 flex flex-1 flex-col gap-4">
-                      <p className="line-clamp-2 text-sm text-muted-foreground">{getLocalizedField(u, "description", locale)}</p>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                          <Award className="h-4 w-4 shrink-0 text-brand-secondary" />
-                          <span>{t("universities.availableScholarships")}</span>
-                        </div>
-                      </div>
-                      <div className="mt-auto flex gap-2 pt-2">
-                        <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] h-9 px-4 py-2 flex-1 w-full bg-brand-secondary text-white hover:bg-brand-secondary-hover">
-                          {t("common.viewDetails")}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      {/* Featured Schools (Supabase取得部分のみ個別Suspense化) */}
+      <Suspense fallback={<FeaturedSchoolsSkeleton />}>
+        <FeaturedSchools />
+      </Suspense>
     </div>
   );
 }
