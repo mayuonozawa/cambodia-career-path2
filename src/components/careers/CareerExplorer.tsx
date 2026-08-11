@@ -1060,8 +1060,8 @@ export default function CareerExplorer() {
             </div>
           </div>
 
-          {/* Re-trigger onboarding */}
-          {hasSeenOnboarding && !showOnboarding && (
+          {/* Re-trigger onboarding (disabled: onboarding question modal is turned off) */}
+          {false && hasSeenOnboarding && !showOnboarding && (
             <div className="mt-6 text-center">
               <button
                 onClick={() => setShowOnboarding(true)}
