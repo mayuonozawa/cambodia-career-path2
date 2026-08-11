@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Badge } from "@/components/ui/Badge";
 import { getLocalizedField, getScholarshipTypeBadgeColor, formatDate } from "@/lib/utils";
+import { trackEvent } from "@/lib/gtag";
 import type { Scholarship, Locale } from "@/types/database";
 import { Calendar, Building, Clock, AlertTriangle } from "lucide-react";
 
@@ -48,9 +49,19 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
   const isUrgent = daysRemaining !== null && daysRemaining > 0 && daysRemaining <= 7;
   const isApproaching = daysRemaining !== null && daysRemaining > 7 && daysRemaining <= 30;
 
+  const handleClick = () => {
+    trackEvent("scholarship_view", {
+      scholarship_id: scholarship.id,
+      scholarship_name: name,
+      language: locale,
+      source: "list",
+    });
+  };
+
   return (
     <Link
       href={`/scholarships/${scholarship.id}`}
+      onClick={handleClick}
       className={`block p-5 bg-white border rounded-xl hover:shadow-md transition-all border-l-4 ${
         isClosed
           ? "border-gray-200 border-l-gray-300 opacity-70"
