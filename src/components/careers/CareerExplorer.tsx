@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
 import {
@@ -22,7 +22,6 @@ import {
   Zap,
   Wifi,
   Sprout,
-  Building2,
   Wrench,
   Users,
   Cpu,
@@ -44,11 +43,7 @@ import CareerDetail from "./CareerDetail";
 
 // ─── Onboarding Modal ───
 
-type OnboardingStep = 1 | 2 | 3;
-
 interface UserProfile {
-  englishLevel: string;
-  location: string;
   interest: InterestType;
 }
 
@@ -60,41 +55,10 @@ function OnboardingModal({
   onSkip: () => void;
 }) {
   const t = useTranslations("careers");
-  const [step, setStep] = useState<OnboardingStep>(1);
-  const [profile, setProfile] = useState<Partial<UserProfile>>({});
 
-  const handleSelect = (key: keyof UserProfile, value: string) => {
-    const updated = { ...profile, [key]: value };
-    setProfile(updated);
-
-    if (step < 3) {
-      setTimeout(() => setStep((step + 1) as OnboardingStep), 200);
-    } else {
-      setTimeout(() => onComplete(updated as UserProfile), 200);
-    }
+  const handleSelectInterest = (value: InterestType) => {
+    setTimeout(() => onComplete({ interest: value }), 200);
   };
-
-  const englishOptions = [
-    { value: "none", labelEn: "None", labelKm: "មិនចេះ", icon: "---" },
-    { value: "basic", labelEn: "Basic", labelKm: "មូលដ្ឋាន", icon: "-\u00b7-" },
-    {
-      value: "intermediate",
-      labelEn: "Intermediate",
-      labelKm: "មធ្យម",
-      icon: "-\u00b7\u00b7",
-    },
-    {
-      value: "advanced",
-      labelEn: "Advanced",
-      labelKm: "កម្រិតខ្ពស់",
-      icon: "\u00b7\u00b7\u00b7",
-    },
-  ];
-
-  const locationOptions = [
-    { value: "urban", labelEn: "Urban (City)", labelKm: "ទីក្រុង", icon: Building2 },
-    { value: "rural", labelEn: "Rural (Province)", labelKm: "ជនបទ", icon: Sprout },
-  ];
 
   const interestOptions: {
     value: InterestType;
@@ -139,19 +103,7 @@ function OnboardingModal({
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm p-0 sm:p-4">
       <div className="relative w-full max-w-md bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden animate-[slideUp_0.4s_cubic-bezier(0.22,1,0.36,1)]">
-        {/* Progress bar */}
-        <div className="flex gap-1.5 px-6 pt-5">
-          {[1, 2, 3].map((s) => (
-            <div
-              key={s}
-              className={`h-1 flex-1 rounded-full transition-all duration-500 ${
-                s <= step ? "bg-brand-primary" : "bg-gray-200"
-              }`}
-            />
-          ))}
-        </div>
-
-        <div className="px-6 pt-5 pb-6">
+        <div className="px-6 pt-6 pb-6">
           {/* Skip */}
           <button
             onClick={onSkip}
@@ -160,124 +112,32 @@ function OnboardingModal({
             {t("onboarding.skip")}
           </button>
 
-          {step === 1 && (
-            <div className="animate-[fadeIn_0.3s_ease]">
-              <div className="flex items-center gap-2 mb-1">
-                <Sparkles className="h-4 w-4 text-brand-primary" />
-                <span className="text-xs font-medium text-brand-primary uppercase tracking-wider">
-                  {t("onboarding.step")} 1/3
-                </span>
-              </div>
-              <h3 className="text-lg font-bold text-foreground mb-1">
-                {t("onboarding.englishTitle")}
-              </h3>
-              <p className="text-sm text-muted-foreground mb-5">
-                {t("onboarding.englishDesc")}
-              </p>
-              <div className="grid grid-cols-2 gap-2.5">
-                {englishOptions.map((opt) => (
+          <div className="animate-[fadeIn_0.3s_ease]">
+            <h3 className="flex items-center gap-2 text-lg font-bold text-foreground mb-1">
+              <Heart className="h-4 w-4 text-rose-500" />
+              {t("onboarding.interestTitle")}
+            </h3>
+            <p className="text-sm text-muted-foreground mb-5">
+              {t("onboarding.interestDesc")}
+            </p>
+            <div className="grid grid-cols-2 gap-2.5">
+              {interestOptions.map((opt) => {
+                const Icon = opt.icon;
+                return (
                   <button
                     key={opt.value}
-                    onClick={() => handleSelect("englishLevel", opt.value)}
-                    className={`group relative flex flex-col items-center gap-1.5 rounded-xl border-2 px-3 py-4 transition-all hover:border-brand-primary hover:bg-brand-primary-light/50 ${
-                      profile.englishLevel === opt.value
-                        ? "border-brand-primary bg-brand-primary-light/50"
-                        : "border-gray-100 bg-gray-50/50"
-                    }`}
+                    onClick={() => handleSelectInterest(opt.value)}
+                    className="group flex flex-col items-center gap-2.5 rounded-xl border-2 border-gray-100 bg-gray-50/50 px-3 py-5 transition-all hover:scale-[1.02] hover:border-gray-200"
                   >
-                    <span className="text-lg font-mono tracking-widest text-gray-400 group-hover:text-brand-primary transition-colors">
-                      {opt.icon}
-                    </span>
-                    <span className="text-sm font-semibold text-foreground">
+                    <Icon className="h-6 w-6 text-gray-400 group-hover:text-gray-600 transition-colors" />
+                    <span className="text-sm font-semibold">
                       {isKm ? opt.labelKm : opt.labelEn}
                     </span>
                   </button>
-                ))}
-              </div>
+                );
+              })}
             </div>
-          )}
-
-          {step === 2 && (
-            <div className="animate-[fadeIn_0.3s_ease]">
-              <div className="flex items-center gap-2 mb-1">
-                <MapPin className="h-4 w-4 text-brand-secondary" />
-                <span className="text-xs font-medium text-brand-secondary uppercase tracking-wider">
-                  {t("onboarding.step")} 2/3
-                </span>
-              </div>
-              <h3 className="text-lg font-bold text-foreground mb-1">
-                {t("onboarding.locationTitle")}
-              </h3>
-              <p className="text-sm text-muted-foreground mb-5">
-                {t("onboarding.locationDesc")}
-              </p>
-              <div className="grid grid-cols-2 gap-3">
-                {locationOptions.map((opt) => {
-                  const Icon = opt.icon;
-                  return (
-                    <button
-                      key={opt.value}
-                      onClick={() => handleSelect("location", opt.value)}
-                      className={`group flex flex-col items-center gap-3 rounded-xl border-2 px-4 py-6 transition-all hover:border-brand-primary hover:bg-brand-primary-light/50 ${
-                        profile.location === opt.value
-                          ? "border-brand-primary bg-brand-primary-light/50"
-                          : "border-gray-100 bg-gray-50/50"
-                      }`}
-                    >
-                      <Icon className="h-8 w-8 text-gray-400 group-hover:text-brand-primary transition-colors" />
-                      <span className="text-sm font-semibold text-foreground">
-                        {isKm ? opt.labelKm : opt.labelEn}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {step === 3 && (
-            <div className="animate-[fadeIn_0.3s_ease]">
-              <div className="flex items-center gap-2 mb-1">
-                <Heart className="h-4 w-4 text-rose-500" />
-                <span className="text-xs font-medium text-rose-500 uppercase tracking-wider">
-                  {t("onboarding.step")} 3/3
-                </span>
-              </div>
-              <h3 className="text-lg font-bold text-foreground mb-1">
-                {t("onboarding.interestTitle")}
-              </h3>
-              <p className="text-sm text-muted-foreground mb-5">
-                {t("onboarding.interestDesc")}
-              </p>
-              <div className="grid grid-cols-2 gap-2.5">
-                {interestOptions.map((opt) => {
-                  const Icon = opt.icon;
-                  return (
-                    <button
-                      key={opt.value}
-                      onClick={() => handleSelect("interest", opt.value)}
-                      className={`group flex flex-col items-center gap-2.5 rounded-xl border-2 px-3 py-5 transition-all hover:scale-[1.02] ${
-                        profile.interest === opt.value
-                          ? `border-current ${opt.color}`
-                          : "border-gray-100 bg-gray-50/50 hover:border-gray-200"
-                      }`}
-                    >
-                      <Icon
-                        className={`h-6 w-6 transition-colors ${
-                          profile.interest === opt.value
-                            ? ""
-                            : "text-gray-400 group-hover:text-gray-600"
-                        }`}
-                      />
-                      <span className="text-sm font-semibold">
-                        {isKm ? opt.labelKm : opt.labelEn}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
@@ -646,25 +506,14 @@ export default function CareerExplorer() {
   const locale = useLocale();
   const isKm = locale === "km";
 
-  // Onboarding state
+  // Onboarding state — shown only when the user manually retakes the quiz
+  // (see "retakeQuiz" button below); it no longer auto-opens on first visit.
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [hasSeenOnboarding, setHasSeenOnboarding] = useState(true); // default true to avoid flash
-
-  useEffect(() => {
-    const seen = localStorage.getItem("career-onboarding-seen");
-    if (!seen) {
-      setHasSeenOnboarding(false);
-      setShowOnboarding(true);
-    }
-  }, []);
 
   const handleOnboardingComplete = (profile: UserProfile) => {
     setUserProfile(profile);
     setShowOnboarding(false);
-    setHasSeenOnboarding(true);
-    localStorage.setItem("career-onboarding-seen", "1");
-    localStorage.setItem("career-profile", JSON.stringify(profile));
 
     // Auto-select category based on interest
     const categoryMap: Record<InterestType, CareerCategory> = {
@@ -678,8 +527,6 @@ export default function CareerExplorer() {
 
   const handleOnboardingSkip = () => {
     setShowOnboarding(false);
-    setHasSeenOnboarding(true);
-    localStorage.setItem("career-onboarding-seen", "1");
   };
 
   // Category & filter state
@@ -1069,7 +916,7 @@ export default function CareerExplorer() {
           </div>
 
           {/* Re-trigger onboarding */}
-          {hasSeenOnboarding && !showOnboarding && (
+          {!showOnboarding && (
             <div className="mt-6 text-center">
               <button
                 onClick={() => setShowOnboarding(true)}

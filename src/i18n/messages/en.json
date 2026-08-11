@@ -498,11 +498,6 @@
     },
     "onboarding": {
       "skip": "Skip",
-      "step": "Step",
-      "englishTitle": "What's your English level?",
-      "englishDesc": "This helps us recommend the right careers for you.",
-      "locationTitle": "Where do you live?",
-      "locationDesc": "Some careers are more available in cities vs. provinces.",
       "interestTitle": "What interests you most?",
       "interestDesc": "Pick the one that excites you — we'll personalize your results."
     },
