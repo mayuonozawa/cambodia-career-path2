@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
 import {
@@ -650,14 +650,6 @@ export default function CareerExplorer() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [hasSeenOnboarding, setHasSeenOnboarding] = useState(true); // default true to avoid flash
-
-  useEffect(() => {
-    const seen = localStorage.getItem("career-onboarding-seen");
-    if (!seen) {
-      setHasSeenOnboarding(false);
-      setShowOnboarding(true);
-    }
-  }, []);
 
   const handleOnboardingComplete = (profile: UserProfile) => {
     setUserProfile(profile);
