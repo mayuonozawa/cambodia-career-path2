@@ -6,7 +6,7 @@ export interface Scholarship {
   provider_km: string;
   description_en: string;
   description_km: string;
-  type: "full" | "partial" | "grant";
+  type: "full" | "partial" | "grant" | null;
   coverage_en: string;
   coverage_km: string;
   eligibility_en: string;

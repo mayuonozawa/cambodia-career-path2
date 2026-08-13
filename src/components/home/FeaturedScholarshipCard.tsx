@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Banknote, Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
-import { getLocalizedField, getScholarshipTypeBadgeColor, formatDate } from "@/lib/utils";
+import { getLocalizedField, getScholarshipTypeBadgeColor, getScholarshipTypeKey, formatDate } from "@/lib/utils";
 import { trackEvent } from "@/lib/gtag";
 import type { Scholarship, Locale } from "@/types/database";
 
@@ -35,7 +35,7 @@ export function FeaturedScholarshipCard({ scholarship: s }: { scholarship: Schol
               <h3 className="line-clamp-2 text-lg font-semibold text-foreground">{getLocalizedField(s, "name", locale)}</h3>
               <p className="mt-1 text-sm text-muted-foreground">{getLocalizedField(s, "provider", locale)}</p>
             </div>
-            <Badge className={`${getScholarshipTypeBadgeColor(s.type)} text-xs font-medium`}>{t(`scholarships.${s.type}`)}</Badge>
+            <Badge className={`${getScholarshipTypeBadgeColor(s.type)} text-xs font-medium`}>{t(`scholarships.${getScholarshipTypeKey(s.type)}`)}</Badge>
           </div>
         </div>
         <div className="px-6 flex flex-1 flex-col gap-4">

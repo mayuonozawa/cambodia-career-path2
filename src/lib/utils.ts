@@ -28,7 +28,7 @@ export function formatDate(dateStr: string | null, locale: Locale): string {
   });
 }
 
-export function getScholarshipTypeBadgeColor(type: string) {
+export function getScholarshipTypeBadgeColor(type: string | null) {
   switch (type) {
     case "full":
       return "bg-green-100 text-green-800";
@@ -39,4 +39,11 @@ export function getScholarshipTypeBadgeColor(type: string) {
     default:
       return "bg-gray-100 text-gray-800";
   }
+}
+
+/** Translation key for a scholarship's type badge — falls back to
+ * "unclassified" when type hasn't been categorized yet (full/partial/grant
+ * is optional; some scholarships are listed before that call is made). */
+export function getScholarshipTypeKey(type: string | null): string {
+  return type ?? "unclassified";
 }
