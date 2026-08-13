@@ -3,7 +3,6 @@
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Badge } from "@/components/ui/Badge";
-import { BackButton } from "@/components/ui/BackButton";
 import {
   getLocalizedField,
   getScholarshipTypeBadgeColor,
@@ -239,8 +238,6 @@ export function ScholarshipDetail({
 
   return (
     <div className="space-y-6">
-      <BackButton />
-
       {/* Hero Header */}
       <div
         className={`bg-gradient-to-r ${getTypeGradient(scholarship.type)} rounded-2xl p-6 md:p-8 text-white relative overflow-hidden`}
