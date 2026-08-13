@@ -41,6 +41,7 @@ export interface ImportResult {
 const TRUE_VALUES = new Set(["true", "1", "yes", "y", "はい"]);
 const FALSE_VALUES = new Set(["false", "0", "no", "n", "いいえ"]);
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 function parseBoolean(value: string, fallback: boolean): boolean | null {
   if (value === "") return fallback;
@@ -106,7 +107,13 @@ export function parseImportCSV(
       const value = idx !== undefined ? (raw[idx] ?? "").trim() : "";
 
       if (col.key === "id") {
-        if (value) obj.id = value;
+        if (value) {
+          if (!UUID_RE.test(value)) {
+            rowError = `id の値 "${value}" はUUID形式ではありません（空欄にすると新規追加として扱われます）`;
+            break;
+          }
+          obj.id = value;
+        }
         continue;
       }
 
