@@ -16,7 +16,8 @@
     "loading": "Loading...",
     "noResults": "No results found",
     "loginRequired": "Please log in to view details",
-    "language": "Language"
+    "language": "Language",
+    "accuracyNotice": "The information on this page is for reference only and may not always be fully accurate or up to date. Please confirm the latest details directly with the official source before applying or making decisions."
   },
   "home": {
     "heroTitle": "Discover Your Future",
@@ -649,7 +650,7 @@
   },
   "terms": {
     "title": "Terms of Service",
-    "lastUpdated": "Last Updated: February 10, 2026",
+    "lastUpdated": "Last Updated: August 13, 2026",
     "intro": "Thank you for using Bright DoorHub (hereinafter referred to as \"the Service\"). These Terms of Service (hereinafter referred to as \"Terms\") set forth the conditions for using the Service. By using the Service, you agree to these Terms.",
     "art1Title": "Article 1 — Purpose of the Service",
     "art1": "The Service provides students with information and opportunities related to higher education, scholarships, and careers. The Service does not guarantee acceptance to schools, scholarships, employment, or any specific results.",
@@ -665,7 +666,7 @@
     "art4Item4": "Unauthorized access to or interference with the Service",
     "art4Item5": "Unsolicited business activities or solicitation",
     "art5Title": "Article 5 — Disclaimer on Provided Information",
-    "art5": "The information provided by the Service is for reference purposes only and does not constitute legal, financial, immigration, or professional advice.",
+    "art5": "The information provided by the Service is for reference purposes only and does not constitute legal, financial, immigration, or professional advice. Furthermore, information about scholarships, universities, and vocational schools listed on the Service — including deadlines, eligibility requirements, and application URLs — is provided on a best-effort basis, and its accuracy, completeness, or timeliness is not guaranteed. Users should always verify the latest information directly with the relevant institution or official source before applying.",
     "art6Title": "Article 6 — Handling of Personal Information",
     "art6": "The handling of personal information is governed by the separate Privacy Policy.",
     "art7Title": "Article 7 — Intellectual Property Rights",

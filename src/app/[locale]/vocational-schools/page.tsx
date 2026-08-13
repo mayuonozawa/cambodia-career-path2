@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { VocationalSchoolList } from "@/components/vocational-schools/VocationalSchoolList";
+import { InfoDisclaimer } from "@/components/ui/InfoDisclaimer";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("vocationalSchools");
@@ -22,7 +23,10 @@ export default async function VocationalSchoolsPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">{t("title")}</h1>
+      <h1 className="text-3xl font-bold mb-5">{t("title")}</h1>
+      <div className="mb-6">
+        <InfoDisclaimer />
+      </div>
       <VocationalSchoolList schools={schools ?? []} />
     </div>
   );

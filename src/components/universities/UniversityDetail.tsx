@@ -10,6 +10,7 @@ import {
 } from "@/lib/utils";
 import type { University, Scholarship, Locale } from "@/types/database";
 import { InlineAuthGate } from "@/components/auth/InlineAuthGate";
+import { InfoDisclaimer } from "@/components/ui/InfoDisclaimer";
 import {
   MapPin,
   ExternalLink,
@@ -101,6 +102,8 @@ export function UniversityDetail({
           )}
         </div>
       </div>
+
+      <InfoDisclaimer />
 
       {/* Quick Info Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

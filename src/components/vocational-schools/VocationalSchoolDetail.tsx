@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { getLocalizedField, getLocalizedArray } from "@/lib/utils";
 import type { VocationalSchool, Locale } from "@/types/database";
 import { InlineAuthGate } from "@/components/auth/InlineAuthGate";
+import { InfoDisclaimer } from "@/components/ui/InfoDisclaimer";
 import {
   MapPin,
   ExternalLink,
@@ -72,6 +73,8 @@ export function VocationalSchoolDetail({
           )}
         </div>
       </div>
+
+      <InfoDisclaimer />
 
       {/* Quick Info Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
