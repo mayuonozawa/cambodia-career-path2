@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "@/i18n/routing";
 import { ArrowLeft, Home } from "lucide-react";
 import { buildExportCSV, parseImportCSV, type ImportResult } from "@/lib/adminCsv";
-import { downloadCSV } from "@/lib/csv";
+import { downloadCSV, readTextFileSmart } from "@/lib/csv";
 
 const ADMIN_EMAIL = "mayuonozawa.taylors@gmail.com";
 
@@ -108,7 +108,7 @@ export default function AdminPage() {
     setImporting(true);
     setImportResult(null);
     try {
-      const text = await file.text();
+      const text = await readTextFileSmart(file);
       const { toInsert, toUpsert, errors } = parseImportCSV(activeTab, text);
 
       let inserted = 0;

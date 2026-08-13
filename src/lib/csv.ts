@@ -84,6 +84,27 @@ export function toCSV(headers: string[], rows: string[][]): string {
     .join("\r\n");
 }
 
+/**
+ * Reads a File as text, auto-detecting Shift-JIS as a fallback.
+ *
+ * Excel on Japanese Windows saves plain "CSV (comma delimited)" as
+ * Shift-JIS (CP932) by default — only the explicit "CSV UTF-8" export
+ * option produces UTF-8. `File.text()` always decodes as UTF-8 per spec,
+ * so a Shift-JIS file would come out garbled for any Japanese/Khmer text
+ * (pure-ASCII rows are unaffected, since ASCII is byte-identical in both
+ * encodings). We detect this by attempting a strict UTF-8 decode first;
+ * multi-byte Shift-JIS content almost never happens to also be valid
+ * UTF-8, so a decode failure is a reliable signal to retry as Shift-JIS.
+ */
+export async function readTextFileSmart(file: File): Promise<string> {
+  const buffer = await file.arrayBuffer();
+  try {
+    return new TextDecoder("utf-8", { fatal: true }).decode(buffer);
+  } catch {
+    return new TextDecoder("shift-jis").decode(buffer);
+  }
+}
+
 /** Triggers a browser download of the given CSV text. */
 export function downloadCSV(content: string, filename: string) {
   // Prefix with BOM so Excel / Google Sheets detect UTF-8 correctly (important for Khmer text).
