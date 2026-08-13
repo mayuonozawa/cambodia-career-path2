@@ -3,7 +3,6 @@
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Badge } from "@/components/ui/Badge";
-import { BackButton } from "@/components/ui/BackButton";
 import {
   getLocalizedField,
   getLocalizedArray,
@@ -66,8 +65,6 @@ export function UniversityDetail({
 
   return (
     <div className="space-y-6">
-      <BackButton />
-
       {/* Hero Header */}
       <div
         className={`bg-gradient-to-r ${isPublic ? "from-blue-600 to-indigo-700" : "from-purple-600 to-violet-700"} rounded-2xl p-6 md:p-8 text-white relative overflow-hidden`}

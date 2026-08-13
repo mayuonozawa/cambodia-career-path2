@@ -6,6 +6,7 @@ import { routing } from "@/i18n/routing";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { BackButtonWrapper } from "@/components/ui/BackButtonWrapper";
+import { NavigationTracker } from "@/components/ui/NavigationTracker";
 
 // ① メタデータの設定
 export const metadata: Metadata = {
@@ -46,6 +47,7 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider messages={messages}>
+      <NavigationTracker />
       <Header />
       <BackButtonWrapper />
       <main className="flex-1">{children}</main>

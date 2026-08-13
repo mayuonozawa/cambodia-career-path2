@@ -1,7 +1,6 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { BackButton } from "@/components/ui/BackButton";
 import { getLocalizedField, getLocalizedArray } from "@/lib/utils";
 import type { VocationalSchool, Locale } from "@/types/database";
 import { InlineAuthGate } from "@/components/auth/InlineAuthGate";
@@ -52,8 +51,6 @@ export function VocationalSchoolDetail({
 
   return (
     <div className="space-y-6">
-      <BackButton />
-
       {/* Hero Header */}
       <div className="bg-gradient-to-r from-teal-600 to-emerald-700 rounded-2xl p-6 md:p-8 text-white relative overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 md:w-48 md:h-48 opacity-10">

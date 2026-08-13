@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "@/i18n/routing";
 import { ArrowLeft, Home } from "lucide-react";
+import { buildExportCSV, parseImportCSV, type ImportResult } from "@/lib/adminCsv";
+import { downloadCSV, readTextFileSmart } from "@/lib/csv";
 
 const ADMIN_EMAIL = "mayuonozawa.taylors@gmail.com";
 
@@ -19,6 +21,9 @@ export default function AdminPage() {
   const [data, setData] = useState<any[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editItem, setEditItem] = useState<any>(null);
+  const [importing, setImporting] = useState(false);
+  const [importResult, setImportResult] = useState<ImportResult | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // 認証チェック（特定メールアドレスのみ許可）
   useEffect(() => {
@@ -83,6 +88,58 @@ export default function AdminPage() {
     setActiveTab(tab);
     setFilter("all");
     setShowForm(false);
+    setImportResult(null);
+  };
+
+  const handleExport = () => {
+    const csv = buildExportCSV(activeTab, data);
+    downloadCSV(csv, `${activeTab}_${new Date().toISOString().slice(0, 10)}.csv`);
+  };
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleImportFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = ""; // allow re-selecting the same file next time
+    if (!file) return;
+
+    setImporting(true);
+    setImportResult(null);
+    try {
+      const text = await readTextFileSmart(file);
+      const { toInsert, toUpsert, errors } = parseImportCSV(activeTab, text);
+
+      let inserted = 0;
+      let upserted = 0;
+
+      if (toInsert.length > 0) {
+        const { error, data: rows } = await supabase.from(activeTab).insert(toInsert).select("id");
+        if (error) errors.push({ row: 0, message: `新規追加でエラー: ${error.message}` });
+        else inserted = rows?.length ?? toInsert.length;
+      }
+
+      if (toUpsert.length > 0) {
+        const { error, data: rows } = await supabase
+          .from(activeTab)
+          .upsert(toUpsert, { onConflict: "id" })
+          .select("id");
+        if (error) errors.push({ row: 0, message: `更新でエラー: ${error.message}` });
+        else upserted = rows?.length ?? toUpsert.length;
+      }
+
+      setImportResult({ inserted, upserted, errors });
+      fetchData();
+    } catch (err: any) {
+      setImportResult({
+        inserted: 0,
+        upserted: 0,
+        errors: [{ row: 0, message: err?.message ?? "読み込みに失敗しました" }],
+      });
+    } finally {
+      setImporting(false);
+    }
   };
 
   if (loading) return <div className="p-8">読み込み中...</div>;
@@ -139,11 +196,68 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* 新規追加ボタン */}
+      {/* 新規追加 / CSV入出力ボタン */}
       {!showForm && (
-        <button onClick={handleNew} className="mb-4 px-4 py-2 bg-green-600 text-white rounded-lg">
-          ＋ 新規追加
-        </button>
+        <div className="flex flex-wrap items-center gap-2 mb-4">
+          <button onClick={handleNew} className="px-4 py-2 bg-green-600 text-white rounded-lg">
+            ＋ 新規追加
+          </button>
+          <button
+            onClick={handleExport}
+            className="px-4 py-2 bg-white text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50"
+          >
+            CSVエクスポート
+          </button>
+          <button
+            onClick={handleImportClick}
+            disabled={importing}
+            className="px-4 py-2 bg-white text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50"
+          >
+            {importing ? "取り込み中..." : "CSVインポート"}
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".csv,text/csv"
+            className="hidden"
+            onChange={handleImportFile}
+          />
+        </div>
+      )}
+
+      {/* CSVインポート結果 */}
+      {importResult && !showForm && (
+        <div
+          className={`mb-4 p-4 rounded-lg border text-sm ${
+            importResult.errors.length > 0
+              ? "bg-amber-50 border-amber-200 text-amber-800"
+              : "bg-green-50 border-green-200 text-green-800"
+          }`}
+        >
+          <div className="flex items-start justify-between gap-3">
+            <p className="font-medium">
+              新規追加: {importResult.inserted}件 / id指定分(新規作成 or 更新): {importResult.upserted}件
+              {importResult.errors.length > 0 && ` / スキップ: ${importResult.errors.length}件`}
+            </p>
+            <button
+              onClick={() => setImportResult(null)}
+              className="shrink-0 text-current opacity-60 hover:opacity-100"
+              aria-label="閉じる"
+            >
+              ✕
+            </button>
+          </div>
+          {importResult.errors.length > 0 && (
+            <ul className="mt-2 space-y-1 list-disc list-inside">
+              {importResult.errors.map((err, i) => (
+                <li key={i}>
+                  {err.row > 0 ? `${err.row}行目: ` : ""}
+                  {err.message}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       )}
 
       {/* フォーム */}
