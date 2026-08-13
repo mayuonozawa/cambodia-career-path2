@@ -65,6 +65,7 @@
     "full": "Full",
     "partial": "Partial",
     "grant": "Grant",
+    "unclassified": "Not Yet Classified",
     "provider": "Provider",
     "deadline": "Deadline",
     "noDeadline": "No deadline set",

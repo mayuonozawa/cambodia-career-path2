@@ -30,7 +30,10 @@ const SCHOLARSHIP_COLUMNS: CsvColumn[] = [
   { key: "provider_km", required: true },
   { key: "description_en" },
   { key: "description_km" },
-  { key: "type", required: true },
+  // Not required: a scholarship can be listed before it's been classified
+  // as full/partial/grant. A blank cell becomes NULL and the site shows
+  // an "Not Yet Classified" badge instead of erroring the row out.
+  { key: "type", nullable: true },
   { key: "coverage_en" },
   { key: "coverage_km" },
   { key: "eligibility_en" },

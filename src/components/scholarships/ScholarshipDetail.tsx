@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/Badge";
 import {
   getLocalizedField,
   getScholarshipTypeBadgeColor,
+  getScholarshipTypeKey,
   formatDate,
 } from "@/lib/utils";
 import type { Scholarship, University, Locale } from "@/types/database";
@@ -153,7 +154,7 @@ interface ScholarshipDetailProps {
   isAuthenticated?: boolean;
 }
 
-function getTypeGradient(type: string) {
+function getTypeGradient(type: string | null) {
   switch (type) {
     case "full":
       return "from-green-600 to-emerald-700";
@@ -166,7 +167,7 @@ function getTypeGradient(type: string) {
   }
 }
 
-function getTypeIcon(type: string) {
+function getTypeIcon(type: string | null) {
   switch (type) {
     case "full":
       return <Shield className="w-6 h-6" />;
@@ -250,7 +251,7 @@ export function ScholarshipDetail({
           <div className="flex items-center gap-2 mb-3">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium">
               {getTypeIcon(scholarship.type)}
-              {t(`scholarships.${scholarship.type}`)}
+              {t(`scholarships.${getScholarshipTypeKey(scholarship.type)}`)}
             </span>
             {scholarship.is_active && !deadlinePassed && (
               <span className="px-2 py-1 bg-green-400/30 backdrop-blur-sm rounded-full text-xs font-medium">
@@ -297,7 +298,7 @@ export function ScholarshipDetail({
             {t("scholarships.type")}
           </div>
           <p className="font-semibold text-gray-900">
-            {t(`scholarships.${scholarship.type}`)}
+            {t(`scholarships.${getScholarshipTypeKey(scholarship.type)}`)}
           </p>
         </div>
 

@@ -452,6 +452,10 @@ function AdminForm({ tab, item, onClose, onSaved }: { tab: Tab; item: any; onClo
       if (tab === "scholarships" || tab === "universities") {
         base.is_domestic = item.is_domestic ?? true;
       }
+      if (tab === "scholarships") {
+        // null (unclassified) -> "" so the <select> stays a controlled component
+        base.type = item.type ?? "";
+      }
       if (tab === "universities" || tab === "vocational_schools") {
         base.programs_en = item.programs_en?.join(", ") ?? "";
         base.programs_km = item.programs_km?.join(", ") ?? "";
@@ -480,6 +484,8 @@ function AdminForm({ tab, item, onClose, onSaved }: { tab: Tab; item: any; onClo
       if (tab === "scholarships") {
         delete payload.programs_en;
         delete payload.programs_km;
+        // "" (未分類を選択) は CHECK 制約に違反するので NULL として送る
+        if (payload.type === "") payload.type = null;
       }
       if (tab === "vocational_schools") {
         delete payload.is_domestic;
@@ -558,6 +564,7 @@ function AdminForm({ tab, item, onClose, onSaved }: { tab: Tab; item: any; onClo
           <div>
             <label className="block text-sm font-medium mb-1">type</label>
             <select className="w-full border rounded px-3 py-2 text-sm" value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })}>
+              <option value="">（未分類）</option>
               <option value="full">full</option>
               <option value="partial">partial</option>
               <option value="grant">grant</option>

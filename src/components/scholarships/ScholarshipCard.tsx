@@ -3,7 +3,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Badge } from "@/components/ui/Badge";
-import { getLocalizedField, getScholarshipTypeBadgeColor, formatDate } from "@/lib/utils";
+import { getLocalizedField, getScholarshipTypeBadgeColor, getScholarshipTypeKey, formatDate } from "@/lib/utils";
 import { trackEvent } from "@/lib/gtag";
 import type { Scholarship, Locale } from "@/types/database";
 import { Calendar, Building, Clock, AlertTriangle } from "lucide-react";
@@ -78,7 +78,7 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
         </h3>
         <div className="flex flex-col items-end gap-1.5 shrink-0">
           <Badge className={getScholarshipTypeBadgeColor(scholarship.type)}>
-            {t(scholarship.type)}
+            {t(getScholarshipTypeKey(scholarship.type))}
           </Badge>
           {isClosed && (
             <Badge className="bg-gray-100 text-gray-500">

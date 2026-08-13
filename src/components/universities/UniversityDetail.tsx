@@ -7,6 +7,7 @@ import {
   getLocalizedField,
   getLocalizedArray,
   getScholarshipTypeBadgeColor,
+  getScholarshipTypeKey,
 } from "@/lib/utils";
 import type { University, Scholarship, Locale } from "@/types/database";
 import { InlineAuthGate } from "@/components/auth/InlineAuthGate";
@@ -257,7 +258,7 @@ export function UniversityDetail({
                         </p>
                         <div className="flex items-center gap-3 mt-1">
                           <Badge className={getScholarshipTypeBadgeColor(s.type)}>
-                            {t(`scholarships.${s.type}`)}
+                            {t(`scholarships.${getScholarshipTypeKey(s.type)}`)}
                           </Badge>
                           {s.deadline && (
                             <span className="text-xs text-gray-500 flex items-center gap-1">
