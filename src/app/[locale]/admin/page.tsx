@@ -4,10 +4,21 @@ import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "@/i18n/routing";
 import { ArrowLeft, Home } from "lucide-react";
-import { buildExportCSV, parseImportCSV, type ImportResult } from "@/lib/adminCsv";
+import {
+  buildExportCSV,
+  parseImportCSV,
+  parseSingleColumnUpdateCSV,
+  type ImportResult,
+  type ImportRowError,
+} from "@/lib/adminCsv";
+import { ADMIN_CSV_COLUMNS } from "@/lib/adminCsvSchema";
 import { downloadCSV, readTextFileSmart } from "@/lib/csv";
 
 const ADMIN_EMAIL = "mayuonozawa.taylors@gmail.com";
+
+function errorMessage(err: unknown): string {
+  return err instanceof Error ? err.message : "読み込みに失敗しました";
+}
 
 type Tab = "scholarships" | "universities" | "vocational_schools";
 type Filter = "all" | "domestic" | "international";
@@ -24,6 +35,11 @@ export default function AdminPage() {
   const [importing, setImporting] = useState(false);
   const [importResult, setImportResult] = useState<ImportResult | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [singleColumnMode, setSingleColumnMode] = useState(false);
+  const [singleColumnKey, setSingleColumnKey] = useState(
+    () => ADMIN_CSV_COLUMNS.scholarships.find((c) => c.key !== "id")?.key ?? ""
+  );
+  const [singleColumnResult, setSingleColumnResult] = useState<{ updated: number; errors: ImportRowError[] } | null>(null);
 
   // 認証チェック（特定メールアドレスのみ許可）
   useEffect(() => {
@@ -89,6 +105,8 @@ export default function AdminPage() {
     setFilter("all");
     setShowForm(false);
     setImportResult(null);
+    setSingleColumnResult(null);
+    setSingleColumnKey(ADMIN_CSV_COLUMNS[tab].find((c) => c.key !== "id")?.key ?? "");
   };
 
   const handleExport = () => {
@@ -105,6 +123,14 @@ export default function AdminPage() {
     e.target.value = ""; // allow re-selecting the same file next time
     if (!file) return;
 
+    if (singleColumnMode) {
+      await runSingleColumnImport(file);
+    } else {
+      await runFullRowImport(file);
+    }
+  };
+
+  const runFullRowImport = async (file: File) => {
     setImporting(true);
     setImportResult(null);
     try {
@@ -131,11 +157,42 @@ export default function AdminPage() {
 
       setImportResult({ inserted, upserted, errors });
       fetchData();
-    } catch (err: any) {
+    } catch (err) {
       setImportResult({
         inserted: 0,
         upserted: 0,
-        errors: [{ row: 0, message: err?.message ?? "読み込みに失敗しました" }],
+        errors: [{ row: 0, message: errorMessage(err) }],
+      });
+    } finally {
+      setImporting(false);
+    }
+  };
+
+  // 指定した1列だけを id 単位で更新する。他の列（description等）には一切触れない。
+  const runSingleColumnImport = async (file: File) => {
+    setImporting(true);
+    setSingleColumnResult(null);
+    try {
+      const text = await readTextFileSmart(file);
+      const { updates, errors } = parseSingleColumnUpdateCSV(activeTab, singleColumnKey, text);
+
+      let updated = 0;
+      // 1件ずつ update するので、ある行の失敗が他の行を巻き込まない
+      for (const u of updates) {
+        const { error } = await supabase.from(activeTab).update({ [singleColumnKey]: u.value }).eq("id", u.id);
+        if (error) {
+          errors.push({ row: 0, message: `id=${u.id} の更新に失敗: ${error.message}` });
+        } else {
+          updated += 1;
+        }
+      }
+
+      setSingleColumnResult({ updated, errors });
+      fetchData();
+    } catch (err) {
+      setSingleColumnResult({
+        updated: 0,
+        errors: [{ row: 0, message: errorMessage(err) }],
       });
     } finally {
       setImporting(false);
@@ -198,30 +255,68 @@ export default function AdminPage() {
 
       {/* 新規追加 / CSV入出力ボタン */}
       {!showForm && (
-        <div className="flex flex-wrap items-center gap-2 mb-4">
-          <button onClick={handleNew} className="px-4 py-2 bg-green-600 text-white rounded-lg">
-            ＋ 新規追加
-          </button>
-          <button
-            onClick={handleExport}
-            className="px-4 py-2 bg-white text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50"
-          >
-            CSVエクスポート
-          </button>
-          <button
-            onClick={handleImportClick}
-            disabled={importing}
-            className="px-4 py-2 bg-white text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50"
-          >
-            {importing ? "取り込み中..." : "CSVインポート"}
-          </button>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".csv,text/csv"
-            className="hidden"
-            onChange={handleImportFile}
-          />
+        <div className="mb-4 space-y-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <button onClick={handleNew} className="px-4 py-2 bg-green-600 text-white rounded-lg">
+              ＋ 新規追加
+            </button>
+            <button
+              onClick={handleExport}
+              className="px-4 py-2 bg-white text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50"
+            >
+              CSVエクスポート
+            </button>
+            <button
+              onClick={handleImportClick}
+              disabled={importing}
+              className="px-4 py-2 bg-white text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50"
+            >
+              {importing ? "取り込み中..." : singleColumnMode ? `CSVで${singleColumnKey}だけ更新` : "CSVインポート"}
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".csv,text/csv"
+              className="hidden"
+              onChange={handleImportFile}
+            />
+          </div>
+
+          {/* 1列だけ更新モード */}
+          <div className="flex flex-wrap items-center gap-2 text-sm">
+            <label className="flex items-center gap-1.5 cursor-pointer text-gray-600">
+              <input
+                type="checkbox"
+                checked={singleColumnMode}
+                onChange={(e) => {
+                  setSingleColumnMode(e.target.checked);
+                  setImportResult(null);
+                  setSingleColumnResult(null);
+                }}
+              />
+              1列だけ更新する（他の項目には触れない）
+            </label>
+            {singleColumnMode && (
+              <select
+                className="border rounded px-2 py-1 text-sm"
+                value={singleColumnKey}
+                onChange={(e) => setSingleColumnKey(e.target.value)}
+              >
+                {ADMIN_CSV_COLUMNS[activeTab]
+                  .filter((c) => c.key !== "id")
+                  .map((c) => (
+                    <option key={c.key} value={c.key}>
+                      {c.key}
+                    </option>
+                  ))}
+              </select>
+            )}
+          </div>
+          {singleColumnMode && (
+            <p className="text-xs text-gray-400">
+              CSVは &ldquo;id&rdquo; と &ldquo;{singleColumnKey}&rdquo; の2列だけでOK（他の列があっても無視されます）。id が既存データと一致する行だけ、その1項目を更新します。新規追加はできません。
+            </p>
+          )}
         </div>
       )}
 
@@ -250,6 +345,41 @@ export default function AdminPage() {
           {importResult.errors.length > 0 && (
             <ul className="mt-2 space-y-1 list-disc list-inside">
               {importResult.errors.map((err, i) => (
+                <li key={i}>
+                  {err.row > 0 ? `${err.row}行目: ` : ""}
+                  {err.message}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+
+      {/* 1列だけ更新の結果 */}
+      {singleColumnResult && !showForm && (
+        <div
+          className={`mb-4 p-4 rounded-lg border text-sm ${
+            singleColumnResult.errors.length > 0
+              ? "bg-amber-50 border-amber-200 text-amber-800"
+              : "bg-green-50 border-green-200 text-green-800"
+          }`}
+        >
+          <div className="flex items-start justify-between gap-3">
+            <p className="font-medium">
+              更新: {singleColumnResult.updated}件
+              {singleColumnResult.errors.length > 0 && ` / スキップ: ${singleColumnResult.errors.length}件`}
+            </p>
+            <button
+              onClick={() => setSingleColumnResult(null)}
+              className="shrink-0 text-current opacity-60 hover:opacity-100"
+              aria-label="閉じる"
+            >
+              ✕
+            </button>
+          </div>
+          {singleColumnResult.errors.length > 0 && (
+            <ul className="mt-2 space-y-1 list-disc list-inside">
+              {singleColumnResult.errors.map((err, i) => (
                 <li key={i}>
                   {err.row > 0 ? `${err.row}行目: ` : ""}
                   {err.message}
