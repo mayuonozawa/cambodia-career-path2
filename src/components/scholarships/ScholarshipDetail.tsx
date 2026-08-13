@@ -11,6 +11,7 @@ import {
 import type { Scholarship, University, Locale } from "@/types/database";
 import { ApplicationInfo } from "@/components/scholarships/ApplicationInfo";
 import { InlineAuthGate } from "@/components/auth/InlineAuthGate";
+import { InfoDisclaimer } from "@/components/ui/InfoDisclaimer";
 import {
   Calendar,
   Building,
@@ -269,6 +270,8 @@ export function ScholarshipDetail({
           </div>
         </div>
       </div>
+
+      <InfoDisclaimer />
 
       {/* Deadline Warning */}
       {deadlineApproaching && (

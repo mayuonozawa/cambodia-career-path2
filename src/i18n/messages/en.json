@@ -16,7 +16,8 @@
     "loading": "Loading...",
     "noResults": "No results found",
     "loginRequired": "Please log in to view details",
-    "language": "Language"
+    "language": "Language",
+    "accuracyNotice": "The information on this page is for reference only and may not always be fully accurate or up to date. Please confirm the latest details directly with the official source before applying or making decisions."
   },
   "home": {
     "heroTitle": "Discover Your Future",

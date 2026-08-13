@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { ScholarshipList } from "@/components/scholarships/ScholarshipList";
+import { InfoDisclaimer } from "@/components/ui/InfoDisclaimer";
 import { Link } from "@/i18n/routing";
 import { Lightbulb, ChevronRight } from "lucide-react";
 
@@ -26,6 +27,10 @@ export default async function ScholarshipsPage() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-5">{t("scholarships.title")}</h1>
+
+      <div className="mb-5">
+        <InfoDisclaimer />
+      </div>
 
       {/* Scholarship Guide Banner — Priming + Curiosity Gap + Progressive Disclosure */}
       <Link href="/about-scholarships" className="block mb-6 group">
