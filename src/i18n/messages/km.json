@@ -114,7 +114,13 @@
     "destinationLabel": "សិក្សានៅណា?",
     "destAll": "ទាំងអស់",
     "destDomestic": "ក្នុងប្រទេស",
-    "destOverseas": "ទៅក្រៅប្រទេស"
+    "destOverseas": "ទៅក្រៅប្រទេស",
+    "applicationTypeDirect": "ដាក់ពាក្យដោយខ្លួនឯង",
+    "applicationTypeViaSchool": "តាមរយៈសាលារបស់អ្នក",
+    "applicationTypeAfterEnrollment": "ដាក់ពាក្យក្រោយចូលរៀន",
+    "applicationTypeHintDirect": "អ្នកអាចដាក់ពាក្យតាមរយៈតំណខាងក្រោម។",
+    "applicationTypeHintViaSchool": "សួរគ្រូរបស់អ្នក។",
+    "applicationTypeHintAfterEnrollment": "អ្នកនឹងដាក់ពាក្យបន្ទាប់ពីចូលរៀននៅសាកលវិទ្យាល័យ។"
   },
   "universities": {
     "title": "សាកលវិទ្យាល័យ",

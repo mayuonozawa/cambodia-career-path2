@@ -3,7 +3,14 @@
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Badge } from "@/components/ui/Badge";
-import { getLocalizedField, getScholarshipTypeBadgeColor, getScholarshipTypeKey, formatDate } from "@/lib/utils";
+import {
+  getLocalizedField,
+  getScholarshipTypeBadgeColor,
+  getScholarshipTypeKey,
+  getApplicationTypeBadgeColor,
+  getApplicationTypeLabelKey,
+  formatDate,
+} from "@/lib/utils";
 import { trackEvent } from "@/lib/gtag";
 import type { Scholarship, Locale } from "@/types/database";
 import { Calendar, Building, Clock, AlertTriangle } from "lucide-react";
@@ -44,6 +51,8 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
   const coverage = getLocalizedField(scholarship, "coverage", locale);
   const coverageIcons = coverage ? getCoverageIcons(coverage) : [];
 
+  const applicationTypeLabelKey = getApplicationTypeLabelKey(scholarship.application_type);
+
   const daysRemaining = getDaysRemaining(scholarship.deadline);
   const isClosed = daysRemaining !== null && daysRemaining <= 0;
   const isUrgent = daysRemaining !== null && daysRemaining > 0 && daysRemaining <= 7;
@@ -73,9 +82,16 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
       }`}
     >
       <div className="flex items-start justify-between gap-3 mb-3">
-        <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">
-          {name}
-        </h3>
+        <div className="min-w-0">
+          <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">
+            {name}
+          </h3>
+          {applicationTypeLabelKey && (
+            <Badge className={`mt-1 whitespace-nowrap ${getApplicationTypeBadgeColor(scholarship.application_type)}`}>
+              {t(applicationTypeLabelKey)}
+            </Badge>
+          )}
+        </div>
         <div className="flex flex-col items-end gap-1.5 shrink-0">
           <Badge className={getScholarshipTypeBadgeColor(scholarship.type)}>
             {t(getScholarshipTypeKey(scholarship.type))}
