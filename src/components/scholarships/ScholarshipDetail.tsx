@@ -7,6 +7,9 @@ import {
   getLocalizedField,
   getScholarshipTypeBadgeColor,
   getScholarshipTypeKey,
+  getApplicationTypeBadgeColor,
+  getApplicationTypeLabelKey,
+  getApplicationTypeHintKey,
   formatDate,
 } from "@/lib/utils";
 import type { Scholarship, University, Locale } from "@/types/database";
@@ -222,6 +225,14 @@ export function ScholarshipDetail({
   const deadlineApproaching = isDeadlineApproaching(scholarship.deadline);
   const coverageItems = coverage ? parseCoverageItems(coverage, locale) : [];
 
+  const applicationTypeLabelKey = getApplicationTypeLabelKey(scholarship.application_type);
+  const applicationTypeHintKey = getApplicationTypeHintKey(scholarship.application_type);
+  // The "apply directly" hint points at the application link, so only show
+  // it when there actually is one; the other hints don't depend on a URL.
+  const showApplicationTypeHint =
+    applicationTypeHintKey &&
+    (scholarship.application_type !== "direct" || !!scholarship.application_url);
+
   const handleShare = async () => {
     if (navigator.share) {
       try {
@@ -265,6 +276,20 @@ export function ScholarshipDetail({
             )}
           </div>
           <h1 className="text-2xl md:text-3xl font-bold mb-2">{name}</h1>
+          {applicationTypeLabelKey && (
+            <div className="mb-3">
+              <span
+                className={`inline-block whitespace-nowrap px-2.5 py-1 rounded-full text-xs font-semibold ${getApplicationTypeBadgeColor(scholarship.application_type)}`}
+              >
+                {t(`scholarships.${applicationTypeLabelKey}`)}
+              </span>
+              {showApplicationTypeHint && (
+                <p className="mt-1.5 text-sm text-white/90">
+                  {t(`scholarships.${applicationTypeHintKey}`)}
+                </p>
+              )}
+            </div>
+          )}
           <div className="flex items-center gap-2 text-white/90">
             <Building className="w-4 h-4" />
             <span className="text-sm md:text-base">{provider}</span>

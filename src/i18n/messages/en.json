@@ -114,7 +114,13 @@
     "destinationLabel": "Where to study?",
     "destAll": "All",
     "destDomestic": "In Cambodia",
-    "destOverseas": "Study Abroad"
+    "destOverseas": "Study Abroad",
+    "applicationTypeDirect": "Apply Directly",
+    "applicationTypeViaSchool": "Through Your School",
+    "applicationTypeAfterEnrollment": "Apply After Enrollment",
+    "applicationTypeHintDirect": "You can apply using the link below.",
+    "applicationTypeHintViaSchool": "Talk to your teacher at school.",
+    "applicationTypeHintAfterEnrollment": "You'll apply after enrolling at the university."
   },
   "universities": {
     "title": "Universities",

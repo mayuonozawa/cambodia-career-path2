@@ -47,3 +47,53 @@ export function getScholarshipTypeBadgeColor(type: string | null) {
 export function getScholarshipTypeKey(type: string | null): string {
   return type ?? "unclassified";
 }
+
+export function getApplicationTypeBadgeColor(
+  applicationType: string | null
+): string {
+  switch (applicationType) {
+    case "direct":
+      return "bg-green-100 text-green-800";
+    case "via_school":
+      return "bg-gray-100 text-gray-800";
+    case "after_enrollment":
+      return "bg-blue-100 text-blue-800";
+    default:
+      return "";
+  }
+}
+
+/** Translation key for a scholarship's application-type badge — unlike
+ * getScholarshipTypeKey, there is no "unclassified" fallback: when
+ * application_type is null/empty the badge is not rendered at all. */
+export function getApplicationTypeLabelKey(
+  applicationType: string | null
+): string | null {
+  switch (applicationType) {
+    case "direct":
+      return "applicationTypeDirect";
+    case "via_school":
+      return "applicationTypeViaSchool";
+    case "after_enrollment":
+      return "applicationTypeAfterEnrollment";
+    default:
+      return null;
+  }
+}
+
+/** Translation key for the one-line hint shown under the application-type
+ * badge on the detail page. Same null-means-hidden rule as the label. */
+export function getApplicationTypeHintKey(
+  applicationType: string | null
+): string | null {
+  switch (applicationType) {
+    case "direct":
+      return "applicationTypeHintDirect";
+    case "via_school":
+      return "applicationTypeHintViaSchool";
+    case "after_enrollment":
+      return "applicationTypeHintAfterEnrollment";
+    default:
+      return null;
+  }
+}
