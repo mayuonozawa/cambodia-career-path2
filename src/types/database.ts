@@ -7,6 +7,7 @@ export interface Scholarship {
   description_en: string;
   description_km: string;
   type: "full" | "partial" | "grant" | null;
+  application_type: "direct" | "via_school" | "after_enrollment" | null;
   coverage_en: string;
   coverage_km: string;
   eligibility_en: string;

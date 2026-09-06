@@ -455,6 +455,7 @@ function AdminForm({ tab, item, onClose, onSaved }: { tab: Tab; item: any; onClo
       if (tab === "scholarships") {
         // null (unclassified) -> "" so the <select> stays a controlled component
         base.type = item.type ?? "";
+        base.application_type = item.application_type ?? "";
       }
       if (tab === "universities" || tab === "vocational_schools") {
         base.programs_en = item.programs_en?.join(", ") ?? "";
@@ -464,7 +465,7 @@ function AdminForm({ tab, item, onClose, onSaved }: { tab: Tab; item: any; onClo
     }
     const initial: any = {};
     fields.forEach(f => initial[f] = "");
-    if (tab === "scholarships") { initial.type = "full"; initial.is_active = true; initial.is_domestic = true; }
+    if (tab === "scholarships") { initial.type = "full"; initial.application_type = ""; initial.is_active = true; initial.is_domestic = true; }
     if (tab === "universities") { initial.type = "public"; initial.is_domestic = true; initial.programs_en = ""; initial.programs_km = ""; }
     if (tab === "vocational_schools") { initial.programs_en = ""; initial.programs_km = ""; }
     return initial;
@@ -486,6 +487,7 @@ function AdminForm({ tab, item, onClose, onSaved }: { tab: Tab; item: any; onClo
         delete payload.programs_km;
         // "" (未分類を選択) は CHECK 制約に違反するので NULL として送る
         if (payload.type === "") payload.type = null;
+        if (payload.application_type === "") payload.application_type = null;
       }
       if (tab === "vocational_schools") {
         delete payload.is_domestic;
@@ -568,6 +570,21 @@ function AdminForm({ tab, item, onClose, onSaved }: { tab: Tab; item: any; onClo
               <option value="full">full</option>
               <option value="partial">partial</option>
               <option value="grant">grant</option>
+            </select>
+          </div>
+        )}
+        {tab === "scholarships" && (
+          <div>
+            <label className="block text-sm font-medium mb-1">application_type（応募方法）</label>
+            <select
+              className="w-full border rounded px-3 py-2 text-sm"
+              value={form.application_type}
+              onChange={(e) => setForm({ ...form, application_type: e.target.value })}
+            >
+              <option value="">未設定（空）</option>
+              <option value="direct">自分で応募する</option>
+              <option value="via_school">学校を通じて選ばれる</option>
+              <option value="after_enrollment">入学後に申し込む</option>
             </select>
           </div>
         )}
