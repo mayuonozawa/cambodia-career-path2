@@ -9,6 +9,11 @@ import {
   ChevronRight,
 } from "lucide-react";
 import type { Scholarship } from "@/types/database";
+import {
+  getApplicationTypeBadgeColor,
+  getApplicationTypeLabelKey,
+  getApplicationTypeHintKey,
+} from "@/lib/utils";
 
 interface ApplicationInfoProps {
   scholarship: Scholarship;
@@ -39,12 +44,39 @@ export function ApplicationInfo({
 }: ApplicationInfoProps) {
   const t = useTranslations("scholarships");
 
+  const applicationTypeLabelKey = getApplicationTypeLabelKey(scholarship.application_type);
+  const applicationTypeHintKey = getApplicationTypeHintKey(scholarship.application_type);
+  // The "apply directly" hint points at the application link, so only show
+  // it when there actually is one; the other hints don't depend on a URL.
+  const showApplicationTypeHint =
+    applicationTypeHintKey &&
+    (scholarship.application_type !== "direct" || !!scholarship.application_url);
+  // Named affirmatively so a future application_type value defaults to
+  // showing Required Documents instead of silently being hidden.
+  const isViaSchool = scholarship.application_type === "via_school";
+
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-bold flex items-center gap-2">
         <ClipboardList className="w-5 h-5 text-blue-600" />
         {t("applicationInfo")}
       </h2>
+
+      {/* How to Apply */}
+      {applicationTypeLabelKey && (
+        <div>
+          <span
+            className={`inline-block whitespace-nowrap px-2.5 py-1 rounded-full text-xs font-semibold ${getApplicationTypeBadgeColor(scholarship.application_type)}`}
+          >
+            {t(applicationTypeLabelKey)}
+          </span>
+          {showApplicationTypeHint && (
+            <p className="mt-1.5 text-sm text-gray-700">
+              {t(applicationTypeHintKey)}
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Important Dates */}
       {deadlineFormatted && (
@@ -64,24 +96,27 @@ export function ApplicationInfo({
         </div>
       )}
 
-      {/* Required Documents */}
-      <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-        <h3 className="font-semibold text-purple-800 mb-3 flex items-center gap-2">
-          <FileText className="w-4 h-4" />
-          {t("requiredDocuments")}
-        </h3>
-        <ul className="space-y-2">
-          {REQUIRED_DOCS.map((doc) => (
-            <li
-              key={doc}
-              className="flex items-center gap-2 text-sm text-purple-700"
-            >
-              <span className="w-1.5 h-1.5 bg-purple-400 rounded-full shrink-0" />
-              {t(doc)}
-            </li>
-          ))}
-        </ul>
-      </div>
+      {/* Required Documents (not shown when the school selects the student —
+          there's nothing for the student to submit) */}
+      {!isViaSchool && (
+        <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
+          <h3 className="font-semibold text-purple-800 mb-3 flex items-center gap-2">
+            <FileText className="w-4 h-4" />
+            {t("requiredDocuments")}
+          </h3>
+          <ul className="space-y-2">
+            {REQUIRED_DOCS.map((doc) => (
+              <li
+                key={doc}
+                className="flex items-center gap-2 text-sm text-purple-700"
+              >
+                <span className="w-1.5 h-1.5 bg-purple-400 rounded-full shrink-0" />
+                {t(doc)}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* Application Process */}
       <div className="p-4 bg-sky-50 rounded-lg border border-sky-200">
