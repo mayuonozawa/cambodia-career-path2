@@ -1,0 +1,17 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Phnom_Penh"
+    open-pull-requests-limit: 5
+    groups:
+      # Batch routine minor/patch bumps into one PR to keep review load low.
+      # Security fixes are still opened as separate PRs by Dependabot security updates.
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
