@@ -1,5 +1,6 @@
 import Script from "next/script";
 import { getLocale } from "next-intl/server";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 export default async function RootLayout({
@@ -17,6 +18,7 @@ export default async function RootLayout({
       </head>
       <body className="flex min-h-screen flex-col bg-background font-sans antialiased">
         {children}
+        <Analytics />
 
         {/* Google Analytics */}
         <Script
