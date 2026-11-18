@@ -2,11 +2,12 @@ import { Suspense } from "react";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
-import { GraduationCap, Compass, Heart, ArrowRight, ChevronRight, Wrench, Sparkles, BookOpen, Users } from "lucide-react";
+import { GraduationCap, Compass, Heart, ArrowRight, ChevronRight, Wrench, Sparkles } from "lucide-react";
 import CareerExplorer from "@/components/careers/CareerExplorer";
 import CareerDiagnosis from "@/components/careers/CareerDiagnosis";
 import FeaturedScholarships from "@/components/home/FeaturedScholarships";
 import FeaturedSchools from "@/components/home/FeaturedSchools";
+import HeroStats, { HeroStatsSkeleton } from "@/components/home/HeroStats";
 import { FeaturedScholarshipsSkeleton, FeaturedSchoolsSkeleton } from "@/components/home/FeaturedSectionSkeleton";
 
 // Supabaseへの問い合わせは FeaturedScholarships / FeaturedSchools に切り出し、
@@ -130,34 +131,10 @@ export default async function HomePage() {
           </div>
         </div>
 
-        {/* Trust Signal Stats Bar */}
-        <div className="hero-animate-stats border-t border-border bg-gradient-to-r from-brand-primary-light/40 via-white to-brand-secondary-light/40 px-4 py-5">
-          <div className="mx-auto flex max-w-lg items-center justify-around">
-            <div className="flex flex-col items-center gap-1">
-              <div className="flex items-center gap-1.5">
-                <BookOpen className="h-4 w-4 text-brand-primary" />
-                <span className="text-xl font-bold text-brand-primary">8+</span>
-              </div>
-              <span className="text-[11px] font-medium text-muted-foreground">{t("home.scholarshipsCount")}</span>
-            </div>
-            <div className="h-8 w-px bg-border" />
-            <div className="flex flex-col items-center gap-1">
-              <div className="flex items-center gap-1.5">
-                <Compass className="h-4 w-4 text-brand-secondary" />
-                <span className="text-xl font-bold text-brand-secondary">11+</span>
-              </div>
-              <span className="text-[11px] font-medium text-muted-foreground">{t("home.schoolsCount")}</span>
-            </div>
-            <div className="h-8 w-px bg-border" />
-            <div className="flex flex-col items-center gap-1">
-              <div className="flex items-center gap-1.5">
-                <Users className="h-4 w-4 text-brand-tertiary" />
-                <span className="text-xl font-bold text-brand-tertiary">8</span>
-              </div>
-              <span className="text-[11px] font-medium text-muted-foreground">{t("home.fieldsCount")}</span>
-            </div>
-          </div>
-        </div>
+        {/* Trust Signal Stats Bar（件数はSupabaseから数える。読み込み中も同じ高さで表示） */}
+        <Suspense fallback={<HeroStatsSkeleton />}>
+          <HeroStats />
+        </Suspense>
       </section>
 
       {/* How it works Section */}
