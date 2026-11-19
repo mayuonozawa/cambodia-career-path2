@@ -7,6 +7,7 @@ import { SearchBar } from "@/components/ui/SearchBar";
 import { ScholarshipCard } from "./ScholarshipCard";
 import type { Scholarship, Locale } from "@/types/database";
 import { getLocalizedField } from "@/lib/utils";
+import { isGraduateLevel } from "@/lib/scholarshipLevel";
 import { useFilterParams } from "@/hooks/useFilterParams";
 import { ChevronDown, X } from "lucide-react";
 
@@ -114,8 +115,14 @@ export function ScholarshipList({ scholarships }: ScholarshipListProps) {
       const dB = b.deadline ? new Date(b.deadline).getTime() : null;
       const closedA = dA !== null && dA < now;
       const closedB = dB !== null && dB < now;
+      // 締め切りを過ぎたものは一番後ろ
       if (closedA && !closedB) return 1;
       if (!closedA && closedB) return -1;
+      // 大学院向けは高校生向けの後ろ（主な利用者は高校生のため）
+      const gradA = isGraduateLevel(a);
+      const gradB = isGraduateLevel(b);
+      if (gradA && !gradB) return 1;
+      if (!gradA && gradB) return -1;
       if (dA !== null && dB !== null) return dA - dB;
       if (dA !== null) return -1;
       if (dB !== null) return 1;

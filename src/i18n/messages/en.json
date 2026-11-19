@@ -17,7 +17,10 @@
     "noResults": "No results found",
     "loginRequired": "Please log in to view details",
     "language": "Language",
-    "accuracyNotice": "The information on this page is for reference only and may not always be fully accurate or up to date. Please confirm the latest details directly with the official source before applying or making decisions."
+    "accuracyNotice": "The information on this page is for reference only and may not always be fully accurate or up to date. Please confirm the latest details directly with the official source before applying or making decisions.",
+    "promiseNotProvider": "BrightDoorHub does not give out scholarships and does not accept applications. Always apply through the official website.",
+    "promiseNoFees": "BrightDoorHub will never ask you for money. If someone says you can get a scholarship by paying a fee, it is likely a scam.",
+    "promiseAskUs": "Not sure? Ask us on Messenger."
   },
   "home": {
     "heroTitle": "Discover Your Future",
@@ -120,7 +123,8 @@
     "applicationTypeAfterEnrollment": "Apply After Enrollment",
     "applicationTypeHintDirect": "You can apply using the link below.",
     "applicationTypeHintViaSchool": "Talk to your teacher at school.",
-    "applicationTypeHintAfterEnrollment": "You'll apply after enrolling at the university."
+    "applicationTypeHintAfterEnrollment": "You'll apply after enrolling at the university.",
+    "graduateLevel": "Master's / Graduate"
   },
   "universities": {
     "title": "Universities",
