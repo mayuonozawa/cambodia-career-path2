@@ -12,6 +12,7 @@ import {
   formatDate,
 } from "@/lib/utils";
 import { trackEvent } from "@/lib/gtag";
+import { isGraduateLevel } from "@/lib/scholarshipLevel";
 import type { Scholarship, Locale } from "@/types/database";
 import { Calendar, Building, Clock, AlertTriangle } from "lucide-react";
 
@@ -52,6 +53,8 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
   const coverageIcons = coverage ? getCoverageIcons(coverage) : [];
 
   const applicationTypeLabelKey = getApplicationTypeLabelKey(scholarship.application_type);
+
+  const isGraduate = isGraduateLevel(scholarship);
 
   const daysRemaining = getDaysRemaining(scholarship.deadline);
   const isClosed = daysRemaining !== null && daysRemaining <= 0;
@@ -96,6 +99,11 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
           <Badge className={getScholarshipTypeBadgeColor(scholarship.type)}>
             {t(getScholarshipTypeKey(scholarship.type))}
           </Badge>
+          {isGraduate && (
+            <Badge className="bg-purple-50 text-purple-700 whitespace-nowrap">
+              {t("graduateLevel")}
+            </Badge>
+          )}
           {isClosed && (
             <Badge className="bg-gray-100 text-gray-500">
               {t("closed")}

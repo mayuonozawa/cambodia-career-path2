@@ -4,6 +4,20 @@ import { createClient } from "@/lib/supabase/server";
 import { ArrowRight } from "lucide-react";
 import { SectionViewTracker } from "@/components/analytics/SectionViewTracker";
 import { FeaturedScholarshipCard } from "./FeaturedScholarshipCard";
+import { isGraduateLevel } from "@/lib/scholarshipLevel";
+import type { Scholarship } from "@/types/database";
+
+// 締め切りを過ぎたものを除き、高校生向け → 大学院向けの順で先頭3件を選ぶ。
+function pickFeatured(list: Scholarship[]): Scholarship[] {
+  const now = Date.now();
+  const open = list.filter(
+    (s) => !s.deadline || new Date(s.deadline).getTime() >= now
+  );
+  return [
+    ...open.filter((s) => !isGraduateLevel(s)),
+    ...open.filter((s) => isGraduateLevel(s)),
+  ].slice(0, 3);
+}
 
 // Supabaseへの問い合わせを独立した非同期コンポーネントに切り出し、
 // トップページ本体をブロックしないようにする（page.tsx側でSuspense化）。
@@ -11,12 +25,16 @@ export default async function FeaturedScholarships() {
   const t = await getTranslations();
   const supabase = await createClient();
 
-  const { data: scholarships } = await supabase
+  // 特集枠は高校生向けを優先する。新しい順に多めに取り、締め切りを過ぎたものと
+  // 大学院向けを除いて先頭3件を出す（足りなければ大学院向けで埋める）。
+  const { data: candidates } = await supabase
     .from("scholarships")
     .select("*")
     .eq("is_active", true)
     .order("created_at", { ascending: false })
-    .limit(3);
+    .limit(30);
+
+  const scholarships = pickFeatured(candidates ?? []);
 
   if (!scholarships || scholarships.length === 0) return null;
 
